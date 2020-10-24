@@ -1,9 +1,28 @@
-html,
+@import url("https://fonts.googleapis.com/css2?family=Bai+Jamjuree&display=swap");
+
+html {
+  scroll-behavior: smooth;
+  font-size: 62.5%;
+}
+
+@media screen and (max-width: 768px) {
+  html {
+    font-size: 55.5%;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  html {
+    font-size: 48.5%;
+  }
+}
+
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, "Bai Jamjuree", sans-serif, BlinkMacSystemFont,
+    Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+    Helvetica Neue, sans-serif;
 }
 
 a {
