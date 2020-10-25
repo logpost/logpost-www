@@ -31,7 +31,7 @@ const SignUpContainer = styled.div`
   font-size: 2.4rem;
   font-weight: 500;
   padding: 3.8rem 0;
-  box-shadow: 0 -14px 24px 0 hsla(0, 0%, 0%, 0.2);
+  box-shadow: 0 -1.4rem 2.4rem 0 hsla(0, 0%, 0%, 0.2);
   border-radius: 3.6rem 3.6rem 0 0;
   position: absolute;
   bottom: 0;
