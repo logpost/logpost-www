@@ -1,3 +1,10 @@
+signup
+- signup/shipper
+- signup/carrier
+
+login
+- login/
+
 alert
 - comfirm/email
 
@@ -14,8 +21,8 @@ carrier
 - carrier/car/overview
 - carrier/car/add/step=1
 - carrier/car/add/step=2
-- carrier/transporter/overview
-- carrier/transporter/add
+- carrier/driver/overview
+- carrier/driver/add
 
 jobs
 - jobs/status=all

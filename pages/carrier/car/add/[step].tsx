@@ -12,8 +12,8 @@ const AddCarSwitcherPage = () => {
         <div>
             {
                 {
-                    step1: <CarAddStepOne />,
-                    step2: <CarAddStepTwo />,
+                    1: <CarAddStepOne />,
+                    2: <CarAddStepTwo />,
                 }[step as string]
             }
         </div>
