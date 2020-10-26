@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import InputComponent from '../../../components/common/Input'
 
@@ -23,17 +23,87 @@ const PrimaryButton = styled.button`
   margin-top: 3rem;
 `
 
+const RadioInputContainer = styled.div`
+  display: flex;
+  border: solid 0.2rem hsl(212, 28%, 28%);
+  border-radius: 0.6rem;
+  margin-top: 1rem;
+  width: 100%;
+`
+
+const RadioInput = styled.button`
+  font-size: 1.6rem;
+  width: 50%;
+  padding: 1rem 0;
+  text-align: center;
+  ${props => props.value === props.name &&
+  `
+    background-color: hsl(212, 28%, 28%);
+    color: white;
+  `}
+`
+
+const FormTitle = styled.div`
+  font-size: 4rem;
+  font-weight: 800;
+  color: hsl(212, 28%, 28%);
+`
+
 const SignUpShipperPage = () => {
+  const [accountType, setAccountType] = useState("personal")
+  const [shipperProfile, setShipperProfile] = useState({
+    username: "",
+    password: "",
+    confirm_password: "",
+    name: "",
+    display_name: "",
+    email: ""
+  })
+  console.log(accountType)
+  console.log(shipperProfile)
+
+  const handleInputOnChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setShipperProfile({...shipperProfile, username: value})
+  }
+
   return (
     <Form>
-      <InputComponent labelTH="ชื่อผู้ใช้" labelEN="Username" />
-      <InputComponent labelTH="รหัสผ่าน" labelEN="Password">
-        ความยาวมากกว่า 6 ตัวอักษร ประกอบด้วยตัวพิมพ์ใหญ่ (A-Z) ตัวพิมพ์เล็ก (a-z) และตัวเลข (0-9)
+      <FormTitle>ลงทะเบียนขนส่ง</FormTitle>
+      <InputComponent labelTH="ประเภทผู้ใช้" labelEN="Account Type" type="other">
+        <RadioInputContainer>
+          <RadioInput type="button" value={accountType} name="personal" onClick={() => setAccountType("personal")}>
+            บุคคล
+          </RadioInput>
+          <RadioInput type="button" value={accountType} name="business" onClick={() => setAccountType("business")}>
+            นิติบุคคล
+          </RadioInput>
+        </RadioInputContainer>
       </InputComponent>
-      <InputComponent labelTH="ยืนยันรหัสผ่าน" labelEN="Confirm Password" />
-      <InputComponent labelTH="ชื่อจริง - นามสกุล" labelEN="Name" />
-      <InputComponent labelTH="ชื่อที่แสดง" labelEN="Display Name" />
-      <InputComponent labelTH="อีเมล" labelEN="E-mail" />
+      <InputComponent 
+        name="username" 
+        value={shipperProfile.username} 
+        labelTH="ชื่อผู้ใช้" 
+        labelEN="Username" 
+        handleOnChange={handleInputOnChange} />
+      <InputComponent 
+        name="password"
+        labelTH="รหัสผ่าน" 
+        labelEN="Password" 
+        description="ความยาวมากกว่า 6 ตัวอักษร ประกอบด้วยตัวพิมพ์ใหญ่ (A-Z) ตัวพิมพ์เล็ก (a-z) และตัวเลข (0-9)"
+        handleOnChange={handleInputOnChange} />
+      <InputComponent 
+        name="confirm_password" 
+        value={shipperProfile.confirm_password} 
+        labelTH="ยืนยันรหัสผ่าน" 
+        labelEN="Confirm Password" />
+      <InputComponent 
+        name="name" 
+        value={shipperProfile.name} 
+        labelTH="ชื่อจริง - นามสกุล" 
+        labelEN="Name" />
+      <InputComponent name="display_name" value={shipperProfile.display_name} labelTH="ชื่อที่แสดง" labelEN="Display Name" />
+      <InputComponent name="email" value={shipperProfile.email} labelTH="อีเมล" labelEN="E-mail" />
       <PrimaryButton>ลงทะเบียนขนส่ง</PrimaryButton>
     </Form>
   )

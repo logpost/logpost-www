@@ -7,7 +7,11 @@ export interface ShipperProfileInterface {
 }
 
 export interface InputProperties {
+  name?: string
+  value?: string
   labelTH: string
   labelEN: string
+  handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  description?: string
   type?: string
 }

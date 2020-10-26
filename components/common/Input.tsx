@@ -37,15 +37,8 @@ const LabelEN = styled(Description)`
   margin-left: 0.5ch;
 `
 
-
 const InputComponent:FunctionComponent<InputProperties> = (props) => {
-  const {labelTH, labelEN, type, children} = props
-  const [value, setValue] = useState('')
-
-  const handleOnChange = (e) => {
-    e.preventDefault()
-    setValue(e.target.value)
-  }
+  const {name, value, labelTH, labelEN, type, description, handleOnChange, children} = props
 
   return (
     <InputContainer>
@@ -57,10 +50,21 @@ const InputComponent:FunctionComponent<InputProperties> = (props) => {
           / {labelEN}
         </LabelEN>
       </LabelsContainer>
-      <Description>
-        {children}
-      </Description>
-      <Input type={type} onChange={(e) => handleOnChange(e)} value={value} />
+      {
+        description && 
+        <Description>
+          {description}
+        </Description>
+      }
+      {
+        type === "other" ? children 
+        : <Input 
+          type={type} 
+          onChange={(e) => handleOnChange(e)} 
+          value={value}
+          name={name}
+        />
+      }
     </InputContainer>
   )
 }
