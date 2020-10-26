@@ -6,7 +6,7 @@ login
 - login/
 
 alert
-- comfirm/email
+- confirm/email
 
 account 
 - setting/personal

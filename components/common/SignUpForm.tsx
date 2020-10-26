@@ -130,7 +130,7 @@ const SignUpForm = (props:SignUpFormInterface) => {
         labelTH="อีเมล" 
         labelEN="E-mail"
         handleOnChange={handleInputOnChange} />
-      <PrimaryButton onSubmit={() => submitForm(profile)}>ลงทะเบียน{role}</PrimaryButton>
+      <PrimaryButton type="button" onClick={() => submitForm(profile)}>ลงทะเบียน{role}</PrimaryButton>
     </Form>
   )
 }
