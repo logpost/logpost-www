@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from 'react'
 import styled from 'styled-components'
-import { InputProperties } from '../../entities/interface/shipper'
+import { InputComponentInterface } from '../../entities/interface/common'
 
 const Input = styled.input`
   width: ${props => props.type === "short" ? "15rem" : "100%"};
@@ -37,7 +37,7 @@ const LabelEN = styled(Description)`
   margin-left: 0.5ch;
 `
 
-const InputComponent:FunctionComponent<InputProperties> = (props) => {
+const InputComponent:FunctionComponent<InputComponentInterface> = (props) => {
   const {name, value, labelTH, labelEN, type, description, handleOnChange, children} = props
 
   return (
