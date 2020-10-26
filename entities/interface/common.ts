@@ -22,3 +22,7 @@ export interface SignUpFormInterface {
   role: string
   submitForm: (profile:ProfileInterface) => void
 }
+
+export interface ProfileHeaderInterface {
+  displayName: string
+}
