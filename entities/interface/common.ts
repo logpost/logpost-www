@@ -3,6 +3,7 @@ export interface InputComponentInterface {
   value?: string
   labelTH: string
   labelEN: string
+  labelSize?: string
   handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   description?: string
   type?: string

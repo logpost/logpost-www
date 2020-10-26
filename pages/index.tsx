@@ -2,13 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { LogpostIcon } from '../components/common/Icon'
-import { PrimaryButton, TextButton } from '../components/styles/GlobalComponents'
-
-const Background = styled.div`
-  background-image: url('/images/main-bg.png');
-  background-size: cover;
-  height: 72vh;
-`
+import { PrimaryButton, TextButton, Background } from '../components/styles/GlobalComponents'
 
 const LogoContainer = styled.div`
   color: hsl(212, 28%, 28%);
