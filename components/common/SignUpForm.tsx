@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SignUpFormInterface } from '../../entities/interface/common'
 import InputComponent from './Input'
+import { PrimaryButton, Title } from '../styles/GlobalComponents';
 
 const Form = styled.form`
   margin: 4.2rem;
@@ -11,17 +12,11 @@ const Form = styled.form`
   > div:not(:first-child) {
     margin-top: 1.8rem;
   }
-`
-const PrimaryButton = styled.button`
-  font-size: 1.8rem;
-  border-radius: 4rem;
-  color: white;
-  padding: 1rem 3rem;
-  width: fit-content;
-  background-color: hsl(16, 56%, 51%);
-  box-shadow: 0.4rem 0.4rem 1.2rem 0 hsla(212, 28%, 28%, 0.24);
-  align-self: center;
-  margin-top: 3rem;
+
+  > button {
+    margin-top: 3rem;
+    align-self: center;
+  }
 `
 
 const RadioInputContainer = styled.div`
@@ -44,12 +39,6 @@ const RadioInput = styled.button`
   `}
 `
 
-const FormTitle = styled.div`
-  font-size: 4rem;
-  font-weight: 800;
-  color: hsl(212, 28%, 28%);
-`
-
 const SignUpForm = (props:SignUpFormInterface) => {
   const { role, submitForm } = props
   const [profile, setProfile] = useState({
@@ -61,7 +50,6 @@ const SignUpForm = (props:SignUpFormInterface) => {
     display_name: "",
     email: ""
   })
-  console.log(profile)
 
   const handleInputOnChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -70,7 +58,7 @@ const SignUpForm = (props:SignUpFormInterface) => {
 
   return (
     <Form>
-      <FormTitle>ลงทะเบียน{role}</FormTitle>
+      <Title>ลงทะเบียน{role}</Title>
       <InputComponent labelTH="ประเภทผู้ใช้" labelEN="Account Type" type="other">
         <RadioInputContainer>
           <RadioInput 

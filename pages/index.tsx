@@ -2,11 +2,12 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { LogpostIcon } from '../components/common/Icon'
+import { PrimaryButton, TextButton } from '../components/styles/GlobalComponents'
 
 const Background = styled.div`
   background-image: url('/images/main-bg.png');
   background-size: cover;
-  height: 70vh;
+  height: 72vh;
 `
 
 const LogoContainer = styled.div`
@@ -39,14 +40,10 @@ const SignUpContainer = styled.div`
   width: 100%;
 `
 
-const PrimaryButton = styled.button`
+const PrimaryButtonCustom = styled(PrimaryButton)`
   background-color: hsl(212, 28%, 28%);
-  border-radius: 4rem;
-  color: white;
-  padding: 1rem 3rem;
-  width: fit-content;
-  box-shadow: 0.4rem 0.4rem 1.2rem 0 hsla(212, 28%, 28%, 0.24);
-
+  font-size: 2.4rem;
+  
   &:not(:first-child)
    {
     margin-top: 3rem;
@@ -54,9 +51,7 @@ const PrimaryButton = styled.button`
   }
 `
 
-const TextButton = styled.button`
-  color: hsl(212, 28%, 28%);
-  text-decoration: underline;
+const TextButtonCustom = styled(TextButton)`
   margin-top: 2.6rem;
 `
 
@@ -75,9 +70,9 @@ const Home = () => {
         แหล่งรวมงานขนส่ง  
       </LogoContainer>
       <SignUpContainer>
-        <PrimaryButton onClick={(e) => handleClick(e, "shipper")}>ลงทะเบียนผู้ส่ง</PrimaryButton>
-        <PrimaryButton onClick={(e) => handleClick(e, "carrier")}>ลงทะเบียนขนส่ง</PrimaryButton>
-        <TextButton>เข้าสู่ระบบ</TextButton>
+        <PrimaryButtonCustom onClick={(e) => handleClick(e, "shipper")}>ลงทะเบียนผู้ส่ง</PrimaryButtonCustom>
+        <PrimaryButtonCustom onClick={(e) => handleClick(e, "carrier")}>ลงทะเบียนขนส่ง</PrimaryButtonCustom>
+        <TextButtonCustom>เข้าสู่ระบบ</TextButtonCustom>
       </SignUpContainer>
     </Background>
   )

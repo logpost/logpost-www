@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { EmailConfirmation } from "../../../../components/common/Icon";
 import { useRouter } from "next/router";
+import { SecondaryButton } from '../../../../components/styles/GlobalComponents';
 
 const DetailContainer = styled.div`
   display: flex;
@@ -26,21 +27,15 @@ const Detail = styled.div`
   }
 `;
 
-const SecondaryButton = styled.button`
-  border-radius: 4rem;
-  border: solid 0.2rem hsl(212, 28%, 28%);
-  color: hsl(212, 28%, 28%);
-  font-size: 1.8rem;
-  font-weight: 500;
-  padding: 1rem 3rem;
-  margin-top: 13.6rem;
-`;
-
 const EmailConfirmationContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 5rem;
+
+  > button {
+    margin-top: 13.6rem;
+  }
 `;
 
 const EmailConfirmationPage = () => {
