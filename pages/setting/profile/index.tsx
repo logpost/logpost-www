@@ -8,31 +8,10 @@ import {
   SecondaryButton,
   TextButton,
   Title,
+  FormActions
 } from "../../../components/styles/GlobalComponents"
 
 const account_type = "personal" // MOCK
-
-const FormActions = styled.span`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 3rem;
-`
-
-const SecondaryButtonCustom = styled(SecondaryButton)`
-  border: solid 1px hsl(0, 0%, 66%);
-  color: hsl(0, 0%, 66%);
-`
-
-const TextButtonCustom = styled(TextButton)`
-  font-size: 1.8rem;
-  color: hsl(16, 56%, 51%);
-  margin-top: 3rem;
-  /* margin-bottom: 3.8rem; */
-
-  > span {
-    font-size: 1.4rem;
-  }
-`
 
 const ProfileSettingPage = () => {
   const router = useRouter()
@@ -111,19 +90,19 @@ const ProfileSettingPage = () => {
         handleOnChange={handleInputOnChange}
       />
       <FormActions>
-        <SecondaryButtonCustom
+        <SecondaryButton
           type="button"
           onClick={() => router.push("/shipper/profile")}
         >
           ยกเลิก
-        </SecondaryButtonCustom>
+        </SecondaryButton>
         <PrimaryButton type="button" onClick={updateProfile}>
           แก้ไขข้อมูล
         </PrimaryButton>
       </FormActions>
-      <TextButtonCustom type="button" onClick={deactivateAccount}>
+      <TextButton type="button" onClick={deactivateAccount}>
         ระงับบัญชี<span> / Deactivate Account</span>
-      </TextButtonCustom>
+      </TextButton>
     </Form>
   )
 }

@@ -61,4 +61,26 @@ export const Form = styled.form`
   > div:not(:first-child) {
     margin-top: 1.8rem;
   }
+
+  ${TextButton} {
+    font-size: 1.8rem;
+    color: hsl(16, 56%, 51%);
+    margin-top: 3rem;
+    /* margin-bottom: 3.8rem; */
+
+    > span {
+      font-size: 1.4rem;
+    }
+  }
+`
+
+export const FormActions = styled.span`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+
+  ${SecondaryButton} {
+    border: solid 1px hsl(0, 0%, 66%);
+    color: hsl(0, 0%, 66%);
+  }
 `

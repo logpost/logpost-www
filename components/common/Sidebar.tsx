@@ -76,8 +76,8 @@ const Sidebar = (props: SidebarProps) => {
           <HeaderTitle>การตั้งค่า</HeaderTitle>
         </HeaderContainer>
         <SidebarItem onClick={() => router.push("/setting/profile")}>ข้อมูลส่วนตัว</SidebarItem>
-        <SidebarItem>แก้ไขรหัสผ่าน</SidebarItem>
-        <SidebarItem>แก้ไขอีเมล</SidebarItem>
+        <SidebarItem onClick={() => router.push("/setting/reset/password")}>แก้ไขรหัสผ่าน</SidebarItem>
+        <SidebarItem onClick={() => router.push("/setting/reset/email")}>แก้ไขอีเมล</SidebarItem>
         <SecondaryButtonCustom>ออกจากระบบ</SecondaryButtonCustom>
       </SidebarContent>
 		</SidebarContainer>
