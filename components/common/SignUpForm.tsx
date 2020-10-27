@@ -4,11 +4,6 @@ import { SignUpFormInterface } from '../../entities/interface/common'
 import InputComponent from './Input'
 import { PrimaryButton, Title, Form } from '../styles/GlobalComponents';
 
-const PrimaryButtonCustom = styled(PrimaryButton) `
-  margin-top: 3rem;
-  align-self: center;
-`
-
 const RadioInputContainer = styled.div`
   display: flex;
   border: solid 0.2rem hsl(212, 28%, 28%);
@@ -109,7 +104,7 @@ const SignUpForm = (props:SignUpFormInterface) => {
         labelTH="อีเมล" 
         labelEN="E-mail"
         handleOnChange={handleInputOnChange} />
-      <PrimaryButtonCustom type="button" onClick={() => submitForm(profile)}>ลงทะเบียน{role}</PrimaryButtonCustom>
+      <PrimaryButton type="button" onClick={() => submitForm(profile)}>ลงทะเบียน{role}</PrimaryButton>
     </Form>
   )
 }

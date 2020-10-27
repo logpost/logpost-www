@@ -62,6 +62,11 @@ export const Form = styled.form`
     margin-top: 1.8rem;
   }
 
+  ${PrimaryButton} {
+    margin-top: 3rem;
+    align-self: center;
+  }
+
   ${TextButton} {
     font-size: 1.8rem;
     color: hsl(16, 56%, 51%);
@@ -77,10 +82,10 @@ export const Form = styled.form`
 export const FormActions = styled.span`
   display: flex;
   justify-content: space-between;
-  margin-top: 3rem;
 
   ${SecondaryButton} {
     border: solid 1px hsl(0, 0%, 66%);
     color: hsl(0, 0%, 66%);
+    margin-top: 3rem;
   }
 `
