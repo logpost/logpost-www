@@ -77,6 +77,7 @@ const SignUpForm = (props:SignUpFormInterface) => {
         name="password"
         labelTH="รหัสผ่าน" 
         labelEN="Password" 
+        value={profile.password} 
         description="ความยาวมากกว่า 6 ตัวอักษร ประกอบด้วยตัวพิมพ์ใหญ่ (A-Z) ตัวพิมพ์เล็ก (a-z) และตัวเลข (0-9)"
         type="password"
         handleOnChange={handleInputOnChange} />

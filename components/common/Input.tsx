@@ -44,6 +44,7 @@ const LabelTH = styled.div<Label>`
 `
 
 const Description = styled.div`
+  margin-top: 1rem;
   color: hsl(0, 0%, 66%);
   font-size: 1.4rem;
 `
@@ -51,6 +52,7 @@ const Description = styled.div`
 const LabelEN = styled(Description)<Label>`
   font-size: ${(props) => (props.labelSize === "large" ? "1.8rem" : "1.4rem")};
   margin-left: 0.5ch;
+  margin-top: 0;
 `
 
 const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
