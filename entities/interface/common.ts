@@ -26,3 +26,13 @@ export interface SignUpFormInterface {
 export interface ProfileHeaderInterface {
   displayName: string
 }
+
+export interface ProfileJobStatusInterface {
+  title: string
+  buttonText: string
+  items: {
+    name: string
+    icon: JSX.Element
+    noOfJobs?: number
+  }[]
+}

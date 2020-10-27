@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { ProfileHeaderInterface } from '../../entities/interface/common'
-import { Settings } from './Icon'
+import { SettingsIcon } from './Icon'
 
 const HeaderContainer = styled.div`
 	background-color: hsl(212, 28%, 28%);
@@ -25,7 +25,7 @@ const ProfileHeader = (props:ProfileHeaderInterface) => {
 
 	return (
 		<HeaderContainer>
-			<Settings />
+			<SettingsIcon />
 			<DisplayName>
 				{displayName}
 			</DisplayName>

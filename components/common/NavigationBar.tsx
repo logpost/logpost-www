@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Person, Home, Job } from './Icon'
+import { PersonIcon, HomeIcon, JobIcon } from './Icon'
 
 const NavBarContainer = styled.div`
 	display: flex;
@@ -29,21 +29,26 @@ const NavBarItem = styled.button`
 		padding: 0 0.75rem;
 	`
 	}
+	
+	svg {
+		width: 3.8rem;
+		height: 3.8rem;
+  }
 `
 
 const NavigationBar = () => {
 	return (
 		<NavBarContainer>
 			<NavBarItem value="true">
-				<Home />
+				<HomeIcon />
 				งานของฉัน
 			</NavBarItem>
 			<NavBarItem>
-				<Job />
+				<JobIcon />
 				ค้นหางาน
 			</NavBarItem>
 			<NavBarItem>
-				<Person />
+				<PersonIcon />
 				บัญชีของฉัน
 			</NavBarItem>
 		</NavBarContainer>
