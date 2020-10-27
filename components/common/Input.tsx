@@ -1,10 +1,10 @@
-import { FunctionComponent, useState } from "react";
-import styled from "styled-components";
-import { InputComponentInterface } from "../../entities/interface/common";
+import { FunctionComponent, useState } from "react"
+import styled from "styled-components"
+import { InputComponentInterface } from "../../entities/interface/common"
 
 interface Label {
-  labelSize: string;
-};
+  labelSize: string
+}
 
 const Input = styled.input`
   width: ${(props) => (props.type === "short" ? "15rem" : "100%")};
@@ -14,34 +14,44 @@ const Input = styled.input`
   margin-top: 1rem;
   font-size: 1.6rem;
   padding: 1.2rem;
-`;
+`
+
+const TextArea = styled.textarea`
+  height: 7rem;
+  border-radius: 0.6rem;
+  border: solid 0.1rem hsl(0, 0%, 66%);
+  margin-top: 1rem;
+  font-size: 1.6rem;
+  padding: 1.2rem;
+  resize: none;
+`
 
 const InputContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-`;
+`
 
 const LabelsContainer = styled.div`
   display: flex;
   font-weight: 500;
   align-items: center;
-`;
+`
 
 const LabelTH = styled.div<Label>`
   font-size: ${(props) => (props.labelSize === "large" ? "2.4rem" : "1.8rem")};
   color: hsl(217, 16%, 16%);
-`;
+`
 
 const Description = styled.div`
   color: hsl(0, 0%, 66%);
   font-size: 1.4rem;
-`;
+`
 
 const LabelEN = styled(Description)<Label>`
-  font-size: ${(props) => (props.labelSize === "large" ? "1.8rem" : "inherit")};
+  font-size: ${(props) => (props.labelSize === "large" ? "1.8rem" : "1.4rem")};
   margin-left: 0.5ch;
-`;
+`
 
 const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
   const {
@@ -54,7 +64,7 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
     description,
     handleOnChange,
     children,
-  } = props;
+  } = props
 
   return (
     <InputContainer>
@@ -65,6 +75,8 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
       {description && <Description>{description}</Description>}
       {type === "other" ? (
         children
+      ) : type === "textarea" ? (
+        <TextArea />
       ) : (
         <Input
           type={type}
@@ -74,7 +86,7 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
         />
       )}
     </InputContainer>
-  );
-};
+  )
+}
 
-export default InputComponent;
+export default InputComponent

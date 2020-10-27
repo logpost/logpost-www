@@ -52,3 +52,13 @@ export const HeaderContainer = styled.div`
 		align-self: flex-end;
 	}
 `
+
+export const Form = styled.form`
+  margin: 4.2rem;
+  display: flex;
+  flex-direction: column;
+
+  > div:not(:first-child) {
+    margin-top: 1.8rem;
+  }
+`

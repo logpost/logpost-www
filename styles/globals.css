@@ -38,6 +38,10 @@ button {
   padding: 0;
 }
 
+textarea {
+  font-family: -apple-system, "Bai Jamjuree";
+}
+
 * {
   box-sizing: border-box;
 }

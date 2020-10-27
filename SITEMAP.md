@@ -9,7 +9,7 @@ alert
 - confirm/email
 
 account 
-- setting/personal
+- setting/profile
 - setting/reset/password
 - setting/reset/email
 

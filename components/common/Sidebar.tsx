@@ -6,6 +6,7 @@ import {
   SecondaryButton,
 } from "../styles/GlobalComponents"
 import { CancelIcon } from "./Icon"
+import { useRouter } from 'next/router'
 
 interface SidebarContainerProps {
   toggle: boolean
@@ -62,6 +63,8 @@ const SecondaryButtonCustom = styled(SecondaryButton)`
 `
 
 const Sidebar = (props: SidebarProps) => {
+  const router = useRouter()
+
   return (
 		<SidebarContainer toggle={props.toggle}>
     	<Backdrop onClick={() => props.setToggle(false)} />
@@ -72,7 +75,7 @@ const Sidebar = (props: SidebarProps) => {
           </button>
           <HeaderTitle>การตั้งค่า</HeaderTitle>
         </HeaderContainer>
-        <SidebarItem>ข้อมูลส่วนตัว</SidebarItem>
+        <SidebarItem onClick={() => router.push("/setting/profile")}>ข้อมูลส่วนตัว</SidebarItem>
         <SidebarItem>แก้ไขรหัสผ่าน</SidebarItem>
         <SidebarItem>แก้ไขอีเมล</SidebarItem>
         <SecondaryButtonCustom>ออกจากระบบ</SecondaryButtonCustom>

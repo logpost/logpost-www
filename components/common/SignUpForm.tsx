@@ -2,21 +2,11 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SignUpFormInterface } from '../../entities/interface/common'
 import InputComponent from './Input'
-import { PrimaryButton, Title } from '../styles/GlobalComponents';
+import { PrimaryButton, Title, Form } from '../styles/GlobalComponents';
 
-const Form = styled.form`
-  margin: 4.2rem;
-  display: flex;
-  flex-direction: column;
-
-  > div:not(:first-child) {
-    margin-top: 1.8rem;
-  }
-
-  > button {
-    margin-top: 3rem;
-    align-self: center;
-  }
+const PrimaryButtonCustom = styled(PrimaryButton) `
+  margin-top: 3rem;
+  align-self: center;
 `
 
 const RadioInputContainer = styled.div`
@@ -118,7 +108,7 @@ const SignUpForm = (props:SignUpFormInterface) => {
         labelTH="อีเมล" 
         labelEN="E-mail"
         handleOnChange={handleInputOnChange} />
-      <PrimaryButton type="button" onClick={() => submitForm(profile)}>ลงทะเบียน{role}</PrimaryButton>
+      <PrimaryButtonCustom type="button" onClick={() => submitForm(profile)}>ลงทะเบียน{role}</PrimaryButtonCustom>
     </Form>
   )
 }
