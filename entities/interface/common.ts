@@ -23,10 +23,6 @@ export interface SignUpFormInterface {
   submitForm: (profile:ProfileInterface) => void
 }
 
-export interface ProfileHeaderInterface {
-  displayName: string
-}
-
 export interface ProfileJobStatusInterface {
   title: string
   buttonText: string

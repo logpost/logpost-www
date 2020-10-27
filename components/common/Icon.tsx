@@ -58,6 +58,12 @@ const RightArrow = () => (
   </svg> 
 )
 
+const CancelIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 22 22">
+      <path stroke="#fff" stroke-linecap="round" stroke-width="3" d="M3.48 3.143l15.556 15.556m-15.893 0L18.699 3.143"/>
+  </svg>
+)
+
 export {
   LogpostIcon,
   EmailConfirmation,
@@ -67,5 +73,6 @@ export {
   JobIcon,
   TruckIcon,
   SuccessIcon,
-  RightArrow
+  RightArrow,
+  CancelIcon
 }

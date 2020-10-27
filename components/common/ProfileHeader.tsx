@@ -1,36 +1,21 @@
-import React from 'react'
-import styled from 'styled-components'
-import { ProfileHeaderInterface } from '../../entities/interface/common'
-import { SettingsIcon } from './Icon'
+import React, { useState } from "react"
+import { SettingsIcon } from "./Icon"
+import Sidebar from "./Sidebar"
+import { HeaderTitle, HeaderContainer } from "../styles/GlobalComponents"
 
-const HeaderContainer = styled.div`
-	background-color: hsl(212, 28%, 28%);
-	padding: 1.6rem 2rem; 
-	display: flex;
-	flex-direction: column;
+const ProfileHeader = (props: {headerTitle: string}) => {
+  const { headerTitle } = props
+	const [toggleSidebar, setToggleSidebar] = useState(false)
 
-	svg {
-		align-self: flex-end;
-	}
-`
-
-const DisplayName = styled.div`
-	font-size: 2.4rem;
-	font-weight: 500;
-	color: white;
-`
-
-const ProfileHeader = (props:ProfileHeaderInterface) => {
-	const { displayName } = props
-
-	return (
-		<HeaderContainer>
-			<SettingsIcon />
-			<DisplayName>
-				{displayName}
-			</DisplayName>
-		</HeaderContainer>
-	)
+  return (
+    <HeaderContainer>
+      <Sidebar toggle={toggleSidebar} setToggle={setToggleSidebar}  />
+      <button onClick={() => setToggleSidebar(true)}>
+        <SettingsIcon />
+      </button>
+      <HeaderTitle>{headerTitle}</HeaderTitle>
+    </HeaderContainer>
+  )
 }
 
 export default ProfileHeader

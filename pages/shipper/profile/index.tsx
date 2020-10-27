@@ -13,7 +13,7 @@ const ShipperProfilePage = () => {
   return (
     <div>
       <NavigationBar />
-      <ProfileHeader displayName="ล็อกโพสต์ จำกัด" />
+      <ProfileHeader headerTitle="ล็อกโพสต์ จำกัด" />
       <ProfileStatus
         title="รายการงาน"
         buttonText="รายการทั้งหมด"

@@ -2,7 +2,7 @@ import { FunctionComponent, useState } from "react";
 import styled from "styled-components";
 import { InputComponentInterface } from "../../entities/interface/common";
 
-type Label = {
+interface Label {
   labelSize: string;
 };
 
