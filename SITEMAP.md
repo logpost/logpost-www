@@ -15,6 +15,10 @@ account
 
 shipper
 - shipper/profile
+- shipper/jobs?status=all
+- shipper/jobs?status=waiting
+- shipper/jobs?status=shipping
+- shipper/jobs?status=finished
 
 carrier
 - carrier/profile
@@ -25,8 +29,4 @@ carrier
 - carrier/driver/add
 
 jobs
-- jobs/status=all
-- jobs/status=waiting
-- jobs/status=shipping
-- jobs/status=success
 - jobs/detail/:job_id
