@@ -55,6 +55,18 @@ const LabelEN = styled(Description)<Label>`
   margin-top: 0;
 `
 
+const Classifier = styled.div`
+  font-size: 1.8rem;
+  color: hsl(0, 0%, 66%);
+  margin-top: 1rem;
+  margin-left: 1.8rem;
+`
+
+const FieldContainer = styled.div`
+  display: flex;
+  align-items: center;
+`
+
 const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
   const {
     name,
@@ -66,6 +78,7 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
     description,
     handleOnChange,
     children,
+    classifier
   } = props
 
   return (
@@ -79,13 +92,20 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
         children
       ) : type === "textarea" ? (
         <TextArea />
-      ) : (
+      ) : ( <FieldContainer>
         <Input
           type={type}
           onChange={(e) => handleOnChange(e)}
           value={value}
           name={name}
         />
+        {
+          classifier && 
+          <Classifier>
+            {classifier}
+          </Classifier>
+        }
+        </FieldContainer>
       )}
     </InputContainer>
   )

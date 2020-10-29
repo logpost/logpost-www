@@ -69,7 +69,7 @@ const Progress = (props:ProgressInterface) => {
 				<ProgressCircle percent={percent} cx="50%" cy="50%" r={CIRCLE_SIZE}></ProgressCircle>
 			</CircularProgress>
 			<StepContainer>
-				{label && label + ": "}<span>{currentStep}</span>
+				{label && label + ": "}{currentStep}
 				{
 					nextStep && <NextStep>
 						{label}ถัดไป: <span>{nextStep}</span>

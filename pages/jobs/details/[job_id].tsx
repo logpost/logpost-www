@@ -19,8 +19,12 @@ import {
 } from "../../../components/styles/GlobalComponents"
 import NavigationBar from "../../../components/common/NavigationBar"
 import DetailSection from "../../../components/common/DetailSection"
-import { JobDetailsInterface } from "../../../entities/interface/common"
 import Modal from "../../../components/common/Modal"
+
+interface JobDetailsInterface {
+  role: string
+  status: number
+}
 
 const STATUS_CODE = {
   100: {
@@ -74,11 +78,12 @@ const JOB_MOCK_DETAILS = {
   pickup_date: "20 ต.ค. 63 09:00 น.",
   dropoff_date: "20 ต.ค. 63 18:00 น.",
   weight: 2,
-  product: "ไม้อัด",
+  product_type: "ไม้อัด",
   description: "งานด่วน ไม่ต้องรอขึ้นของ",
   waiting_time: 0,
   truck: {
-    type: "รถ 6 ล้อ พื้นเรียบ",
+    wheel: 6,
+    options: "พื้นเรียบ",
     age: 5,
     driver_license_type: "ท.2",
   },

@@ -43,8 +43,6 @@ const NavigationBar = () => {
 	const router = useRouter()
 	const currentPath = router.asPath
 
-	console.log(currentPath)
-
 	return (
 		<NavBarContainer>
 			<NavBarItem onClick={() => router.push(`/`)}>

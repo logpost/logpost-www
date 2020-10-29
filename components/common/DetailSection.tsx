@@ -2,23 +2,10 @@ import React, { FunctionComponent } from "react"
 import styled from "styled-components"
 import { DetailRow, Detail } from "../styles/GlobalComponents"
 import { DownArrowLine, UpArrowLine } from "./Icons"
+import { JobDetailsInterface } from '../../entities/interface/common'
 
 interface DetailInterface {
-  details: {
-    pickup_location?: string
-    dropoff_location?: string
-    pickup_date?: string
-    dropoff_date?: string
-    weight?: number
-    product?: string
-    description?: string
-    waiting_time?: number
-    truck?: {
-      type?: string
-      age?: number
-      driver_license_type?: string
-    }
-  }
+  details: JobDetailsInterface
 }
 
 const DetailSectionContainer = styled.div`
@@ -121,7 +108,7 @@ const DetailSection = (props: DetailInterface) => {
         </DetailRow>
         <DetailRow>
           <Detail>
-            สินค้า <span>{details.product}</span>
+            สินค้า <span>{details.product_type}</span>
           </Detail>
           <Detail>
             น้ำหนัก <span>{details.weight}</span> <span>ตัน</span>
@@ -140,7 +127,7 @@ const DetailSection = (props: DetailInterface) => {
       <>
         <DetailRow>
           <Detail>
-            ประเภทรถ <span>{details.truck.type}</span>
+            ประเภทรถ <span>รถ {details.truck.wheel} ล้อ {details.truck.options}</span>
           </Detail>
           <Detail>
             อายุไม่เกิน <span>{details.truck.age}</span> <span>ปี</span>
