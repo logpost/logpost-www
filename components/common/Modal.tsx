@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { ToggleComponentInterface } from '../../entities/interface/common'
 import { FormActions, PrimaryButton, SecondaryButton } from '../styles/GlobalComponents'
-import { Alert } from './Icons'
+import { AlertIcon } from './Icons'
 
 interface ModalContainerProps {
   toggle: boolean
@@ -61,7 +61,7 @@ const Modal = (props: ToggleComponentInterface) => {
 		<ModalContainer toggle={props.toggle}>
 			<Backdrop onClick={() => props.setToggle(false)} />
 			<ModalContent>
-				<Alert />
+				<AlertIcon />
 				<span>เมื่อยืนยันเริ่มงานแล้วจะ<b>ไม่สามารถ</b><br/>- แก้ไขพนักงานขับรถ<br/>- ยกเลิกงาน<br/></span>
 				<b>ยืนยันเริ่มงานหรือไม่ ?</b>
 				<FormActions>

@@ -12,6 +12,7 @@ const NavBarContainer = styled.div`
 	height: 6.2rem;
   box-shadow: 0 -0.2rem 1.4rem 0 hsla(0, 0%, 0%, 0.1);
   background-color: white;
+	z-index: 1;
 `
 
 const NavBarItem = styled.button`
