@@ -12,6 +12,7 @@ import { useRouter } from "next/router"
 
 const JobMap = styled.div`
   background: url(/images/job-map.png) no-repeat;
+  background-size: contain;
   height: 19rem;
 `
 

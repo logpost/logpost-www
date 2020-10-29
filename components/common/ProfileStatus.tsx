@@ -2,6 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import { RightArrow } from "./Icons"
 import { ProfileJobStatusInterface } from "../../entities/interface/common"
+import { useRouter } from 'next/router'
 
 const StatusContainer = styled.div`
   display: flex;
@@ -65,12 +66,13 @@ const NumberOfJobs = styled.div`
 
 const ProfileStatus = (props: ProfileJobStatusInterface) => {
   const { title, buttonText, items } = props
+  const router = useRouter()
 
   const statusItems = () => {
     const listOfItems = []
     items.map((item, index) => {
       listOfItems.push(
-        <StatusItem key={index}>
+        <StatusItem key={index} onClick={() => router.push(`jobs?status=${item.status}`)}>
           {item.noOfJobs && <NumberOfJobs>{item.noOfJobs}</NumberOfJobs>}
           {item.icon}
           {item.name}
@@ -84,10 +86,10 @@ const ProfileStatus = (props: ProfileJobStatusInterface) => {
     <StatusContainer>
       <StatusHeader>
         {title}
-        <SeeAllButton>
+        <SeeAllButton onClick={() => router.push(`jobs?status=all`)}>
           {buttonText}
           <RightArrow />
-        </SeeAllButton>
+        </SeeAllButton >
       </StatusHeader>
       <StatusItemContainer>{statusItems()}</StatusItemContainer>
     </StatusContainer>

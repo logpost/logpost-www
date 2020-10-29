@@ -30,6 +30,7 @@ export interface ProfileJobStatusInterface {
   items: {
     name: string
     icon: JSX.Element
+    status: string
     noOfJobs?: number
   }[]
 }

@@ -143,7 +143,7 @@ const LoginPage = () => {
             value={auth.password}
             handleOnChange={handleInputOnChange}
           />
-          <PrimaryButtonCustom>เข้าสู่ระบบ</PrimaryButtonCustom>
+          <PrimaryButtonCustom onClick={() => router.push('/jobs')}>เข้าสู่ระบบ</PrimaryButtonCustom>
           <SignUpContainer>
             ยังไม่ได้ลงทะเบียน?
             <TextButton onClick={() => router.push(`/signup/${auth.role}`)}>

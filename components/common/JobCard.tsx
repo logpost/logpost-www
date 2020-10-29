@@ -1,5 +1,6 @@
 import React from "react"
 import styled from "styled-components"
+import { useRouter } from "next/router"
 import { DetailRow, PrimaryButton } from "../styles/GlobalComponents"
 import {
   DownArrowLine,
@@ -13,6 +14,7 @@ import {
 
 interface JobCardInterface {
   origin: string
+  job_id: string
 }
 
 const CardContainer = styled.div`
@@ -98,7 +100,8 @@ const Detail = styled.div`
 `
 
 const JobCard = (props: JobCardInterface) => {
-  const { origin } = props
+  const { origin, job_id } = props
+  const router = useRouter()
 
   return (
     <CardContainer>
@@ -140,7 +143,7 @@ const JobCard = (props: JobCardInterface) => {
         </DetailColumn>
         <DetailColumn>
           <span>8,000 บาท</span>
-          <PrimaryButtonCustom>รายละเอียด</PrimaryButtonCustom>
+          <PrimaryButtonCustom onClick={() => router.push(`/jobs/details/${job_id}`)}>รายละเอียด</PrimaryButtonCustom>
         </DetailColumn>
       </DetailRow>
     </CardContainer>

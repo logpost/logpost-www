@@ -2,7 +2,7 @@ import React from "react"
 import { useRouter } from "next/router"
 import styled from "styled-components"
 import JobCard from "../../components/common/JobCard"
-import { FilterIcon, SearchIcon } from "../../components/common/Icons"
+import { FilterIcon, PlusIcon, SearchIcon } from "../../components/common/Icons"
 import { PrimaryButton } from "../../components/styles/GlobalComponents"
 import NavigationBar from "../../components/common/NavigationBar"
 
@@ -49,12 +49,39 @@ const SearchBar = styled.input`
   }
 `
 
+const AddJob = styled.button`
+  height: 7rem;
+  width: 7rem;
+  background-color: hsl(16, 56%, 51%);
+  position: fixed;
+  z-index: 1;
+  right: 2.6rem;
+  bottom: 8rem;
+  border-radius: 100%;
+  box-shadow: 4px 4px 12px 0 hsla(212, 28%, 28%, 0.24);
+  font-size: 10rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    height: 4rem;
+    width: 4rem;
+
+    path {
+      fill: white;
+    }
+  }
+`
+
 const JobsPage = () => {
   const router = useRouter()
 
   return (
     <JobsPageContainer>
       <NavigationBar />
+      <AddJob onClick={() => router.push("/jobs/add/1")}><PlusIcon/></AddJob>
       <Header>
             <SearchBarContainer>
                 <SearchIcon />

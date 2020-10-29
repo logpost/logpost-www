@@ -22,15 +22,18 @@ const ShipperProfilePage = () => {
         items={[
           {
             name: "รอผู้รับงาน",
+            status: "waiting",
             icon: <JobIcon />,
             noOfJobs: 2,
           },
           {
             name: "กำลังขนส่ง",
+            status: "shipping",
             icon: <TruckIcon />,
           },
           {
             name: "ขนส่งเสร็จสิ้น",
+            status: "finished",
             icon: <SuccessIcon />,
           },
         ]}
