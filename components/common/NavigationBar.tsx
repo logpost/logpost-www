@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { PersonIcon, HomeIcon, JobIcon } from './Icon'
+import { PersonIcon, HomeIcon, JobIcon } from './Icons'
 
 const NavBarContainer = styled.div`
 	display: flex;

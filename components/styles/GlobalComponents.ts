@@ -82,10 +82,32 @@ export const Form = styled.form`
 export const FormActions = styled.span`
   display: flex;
   justify-content: space-between;
+  width: 100%;
 
   ${SecondaryButton} {
     border: solid 1px hsl(0, 0%, 66%);
     color: hsl(0, 0%, 66%);
     margin-top: 3rem;
+  }
+`
+
+export const DetailRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-flow: wrap;
+`
+
+export const Detail = styled.div`
+  display: flex;
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: hsl(0, 0%, 51%);
+
+  span {
+    margin-left: 1.1rem;
+    
+    &:first-child {
+      color: hsl(212, 28%, 28%);
+    }
   }
 `

@@ -4,16 +4,18 @@ import {
   JobIcon,
   SuccessIcon,
   TruckIcon,
-} from "../../../components/common/Icon"
+} from "../../../components/common/Icons"
 import NavigationBar from "../../../components/common/NavigationBar"
-import ProfileHeader from "../../../components/common/ProfileHeader"
+import Header from "../../../components/common/Header"
 import ProfileStatus from "../../../components/common/ProfileStatus"
 
 const ShipperProfilePage = () => {
   return (
     <div>
       <NavigationBar />
-      <ProfileHeader headerTitle="ล็อกโพสต์ จำกัด" />
+      <Header enabledSetting={true}>
+        ล็อกโพสต์ จำกัด
+      </Header>
       <ProfileStatus
         title="รายการงาน"
         buttonText="รายการทั้งหมด"

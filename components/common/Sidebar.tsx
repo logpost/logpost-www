@@ -5,16 +5,12 @@ import {
   HeaderContainer,
   SecondaryButton,
 } from "../styles/GlobalComponents"
-import { CancelIcon } from "./Icon"
+import { CancelIcon } from "./Icons"
 import { useRouter } from 'next/router'
+import { ToggleComponentInterface } from '../../entities/interface/common'
 
 interface SidebarContainerProps {
   toggle: boolean
-}
-
-interface SidebarProps {
-	toggle: boolean 
-	setToggle: (toggle: boolean) => void
 }
 
 const SidebarContainer = styled.div<SidebarContainerProps>`
@@ -62,7 +58,7 @@ const SecondaryButtonCustom = styled(SecondaryButton)`
   bottom: 1.8rem;
 `
 
-const Sidebar = (props: SidebarProps) => {
+const Sidebar = (props: ToggleComponentInterface) => {
   const router = useRouter()
 
   return (

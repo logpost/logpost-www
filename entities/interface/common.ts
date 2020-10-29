@@ -9,6 +9,11 @@ export interface InputComponentInterface {
   type?: string
 }
 
+export interface JobDetailsInterface {
+  role: string
+  status: number
+}
+
 export interface ProfileInterface {
   account_type: string
   username: string
@@ -31,4 +36,9 @@ export interface ProfileJobStatusInterface {
     icon: JSX.Element
     noOfJobs?: number
   }[]
+}
+
+export interface ToggleComponentInterface {
+	toggle: boolean 
+	setToggle: (toggle: boolean) => void
 }

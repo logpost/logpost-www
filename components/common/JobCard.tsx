@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { PrimaryButton } from "../styles/GlobalComponents"
+import { DetailRow, PrimaryButton } from "../styles/GlobalComponents"
 import {
   DownArrowLine,
   PersonIcon,
@@ -8,7 +8,7 @@ import {
   RightArrowLine,
   TruckIcon,
   UpArrowLine,
-} from "./Icon"
+} from "./Icons"
 
 const CardContainer = styled.div`
   display: flex;
@@ -52,12 +52,6 @@ const PrimaryButtonCustom = styled(PrimaryButton)`
   font-size: 1.2rem;
   padding: 0.4rem 1.2rem;
   align-self: flex-end;
-`
-
-const DetailRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-flow: wrap;
 `
 
 const DetailColumn = styled.div`

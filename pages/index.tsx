@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
-import { LogpostIcon } from '../components/common/Icon'
+import { LogpostIcon } from '../components/common/Icons'
 import { PrimaryButton, TextButton, Background } from '../components/styles/GlobalComponents'
 
 const LogoContainer = styled.div`

@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { RightArrow } from "./Icon"
+import { RightArrow } from "./Icons"
 import { ProfileJobStatusInterface } from "../../entities/interface/common"
 
 const StatusContainer = styled.div`

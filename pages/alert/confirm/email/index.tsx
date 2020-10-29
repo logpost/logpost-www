@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { EmailConfirmation } from "../../../../components/common/Icon"
+import { EmailConfirmation } from "../../../../components/common/Icons"
 import { useRouter } from "next/router"
 import { SecondaryButton } from "../../../../components/styles/GlobalComponents"
 
