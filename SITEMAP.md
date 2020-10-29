@@ -7,6 +7,7 @@ login
 
 alert
 - confirm/email
+- success
 
 account 
 - setting/profile

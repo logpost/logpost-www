@@ -66,7 +66,7 @@ const Home = () => {
       <SignUpContainer>
         <PrimaryButtonCustom onClick={(e) => handleClick(e, "shipper")}>ลงทะเบียนผู้ส่ง</PrimaryButtonCustom>
         <PrimaryButtonCustom onClick={(e) => handleClick(e, "carrier")}>ลงทะเบียนขนส่ง</PrimaryButtonCustom>
-        <TextButtonCustom>เข้าสู่ระบบ</TextButtonCustom>
+        <TextButtonCustom onClick={() => router.push("/login")}>เข้าสู่ระบบ</TextButtonCustom>
       </SignUpContainer>
     </Background>
   )
