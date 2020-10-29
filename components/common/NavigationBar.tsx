@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useRouter } from 'next/router'
 import { PersonIcon, HomeIcon, JobIcon } from './Icons'
 
 const NavBarContainer = styled.div`
@@ -23,6 +24,7 @@ const NavBarItem = styled.button`
   color: hsl(212, 28%, 28%);
 	font-weight: 600;
 	font-size: 1rem;
+	width: 7rem;
 	${props => props.value && 
 	`
 		background-color: hsl(212, 29%, 90%);
@@ -38,17 +40,22 @@ const NavBarItem = styled.button`
 `
 
 const NavigationBar = () => {
+	const router = useRouter()
+	const currentPath = router.asPath
+
+	console.log(currentPath)
+
 	return (
 		<NavBarContainer>
-			<NavBarItem value="true">
+			<NavBarItem onClick={() => router.push(`/`)}>
 				<HomeIcon />
-				งานของฉัน
+				หน้าหลัก
 			</NavBarItem>
-			<NavBarItem>
+			<NavBarItem onClick={() => router.push(`/jobs`)} value={currentPath === `/jobs` && "true"}>
 				<JobIcon />
 				ค้นหางาน
 			</NavBarItem>
-			<NavBarItem>
+			<NavBarItem onClick={() => router.push(`/shipper/profile`)} value={currentPath === `/shipper/profile` && "true"}>
 				<PersonIcon />
 				บัญชีของฉัน
 			</NavBarItem>

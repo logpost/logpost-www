@@ -111,3 +111,28 @@ export const Detail = styled.div`
     }
   }
 `
+
+export const JobTitle = styled.span`
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+  padding: 0.2rem 0;
+
+  svg {
+    margin: 0 1.4rem;
+
+    path {
+      fill: white;
+    }
+  }
+`
+
+export const CarrierDetailsContainer = styled.div`
+  margin-top: 2rem;
+  padding: 0.8rem 1.6rem;
+  background-color: hsl(211, 28%, 94%);
+
+  > div:not(:first-child) {
+    margin-top: 0.8rem;
+  }
+`

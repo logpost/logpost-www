@@ -8,7 +8,12 @@ import {
   RightArrowLine,
   TruckIcon,
   UpArrowLine,
+  NoteIcon
 } from "./Icons"
+
+interface JobCardInterface {
+  origin: string
+}
 
 const CardContainer = styled.div`
   display: flex;
@@ -77,6 +82,10 @@ const Detail = styled.div`
     path {
       stroke: hsl(16, 56%, 51%);
 
+      &#note {
+        stroke: none;
+      }
+
       &#person {
         stroke-width: 0.2rem;
       }
@@ -88,7 +97,8 @@ const Detail = styled.div`
   }
 `
 
-const JobCard = () => {
+const JobCard = (props: JobCardInterface) => {
+  const { origin } = props
 
   return (
     <CardContainer>
@@ -120,7 +130,11 @@ const JobCard = () => {
             </Detail>
           </DetailRow>
           <Detail>
-            <PersonIcon />
+          {
+            origin === "jobs-page" ?
+              <NoteIcon />
+              : <PersonIcon />
+          }
             นายคนขับ ขนส่ง
           </Detail>
         </DetailColumn>

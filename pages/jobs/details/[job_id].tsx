@@ -12,6 +12,10 @@ import {
   DetailRow,
   Detail,
   SecondaryButton,
+  PrimaryButton,
+  JobTitle,
+  CarrierDetailsContainer,
+  FormActions
 } from "../../../components/styles/GlobalComponents"
 import NavigationBar from "../../../components/common/NavigationBar"
 import DetailSection from "../../../components/common/DetailSection"
@@ -84,9 +88,9 @@ const JOB_MOCK_DETAILS = {
 
 const PAGE_TEST = [
   {
-    user_id: "01",
-    role: "shipper",
-    status: 100,
+    user_id: "02",
+    role: "carrier",
+    status: 200,
   },
 ]
 
@@ -103,21 +107,6 @@ const PageContainer = styled.div<{ bottomSpace: boolean }>`
   }
 `
 
-const JobTitle = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: 2rem;
-  padding: 0.2rem 0;
-
-  svg {
-    margin: 0 1.4rem;
-
-    path {
-      fill: white;
-    }
-  }
-`
-
 const JobMap = styled.div`
   background: url(/images/job-map.png) no-repeat;
   height: 19rem;
@@ -125,6 +114,33 @@ const JobMap = styled.div`
 
 const JobDetailsContainer = styled.div`
   margin: 1.8rem 2rem;
+`
+
+const ModalContent = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	white-space: nowrap;
+
+	> *:not(:last-child) {
+		margin-bottom: 1.6rem;
+	}
+
+	span:not(:last-child) {
+		line-height: 3.24rem;
+		padding: 0 1.2rem;
+	}
+
+  ${FormActions} {
+    ${SecondaryButton}, ${PrimaryButton}  {
+      font-size: 1.6rem;
+      box-shadow: none;
+      margin-top: 0;
+      height: fit-content;
+      font-weight: 500;
+    }
+  }
 `
 
 const HorizontalLine = styled.div`
@@ -163,12 +179,12 @@ const Price = styled.div`
 const SecondaryButtonCustom = styled(SecondaryButton)`
   padding: 0.6rem 0;
   width: 38%;
-  border-radius: 6px;
+  border-radius: 0.6rem;
   font-weight: 600;
   height: fit-content;
 `
 
-const PrimaryButton = styled(SecondaryButtonCustom)`
+const PrimaryButtonCustom = styled(SecondaryButtonCustom)`
   background-color: hsl(212, 28%, 28%);
   color: white;
   width: 51%;
@@ -213,16 +229,6 @@ const PriceItem = styled.div`
     span {
       color: hsl(0, 0%, 51%);
     }
-  }
-`
-
-const CarrierDetailsContainer = styled.div`
-  margin-top: 2rem;
-  padding: 0.8rem 1.6rem;
-  background-color: hsl(211, 28%, 94%);
-
-  > div:not(:first-child) {
-    margin-top: 0.8rem;
   }
 `
 
@@ -407,21 +413,31 @@ const JobDetailPage = (props: JobDetailsInterface) => {
         )}
         {isCarrierCanEditDetails && (
           <>
-            <Modal toggle={toggleModal} setToggle={setToggleModal} />
+            <Modal toggle={toggleModal} setToggle={setToggleModal}>
+              <ModalContent>
+                <AlertIcon />
+                <span>เมื่อยืนยันเริ่มงานแล้วจะ<b>ไม่สามารถ</b><br/>- แก้ไขพนักงานขับรถ<br/>- ยกเลิกงาน<br/></span>
+                <b>ยืนยันเริ่มงานหรือไม่ ?</b>
+                <FormActions>
+                  <SecondaryButton onClick={() => setToggleModal(false)}>ย้อนกลับ</SecondaryButton>
+                  <PrimaryButton onClick={() => setToggleModal(false)}>ยืนยันเริ่มงาน</PrimaryButton>
+                </FormActions>
+              </ModalContent>
+            </Modal>
             <ButtonContainer>
               <SecondaryButtonCustom>ยกเลิก</SecondaryButtonCustom>
               <SecondaryButtonCustom>แก้ไข</SecondaryButtonCustom>
-              <PrimaryButton onClick={() => setToggleModal(true)}>
+              <PrimaryButtonCustom onClick={() => setToggleModal(true)}>
                 เริ่มงาน
-              </PrimaryButton>
+              </PrimaryButtonCustom>
             </ButtonContainer>
           </>
         )}
         {isCarrierCanGetJob && (
           <ButtonContainer>
-            <PrimaryButton onClick={() => setToggleModal(true)}>
+            <PrimaryButtonCustom onClick={() => setToggleModal(true)}>
               รับงาน
-            </PrimaryButton>
+            </PrimaryButtonCustom>
           </ButtonContainer>
         )}
       </JobDetailsContainer>

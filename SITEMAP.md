@@ -30,3 +30,4 @@ carrier
 
 jobs
 - jobs/detail/:job_id
+- jobs/get/:job_id

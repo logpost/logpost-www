@@ -38,7 +38,7 @@ button {
   padding: 0;
 }
 
-textarea {
+input, textarea {
   font-family: -apple-system, "Bai Jamjuree";
 }
 
