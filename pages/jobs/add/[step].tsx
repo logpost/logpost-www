@@ -10,21 +10,31 @@ const AddJobSwitcherPage = () => {
     const router = useRouter()
     const { step } = router.query
     const [jobDetails, setJobDetails] = useState({
-        pickup_location: "",
-        dropoff_location: "",
-        pickup_date: "",
-        dropoff_date: "",
-        product_type: "",
-        weight: "",
-        waiting_time: "",
-        offer_price: "",
-        description: "",
-        truck: {
-            wheel: "",
-            options: "",
-            age: "",
-            driver_license_type: "",
+        pickup_location: "กรุงเทพ",
+        dropoff_location: "ชลบุรี",
+        pickup_date: "2020-10-29T22:35:21.701Z",
+        dropoff_date: "2020-10-29T22:35:21.701Z",
+        weight: 1.2,
+        carrier_specification: { 
+            truck: {
+                age: 5,
+                type: {
+                    wheel: "4",
+                    options: "ตู้ทึบ"
+                }
+            },
+            driver: {
+                driver_license_type: "12345555"
+            }
         },
+        description: "ไม่มี",
+      product_type: "ไม้",
+        offer_price: 8000,
+        auto_price: 4000,
+        status: 100,
+        distance: 250,
+        permission: "pubilc",
+        waiting_time: 5
     })
 
     return (

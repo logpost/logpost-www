@@ -8,6 +8,8 @@ import {
 import { CancelIcon } from "./Icons"
 import { useRouter } from 'next/router'
 import { ToggleComponentInterface } from '../../entities/interface/common'
+import appStore from '../../store/AppStore'
+import { view } from '@risingstack/react-easy-state'
 
 interface SidebarContainerProps {
   toggle: boolean
@@ -60,6 +62,7 @@ const SecondaryButtonCustom = styled(SecondaryButton)`
 
 const Sidebar = (props: ToggleComponentInterface) => {
   const router = useRouter()
+  const { logout }  = appStore
 
   return (
 		<SidebarContainer toggle={props.toggle}>
@@ -74,10 +77,10 @@ const Sidebar = (props: ToggleComponentInterface) => {
         <SidebarItem onClick={() => router.push("/setting/profile")}>ข้อมูลส่วนตัว</SidebarItem>
         <SidebarItem onClick={() => router.push("/setting/reset/password")}>แก้ไขรหัสผ่าน</SidebarItem>
         <SidebarItem onClick={() => router.push("/setting/reset/email")}>แก้ไขอีเมล</SidebarItem>
-        <SecondaryButtonCustom>ออกจากระบบ</SecondaryButtonCustom>
+        <SecondaryButtonCustom onClick={logout}>ออกจากระบบ</SecondaryButtonCustom>
       </SidebarContent>
 		</SidebarContainer>
   )
 }
 
-export default Sidebar
+export default view(Sidebar)

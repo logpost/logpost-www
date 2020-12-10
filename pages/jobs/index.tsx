@@ -1,10 +1,12 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import styled from "styled-components"
 import JobCard from "../../components/common/JobCard"
 import { FilterIcon, PlusIcon, SearchIcon } from "../../components/common/Icons"
 import { PrimaryButton } from "../../components/styles/GlobalComponents"
 import NavigationBar from "../../components/common/NavigationBar"
+import appStore from "../../store/AppStore"
+import { view } from '@risingstack/react-easy-state'
 
 const JobsPageContainer = styled.div`
 
@@ -77,6 +79,11 @@ const AddJob = styled.button`
 
 const JobsPage = () => {
   const router = useRouter()
+  const { getAllJob, jobs } = appStore
+
+  useEffect(() => {
+    getAllJob()
+  },[])
 
   return (
     <JobsPageContainer>
@@ -90,12 +97,16 @@ const JobsPage = () => {
             <PrimaryButton><FilterIcon />ตัวกรอง</PrimaryButton>
       </Header>
       <div>
-        <JobCard origin="jobs-page" />
-        <JobCard origin="jobs-page" />
-        <JobCard origin="jobs-page" />
+      {
+        jobs.map((job, index) => {
+          return (
+            <JobCard key={index} origin="jobs-page" details={job} />
+          )
+        })
+      }
       </div>
     </JobsPageContainer>
   )
 }
 
-export default JobsPage
+export default view(JobsPage)

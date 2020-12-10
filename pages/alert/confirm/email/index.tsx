@@ -1,4 +1,5 @@
-import React from "react"
+import React, { useEffect } from "react"
+// import axios from 'axios'
 import styled from "styled-components"
 import { EmailConfirmation } from "../../../../components/common/Icons"
 import { useRouter } from "next/router"
@@ -40,6 +41,9 @@ const EmailConfirmationContainer = styled.div`
 
 const EmailConfirmationPage = () => {
   const router = useRouter()
+  // useEffect(() => {
+  //   axios.post(`http://localhost:5000/account/email/confirm/consume?token_email=${}`)
+  // })
   return (
     <EmailConfirmationContainer>
       <EmailConfirmation />

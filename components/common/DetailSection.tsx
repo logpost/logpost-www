@@ -96,14 +96,16 @@ const DetailSection = (props: DetailInterface) => {
               ขึ้นสินค้า <UpArrowLine />
             </span>
             <span>{details.pickup_location}</span>
-            <span>{details.pickup_date}</span>
+            {/* <span>{details.pickup_date}</span> */}
+            <span>30 ต.ค. 63 09:00 น.</span>
           </PickUpDeliverContainer>
           <PickUpDeliverContainer>
             <span>
               ลงสินค้า <DownArrowLine />
             </span>
             <span>{details.dropoff_location}</span>
-            <span>{details.dropoff_date}</span>
+            {/* <span>{details.dropoff_date}</span> */}
+            <span>31 ต.ค. 63 10:00 น.</span>
           </PickUpDeliverContainer>
         </DetailRow>
         <DetailRow>
@@ -127,14 +129,14 @@ const DetailSection = (props: DetailInterface) => {
       <>
         <DetailRow>
           <Detail>
-            ประเภทรถ <span>รถ {details.truck.wheel} ล้อ {details.truck.options}</span>
+            ประเภทรถ <span>รถ {details.carrier_specification.truck.type.wheel} ล้อ {details.carrier_specification.truck.type.option}</span>
           </Detail>
           <Detail>
-            อายุไม่เกิน <span>{details.truck.age}</span> <span>ปี</span>
+            อายุไม่เกิน <span>{details.carrier_specification.truck.age}</span> <span>ปี</span>
           </Detail>
         </DetailRow>
         <Detail>
-          พนักงานขับรถใบขับขี่ <span>{details.truck.driver_license_type}</span>
+          พนักงานขับรถใบขับขี่ <span>{details.carrier_specification.driver.driver_license_type}</span>
         </Detail>
       </>
     </DetailSectionContainer>

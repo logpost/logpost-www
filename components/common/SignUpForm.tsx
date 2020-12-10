@@ -3,6 +3,9 @@ import styled from 'styled-components'
 import { SignUpFormInterface } from '../../entities/interface/common'
 import InputComponent from './Input'
 import { PrimaryButton, Title, Form } from '../styles/GlobalComponents';
+import appStore from '../../store/AppStore'
+import { useRouter } from 'next/router' 
+import { view } from '@risingstack/react-easy-state'
 
 const RadioInputContainer = styled.div`
   display: flex;
@@ -34,7 +37,7 @@ const RadioInput = styled.button`
 `
 
 const SignUpForm = (props:SignUpFormInterface) => {
-  const { role, submitForm } = props
+  const { role } = props
   const [profile, setProfile] = useState({
     account_type: "personal",
     username: "",
@@ -45,14 +48,26 @@ const SignUpForm = (props:SignUpFormInterface) => {
     email: ""
   })
 
+  const { signup }  = appStore
+  const router = useRouter()
+
   const handleInputOnChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setProfile({...profile, [e.target.name]: value})
   }
 
+  const handleSignup = () => { 
+    signup(role, profile)
+    router.push({
+      pathname: '/alert/confirm/email',
+      query: { email: profile.email },
+    })
+  }
+
+
   return (
     <Form>
-      <Title>ลงทะเบียน{role}</Title>
+      <Title>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง":"ขนส่ง"}</Title>
       <InputComponent labelTH="ประเภทผู้ใช้" labelEN="Account Type" type="other">
         <RadioInputContainer>
           <RadioInput 
@@ -113,7 +128,7 @@ const SignUpForm = (props:SignUpFormInterface) => {
         labelTH="อีเมล" 
         labelEN="E-mail"
         handleOnChange={handleInputOnChange} />
-      <PrimaryButton type="button" onClick={() => submitForm(profile)}>ลงทะเบียน{role}</PrimaryButton>
+      <PrimaryButton type="button" onClick={handleSignup/* () => submitForm(profile) */}>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง":"ขนส่ง"}</PrimaryButton>
     </Form>
   )
 }

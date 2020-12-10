@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
 import Header from "../../../components/common/Header"
@@ -20,6 +20,8 @@ import {
 import NavigationBar from "../../../components/common/NavigationBar"
 import DetailSection from "../../../components/common/DetailSection"
 import Modal from "../../../components/common/Modal"
+import appStore from "../../../store/AppStore"
+import { view } from "@risingstack/react-easy-state"
 
 interface JobDetailsInterface {
   role: string
@@ -70,7 +72,7 @@ const STATUS_CODE = {
 
 const JOB_MOCK_DETAILS = {
   shipper_id: "01",
-  carrier_id: "02",
+  carrier_id: "",
   driver_name: "",
   license_number: "",
   pickup_location: "กรุงเทพ",
@@ -81,11 +83,17 @@ const JOB_MOCK_DETAILS = {
   product_type: "ไม้อัด",
   description: "งานด่วน ไม่ต้องรอขึ้นของ",
   waiting_time: 0,
-  truck: {
-    wheel: 6,
-    options: "พื้นเรียบ",
-    age: 5,
-    driver_license_type: "ท.2",
+  carrier_specification: { 
+    truck: {
+      age: 5,
+      type: {
+        wheel: 6,
+        options: "ตู้ทึบ"
+      }
+    },
+    driver: {
+      driver_license_type: "12345555",
+    }
   },
   offer_price: 8000,
   auto_price: 4800,
@@ -93,9 +101,9 @@ const JOB_MOCK_DETAILS = {
 
 const PAGE_TEST = [
   {
-    user_id: "02",
+    user_id: "00",
     role: "carrier",
-    status: 200,
+    status: 100,
   },
 ]
 
@@ -291,6 +299,7 @@ const JobDetailPage = (props: JobDetailsInterface) => {
   const { job_id } = router.query
   const [isPositive, setIsPositive] = useState(true)
   const [toggleModal, setToggleModal] = useState(false)
+  
 
   const isJobHasCarrier = status > 100
   const isJobStarted = status >= 300
@@ -441,7 +450,7 @@ const JobDetailPage = (props: JobDetailsInterface) => {
         )}
         {isCarrierCanGetJob && (
           <ButtonContainer>
-            <PrimaryButtonCustom onClick={() => setToggleModal(true)}>
+            <PrimaryButtonCustom onClick={() => router.push(`/jobs/get/${job_id}`)}>
               รับงาน
             </PrimaryButtonCustom>
           </ButtonContainer>
@@ -451,4 +460,4 @@ const JobDetailPage = (props: JobDetailsInterface) => {
   )
 }
 
-export default JobDetailPage
+export default view(JobDetailPage)

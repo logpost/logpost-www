@@ -11,10 +11,11 @@ import {
   UpArrowLine,
   NoteIcon
 } from "./Icons"
+import { JobDetailsInterface } from "../../entities/interface/common"
 
 interface JobCardInterface {
   origin: string
-  job_id: string
+  details: JobDetailsInterface
 }
 
 const CardContainer = styled.div`
@@ -100,15 +101,15 @@ const Detail = styled.div`
 `
 
 const JobCard = (props: JobCardInterface) => {
-  const { origin, job_id } = props
+  const { origin, details } = props
   const router = useRouter()
 
   return (
     <CardContainer>
       <Locations>
-        กรุงเทพ
+        {details.pickup_location}
         <RightArrowLine />
-        ชลบุรี
+        {details.dropoff_location}
       </Locations>
       <DetailRow>
         <DateAndTime>
@@ -125,25 +126,25 @@ const JobCard = (props: JobCardInterface) => {
           <DetailRow>
             <Detail>
               <TruckIcon />
-              รถ 6 ล้อ
+              รถ {details.carrier_specification.truck.type.wheel} ล้อ
             </Detail>
             <Detail>
               <ProductIcon />
-              ไม้อัด 2 ตัน
+              {details.product_type} {details.weight} ตัน
             </Detail>
           </DetailRow>
           <Detail>
           {
             origin === "jobs-page" ?
-              <NoteIcon />
+              <><NoteIcon />{details.description}</>
               : <PersonIcon />
           }
-            นายคนขับ ขนส่ง
+            {/* นายคนขับ ขนส่ง */}
           </Detail>
         </DetailColumn>
         <DetailColumn>
-          <span>8,000 บาท</span>
-          <PrimaryButtonCustom onClick={() => router.push(`/jobs/details/${job_id}`)}>รายละเอียด</PrimaryButtonCustom>
+          <span>{details.offer_price} บาท</span>
+          <PrimaryButtonCustom onClick={() => router.push(`/jobs/details/${details._id}`)}>รายละเอียด</PrimaryButtonCustom>
         </DetailColumn>
       </DetailRow>
     </CardContainer>

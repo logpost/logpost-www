@@ -2,6 +2,8 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import InputComponent from "../../components/common/Input"
 import { useRouter } from "next/router"
+import appStore from '../../store/AppStore'
+import { view } from '@risingstack/react-easy-state'
 import {
   Background,
   PrimaryButton,
@@ -94,10 +96,17 @@ const LoginPage = () => {
     username: "",
     password: "",
   })
+  
+  const { login } = appStore
 
   const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setAuth({ ...auth, [e.target.name]: value })
+  }
+
+  const handleLogin = () => {
+    login(auth)
+    router.push('/jobs')
   }
 
   return (
@@ -143,7 +152,7 @@ const LoginPage = () => {
             value={auth.password}
             handleOnChange={handleInputOnChange}
           />
-          <PrimaryButtonCustom onClick={() => router.push('/jobs')}>เข้าสู่ระบบ</PrimaryButtonCustom>
+          <PrimaryButtonCustom onClick={handleLogin}>เข้าสู่ระบบ</PrimaryButtonCustom>
           <SignUpContainer>
             ยังไม่ได้ลงทะเบียน?
             <TextButton onClick={() => router.push(`/signup/${auth.role}`)}>
@@ -156,4 +165,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default view(LoginPage)

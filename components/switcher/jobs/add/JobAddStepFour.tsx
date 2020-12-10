@@ -10,6 +10,8 @@ import {
 import { JobDetailsInterface } from "../../../../entities/interface/common"
 import DetailSection from "../../../common/DetailSection"
 import { useRouter } from "next/router"
+import appStore from "../../../../store/AppStore"
+import { view } from '@risingstack/react-easy-state'
 
 const JobMap = styled.div`
   background: url(/images/job-map.png) no-repeat;
@@ -59,8 +61,10 @@ const Price = styled.div`
 const JobAddStepFour = (props: { details: JobDetailsInterface }) => {
   const router = useRouter()
   const { details } = props
+  const { createJob } = appStore
 
-  const createJob = () => {
+  const handleNewJob = () => {
+    createJob(details)
     router.push(`/shipper/profile`)
   }
 
@@ -85,11 +89,11 @@ const JobAddStepFour = (props: { details: JobDetailsInterface }) => {
           <SecondaryButton onClick={() => router.push(`/jobs/add/3`)}>
             ย้อนกลับ
           </SecondaryButton>
-          <PrimaryButton onClick={createJob}>สร้างงาน</PrimaryButton>
+          <PrimaryButton onClick={handleNewJob}>สร้างงาน</PrimaryButton>
         </FormActions>
       </JobDetailsContainer>
     </div>
   )
 }
 
-export default JobAddStepFour
+export default view(JobAddStepFour)

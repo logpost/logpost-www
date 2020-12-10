@@ -54,30 +54,36 @@ const Header = styled.div`
 const JobAddStepThree = (props: JobAddInterface) => {
   const router = useRouter()
   const { details, setDetails } = props
-  const [stepThreeDetails, setStepThreeDetails] = useState(details)
-  const [truckType, setTruckType] = useState(details.truck.wheel)
-  const [addOn, setAddOn] = useState(details.truck.options)
+  const [stepThreeDetails, setStepThreeDetails] = useState({
+    age: details.carrier_specification.truck.age,
+    driver_license_type: details.carrier_specification.driver.driver_license_type
+  })
+  const [truckType, setTruckType] = useState(details.carrier_specification.truck.type.wheel)
+  const [addOn, setAddOn] = useState(details.carrier_specification.truck.type.options)
 
   const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setStepThreeDetails({
       ...stepThreeDetails,
-      truck: {
-        ...stepThreeDetails.truck,
-        [e.target.name]: value,
-      },
+      [e.target.name]: value,
     })
   }
 
   const submitDetails = () => {
     setDetails({
       ...details,
-      truck: {
-        wheel: truckType,
-        options: addOn,
-        age: stepThreeDetails.truck.age,
-        driver_license_type: stepThreeDetails.truck.driver_license_type,
-      },
+      carrier_specification: {
+        truck: {
+          age: stepThreeDetails.age,
+          type: {
+            wheel: truckType,
+            options: addOn,
+          }
+        },
+        driver: {
+          driver_license_type: stepThreeDetails.driver_license_type,
+        }
+      }
     })
     router.push(`/jobs/add/4`, undefined, { shallow: true })
   }
@@ -157,7 +163,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
           labelEN="Maximum Truck Age"
           type="short"
           classifier="ปี"
-          value={`${stepThreeDetails.truck.age}`}
+          value={`${stepThreeDetails.age}`}
           handleOnChange={handleInputOnChange}
         />
         <InputComponent
@@ -165,7 +171,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
           labelTH="ประเภทใบขับขี่"
           labelEN="Driver License Type"
           type="short"
-          value={stepThreeDetails.truck.driver_license_type}
+          value={stepThreeDetails.driver_license_type}
           handleOnChange={handleInputOnChange}
         />
         <FormActions>

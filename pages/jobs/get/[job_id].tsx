@@ -57,7 +57,7 @@ const MOCKUP_TRUCK = [
 
 const JOB_MOCK_DETAILS = {
   shipper_id: "01",
-  carrier_id: "02",
+  carrier_id: "",
   driver_name: "",
   license_number: "",
   pickup_location: "กรุงเทพ",
@@ -65,20 +65,29 @@ const JOB_MOCK_DETAILS = {
   pickup_date: "20 ต.ค. 63 09:00 น.",
   dropoff_date: "20 ต.ค. 63 18:00 น.",
   weight: 2,
-  product: "ไม้อัด",
+  product_type: "ไม้อัด",
   description: "งานด่วน ไม่ต้องรอขึ้นของ",
   waiting_time: 0,
-  truck: {
-    type: "รถ 6 ล้อ พื้นเรียบ",
-    age: 5,
-    driver_license_type: "ท.2",
+  carrier_specification: { 
+    truck: {
+      age: 5,
+      type: {
+        wheel: 6,
+        options: "ตู้ทึบ"
+      }
+    },
+    driver: {
+      driver_license_type: "12345555",
+    }
   },
   offer_price: 8000,
   auto_price: 4800,
 }
 
+
 const JobDetails = styled.div`
   padding: 0 2rem;
+  margin-bottom: 8rem;
 
   ${Detail} {
     span {
