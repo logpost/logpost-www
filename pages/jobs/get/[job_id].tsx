@@ -22,17 +22,17 @@ import NavigationBar from "../../../components/common/NavigationBar"
 const MOCKUP_DRIVER = [
   {
     id: "01",
-    driver_name: "คนขับหนึ่ง ส่งของ",
+    driver_name: "คนขับหนึ่ง ส่งของเยอะแยะเต็มไปหมด",
     driver_license_type: "ท.2",
   },
   {
     id: "02",
-    driver_name: "คนขับหนึ่ง ขนส่ง",
+    driver_name: "คนขับหนึ่ง ขนส่งเยอะแยะเต็มไปหมด",
     driver_license_type: "ท.2",
   },
   {
     id: "03",
-    driver_name: "คนขับสอง ส่งของ",
+    driver_name: "คนขับสอง ส่งของเยอะแยะเต็มไปหมด",
     driver_license_type: "ท.2",
   },
 ]
@@ -90,13 +90,17 @@ const JobDetails = styled.div`
   margin-bottom: 8rem;
 
   ${Detail} {
+    white-space: nowrap;
+
     span {
-      margin-left: 1.1rem;
+      margin-left: 1.2rem;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
 
     button,
     svg {
-      margin-left: 1.1rem;
+      margin-left: 0.6rem;
       color: hsl(16, 56%, 51%);
 
       path {
@@ -262,12 +266,18 @@ const GetJobPage = () => {
       </Header>
       <JobDetails>
         <DetailSection details={JOB_MOCK_DETAILS} />
-        <Warning>เลือกพนักงานและรถบรรทุกที่ใช้รับงาน</Warning>
+        <Warning>เลือกพนักงานและรถที่ใช้รับงาน</Warning>
         <CarrierDetailsContainer>
           <Detail>
             พนักงานขับรถ
             {carrierDetails.driver ? (
-              <span>{MOCKUP_DRIVER[carrierDetails.driver].driver_name}</span>
+              <>
+                <span>{MOCKUP_DRIVER[carrierDetails.driver].driver_name}</span>
+                <button onClick={() => setToggleDriverModal(true)}>
+                  แก้ไข
+                  <RightArrow />
+                </button>
+              </>
             ) : (
               <button onClick={() => setToggleDriverModal(true)}>
                 เลือกพนักงานขับรถ
@@ -276,9 +286,15 @@ const GetJobPage = () => {
             )}
           </Detail>
           <Detail>
-            ทะเบียนรถ
+            รถบรรทุก
             {carrierDetails.truck ? (
-              <span>{MOCKUP_TRUCK[carrierDetails.truck].license_number}</span>
+              <>
+                <span>{MOCKUP_TRUCK[carrierDetails.truck].license_number}</span>
+                <button onClick={() => setToggleTruckModal(true)}>
+                  แก้ไข
+                  <RightArrow />
+                </button>
+              </>
             ) : (
               <button onClick={() => setToggleTruckModal(true)}>
                 เลือกรถบรรทุก
