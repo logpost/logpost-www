@@ -11,8 +11,8 @@ const NavBarContainer = styled.div`
 	bottom: 0;
 	width: 100%;
 	height: 6.2rem;
-  box-shadow: 0 -0.2rem 1.4rem 0 hsla(0, 0%, 0%, 0.1);
-  background-color: white;
+	box-shadow: 0 -0.2rem 1.4rem 0 hsla(0, 0%, 0%, 0.1);
+	background-color: white;
 	z-index: 1;
 `
 
@@ -21,7 +21,7 @@ const NavBarItem = styled.button`
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
-  color: hsl(212, 28%, 28%);
+	color: hsl(212, 28%, 28%);
 	font-weight: 600;
 	font-size: 1rem;
 	width: 7rem;
@@ -36,7 +36,7 @@ const NavBarItem = styled.button`
 	svg {
 		width: 3.8rem;
 		height: 3.8rem;
-  }
+	}
 `
 
 const NavigationBar = () => {

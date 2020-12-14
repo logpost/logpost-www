@@ -1,39 +1,39 @@
 import styled from 'styled-components'
 
 export const Background = styled.div`
-  background-image: url('/images/main-bg.png');
-  background-size: cover;
-  height: 72vh;
+	background-image: url('/images/main-bg.png');
+	background-size: cover;
+	height: 72vh;
 `
 
 export const Title = styled.div`
-  font-size: 4rem;
-  font-weight: 800;
-  color: hsl(212, 28%, 28%);
+	font-size: 4rem;
+	font-weight: 800;
+	color: hsl(212, 28%, 28%);
 `
 
 export const PrimaryButton = styled.button`
-  font-size: 1.8rem;
-  border-radius: 4rem;
-  color: white;
-  padding: 1rem 3rem;
-  width: fit-content;
-  background-color: hsl(16, 56%, 51%);
-  box-shadow: 0.4rem 0.4rem 1.2rem 0 hsla(212, 28%, 28%, 0.24);
+	font-size: 1.8rem;
+	border-radius: 4rem;
+	color: white;
+	padding: 1rem 3rem;
+	width: fit-content;
+	background-color: hsl(16, 56%, 51%);
+	box-shadow: 0.4rem 0.4rem 1.2rem 0 hsla(212, 28%, 28%, 0.24);
 `
 
 export const SecondaryButton = styled.button`
-  border-radius: 4rem;
-  border: solid 0.2rem hsl(212, 28%, 28%);
-  color: hsl(212, 28%, 28%);
-  font-size: 1.8rem;
-  font-weight: 500;
-  padding: 1rem 3rem;
-`;
+	border-radius: 4rem;
+	border: solid 0.2rem hsl(212, 28%, 28%);
+	color: hsl(212, 28%, 28%);
+	font-size: 1.8rem;
+	font-weight: 500;
+	padding: 1rem 3rem;
+`
 
 export const TextButton = styled.button`
-  color: hsl(212, 28%, 28%);
-  text-decoration: underline;
+	color: hsl(212, 28%, 28%);
+	text-decoration: underline;
 `
 
 export const HeaderTitle = styled.div`
@@ -54,85 +54,85 @@ export const HeaderContainer = styled.div`
 `
 
 export const Form = styled.form`
-  margin: 4.2rem;
-  display: flex;
-  flex-direction: column;
+	margin: 4.2rem;
+	display: flex;
+	flex-direction: column;
 
-  > div:not(:first-child) {
-    margin-top: 1.8rem;
-  }
+	> div:not(:first-child) {
+		margin-top: 1.8rem;
+	}
 
-  ${PrimaryButton} {
-    margin-top: 3rem;
-    align-self: center;
-  }
+	${PrimaryButton} {
+		margin-top: 3rem;
+		align-self: center;
+	}
 
-  ${TextButton} {
-    font-size: 1.8rem;
-    color: hsl(16, 56%, 51%);
-    margin-top: 3rem;
-    /* margin-bottom: 3.8rem; */
+	${TextButton} {
+		font-size: 1.8rem;
+		color: hsl(16, 56%, 51%);
+		margin-top: 3rem;
+		/* margin-bottom: 3.8rem; */
 
-    > span {
-      font-size: 1.4rem;
-    }
-  }
+		> span {
+			font-size: 1.4rem;
+		}
+	}
 `
 
 export const FormActions = styled.span`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
 
-  ${SecondaryButton} {
-    border: solid 1px hsl(0, 0%, 66%);
-    color: hsl(0, 0%, 66%);
-    margin-top: 3rem;
-  }
+	${SecondaryButton} {
+		border: solid 1px hsl(0, 0%, 66%);
+		color: hsl(0, 0%, 66%);
+		margin-top: 3rem;
+	}
 `
 
 export const DetailRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-flow: wrap;
+	display: flex;
+	justify-content: space-between;
+	flex-flow: wrap;
 `
 
 export const Detail = styled.div`
-  display: flex;
-  font-size: 1.6rem;
-  font-weight: 500;
-  color: hsl(0, 0%, 51%);
+	display: flex;
+	font-size: 1.6rem;
+	font-weight: 500;
+	color: hsl(0, 0%, 51%);
 
-  span {
-    margin-left: 1.1rem;
-    
-    &:first-child {
-      color: hsl(212, 28%, 28%);
-    }
-  }
+	span {
+		margin-left: 1.1rem;
+		
+		&:first-child {
+			color: hsl(212, 28%, 28%);
+		}
+	}
 `
 
 export const JobTitle = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: 2rem;
-  padding: 0.2rem 0;
+	display: flex;
+	align-items: center;
+	font-size: 2rem;
+	padding: 0.2rem 0;
 
-  svg {
-    margin: 0 1.4rem;
+	svg {
+		margin: 0 1.4rem;
 
-    path {
-      fill: white;
-    }
-  }
+		path {
+			fill: white;
+		}
+	}
 `
 
 export const CarrierDetailsContainer = styled.div`
-  margin-top: 2rem;
-  padding: 0.8rem 1.6rem;
-  background-color: hsl(211, 28%, 94%);
+	margin-top: 2rem;
+	padding: 0.8rem 1.6rem;
+	background-color: hsl(211, 28%, 94%);
 
-  > div:not(:first-child) {
-    margin-top: 0.8rem;
-  }
+	> div:not(:first-child) {
+		margin-top: 0.8rem;
+	}
 `
