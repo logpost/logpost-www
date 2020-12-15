@@ -1,7 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { PersonIcon, HomeIcon, JobIcon } from './Icons'
+import { PersonIcon, JobIcon, SearchIconLarge } from './Icons'
+
+interface NavBarItemInterface {
+	isActive: boolean
+}
 
 const NavBarContainer = styled.div`
 	display: flex;
@@ -16,7 +20,7 @@ const NavBarContainer = styled.div`
 	z-index: 1;
 `
 
-const NavBarItem = styled.button`
+const NavBarItem = styled.button<NavBarItemInterface>`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -25,7 +29,7 @@ const NavBarItem = styled.button`
 	font-weight: 600;
 	font-size: 1rem;
 	width: 7rem;
-	${props => props.value && 
+	${props => props.isActive && 
 	`
 		background-color: hsl(212, 29%, 90%);
 		border-radius: 0.6rem;
@@ -41,19 +45,19 @@ const NavBarItem = styled.button`
 
 const NavigationBar = () => {
 	const router = useRouter()
-	const currentPath = router.asPath
+	const currentPath = router.pathname
 
 	return (
 		<NavBarContainer>
-			<NavBarItem onClick={() => router.push(`/`)}>
-				<HomeIcon />
-				หน้าหลัก
-			</NavBarItem>
-			<NavBarItem onClick={() => router.push(`/jobs`)} value={currentPath === `/jobs` && "true"}>
+			<NavBarItem onClick={() => router.push(`/shipper/jobs?status=all`)} isActive={currentPath === `/shipper/jobs`}>
 				<JobIcon />
+				งานของฉัน
+			</NavBarItem>
+			<NavBarItem onClick={() => router.push(`/jobs`)} isActive={currentPath === `/jobs`}>
+				<SearchIconLarge />
 				ค้นหางาน
 			</NavBarItem>
-			<NavBarItem onClick={() => router.push(`/shipper/profile`)} value={currentPath === `/shipper/profile` && "true"}>
+			<NavBarItem onClick={() => router.push(`/shipper/profile`)} isActive={currentPath === `/shipper/profile`}>
 				<PersonIcon />
 				บัญชีของฉัน
 			</NavBarItem>
