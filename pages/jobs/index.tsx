@@ -51,24 +51,26 @@ const SearchBar = styled.input`
 `
 
 const AddJob = styled.button`
-	height: 7rem;
-	width: 7rem;
+	padding: 1rem 2rem;
 	background-color: hsl(16, 56%, 51%);
 	position: fixed;
 	z-index: 1;
-	right: 2.6rem;
+	left: 50%;
+	transform: translateX(-50%);
 	bottom: 8rem;
-	border-radius: 100%;
-	box-shadow: 4px 4px 12px 0 hsla(212, 28%, 28%, 0.24);
-	font-size: 10rem;
+	border-radius: 4rem;
+	box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.3);
+	font-size: 1.8rem;
+	font-weight: 600;
 	color: white;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 
 	svg {
-		height: 4rem;
-		width: 4rem;
+		margin-right: 1rem;
+		height: 2.2rem;
+		width: 2.2rem;
 
 		path {
 			fill: white;
@@ -89,6 +91,7 @@ const JobsPage = () => {
 			<NavigationBar />
 			<AddJob onClick={() => router.push("/jobs/add/1")}>
 				<PlusIcon />
+				สร้างงานใหม่
 			</AddJob>
 			<Header>
 				<SearchBarContainer>
