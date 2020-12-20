@@ -11,8 +11,8 @@ const AddJobSwitcherPage = () => {
 	const [jobDetails, setJobDetails] = useState({
 		pickup_location: "กรุงเทพ",
 		dropoff_location: "ชลบุรี",
-		pickup_date: "2020-10-29T22:35:21.701Z",
-		dropoff_date: "2020-10-29T22:35:21.701Z",
+		pickup_date: "",
+		dropoff_date: "",
 		weight: 1.2,
 		carrier_specification: { 
 			truck: {

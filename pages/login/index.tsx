@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import InputComponent from "../../components/common/Input"
+import InputComponent from "../../components/common/InputComponent"
 import { useRouter } from "next/router"
 import appStore from '../../store/AppStore'
 import { view } from '@risingstack/react-easy-state'

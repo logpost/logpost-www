@@ -6,7 +6,7 @@ import {
 	SecondaryButton,
 	Title,
 } from "../../../../components/styles/GlobalComponents"
-import InputComponent from "../../../../components/common/Input"
+import InputComponent from "../../../../components/common/InputComponent"
 import { useRouter } from "next/router"
 
 const EmailSettingPage = () => {

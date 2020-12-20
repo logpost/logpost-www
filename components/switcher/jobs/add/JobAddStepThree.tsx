@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import InputComponent from "../../../common/Input"
+import InputComponent from "../../../common/InputComponent"
 import Progress from "../../../common/Progress"
 import {
 	FormActions,

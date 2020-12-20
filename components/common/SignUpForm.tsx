@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SignUpFormInterface } from '../../entities/interface/common'
-import InputComponent from './Input'
+import InputComponent from './InputComponent'
 import { PrimaryButton, Title, Form } from '../styles/GlobalComponents'
 import appStore from '../../store/AppStore'
 import { useRouter } from 'next/router'

@@ -14,3 +14,8 @@ export const filterData = (
 	})
 	setFilteredData(filteredData)
 }
+
+export const pad = (num: string, size: number) => {
+	while (num.length < size) num = "0" + num;
+	return num;
+}

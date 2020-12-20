@@ -46,8 +46,8 @@ export interface ToggleComponentInterface {
 	carrier_id?: string
 	pickup_location?: string
 	dropoff_location?: string
-	pickup_date?: string
-	dropoff_date?: string
+	pickup_date?: Date
+	dropoff_date?: Date
 	product_type?: string
 	weight?: number
 	waiting_time?: number

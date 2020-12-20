@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
-import InputComponent from "../../../components/common/Input"
+import InputComponent from "../../../components/common/InputComponent"
 import {
 	Form,
 	PrimaryButton,

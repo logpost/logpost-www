@@ -2,6 +2,13 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import { RightArrow } from "./Icons"
 import { FormActions, PrimaryButton, SecondaryButton } from '../styles/GlobalComponents'
+import { pad } from "../utilities/helper"
+
+interface TimeInputComponentInterface {
+	date: Date,
+	setDateAndTime: (date: Date) => void,
+	closePicker: () => void
+}
 
 const TimePicker = styled.div`
 	font-family: -apple-system, "Bai Jamjuree";
@@ -56,79 +63,86 @@ const TimeInput = styled.input`
 	}
 `
 
-const TimeInputComponent = ({ date, setDate, closePicker }) => {
+const TimeInputComponent = (props: TimeInputComponentInterface) => {
+	const { date, setDateAndTime, closePicker} = props
+
 	const [time, setTime] = useState({
-		hour: date.getHours(),
-		minute: date.getMinutes()
+		hour: pad(String(date.getHours()), 2),
+		minute: pad(String(date.getMinutes()), 2)
 	})
 
 	const setDefault = () => {
 		let newTime = time
 		newTime = {
-			hour: date.getHours(),
-			minute: date.getMinutes()
+			hour: pad(String(date.getHours()), 2),
+			minute: pad(String(date.getMinutes()), 2)
 		}
 		setTime(newTime)
 	}
 
 	const confirmTime = () => {
 		let newTime = time
-		const modRemaining = time.minute % 15
+		const minute = parseInt(time.minute)
+		const modRemaining = minute % 15
 		if (modRemaining !== 0) {
 			if (modRemaining < 8) {
 				newTime = { ...time,
-					minute: time.minute - modRemaining
+					minute: String(minute - modRemaining)
 				}
 			} else {
 				newTime = { ...time,
-					minute: time.minute + (15 - modRemaining)
+					minute: String(minute + (15 - modRemaining))
 				}
 			}
 		}
 
 		const newDate = date
-		if (time.hour === null) {
-			newTime = { ...newTime, hour: date.getHours() }
+		if (time.hour === "") {
+			newTime = { ...newTime, hour: String(date.getHours()) }
 		}
-		if (time.minute === null) {
-			newTime = { ...newTime, minute: date.getMinutes() }
+		if (time.minute === "") {
+			newTime = { ...newTime, minute: String(date.getMinutes()) }
 		}
-		newDate.setHours(newTime.hour, newTime.minute, 0)
-		setDate(newDate)
+		newDate.setHours(parseInt(newTime.hour), parseInt(newTime.minute), 0)
+		setDateAndTime(newDate)
 		closePicker()
 	}
 
 	useEffect(() => {
-		if (time.minute >= 60) {
-			setTime({
-				hour: time.hour + 1,
-				minute: 0
-			})
+		let newTime = time
+		const minute = parseInt(time.minute)
+		const hour = parseInt(time.hour)
+		if (minute >= 60) {
+			newTime = {
+				hour: pad(String(parseInt(time.hour) + 1), 2),
+				minute: "00"
+			}
 		}
-		else if (time.minute === -15) {
-			setTime({
-				hour: time.hour - 1,
-				minute: 45
-			})
+		else if (minute === -15) {
+			newTime = {
+				hour: pad(String(parseInt(time.hour) - 1), 2),
+				minute: "45"
+			}
 		}
-		if (time.hour >= 24) {
-			setTime({
-				hour: 0,
-				minute: time.minute
-			})
+		if (hour >= 24) {
+			newTime = {
+				hour: "00",
+				minute: pad(time.minute, 2)
+			}
 		} 
-		else if (time.hour === -1) {
-			setTime({
-				hour: 23,
-				minute: time.minute
-			})
+		else if (hour === -1) {
+			newTime = {
+				hour: "23",
+				minute: pad(time.minute, 2)
+			}
 		}
+		setTime(newTime)
 	}, [time])
 
 	useEffect(() => {
 		setTime({
 			...time,
-			minute: date.getMinutes() - (date.getMinutes() % 15)
+			minute: pad(String(date.getMinutes() - (date.getMinutes() % 15)), 2)
 		})
 	}, [])
 
@@ -137,17 +151,16 @@ const TimeInputComponent = ({ date, setDate, closePicker }) => {
 			<TimePicker>
 				<TimeInputContainer>
 					<button 
-						onClick={() => setTime({...time, hour: time.hour + 1})}
+						onClick={() => setTime({...time, hour: pad(String(parseInt(time.hour) + 1), 2)})}
 					>
 						<RightArrow />
 					</button>
 					<TimeInput
-						value={`${time.hour < 10 ? "0" : ""}${time.hour}`}
-						type="number"
+						value={time.hour}
 						onChange={(e) => setTime({...time, hour: e.target.value})}
 					/>
 					<button
-						onClick={() => setTime({...time, hour: time.hour - 1})}
+						onClick={() => setTime({...time, hour: pad(String(parseInt(time.hour) - 1), 2)})}
 					>
 						<RightArrow />
 					</button>
@@ -155,17 +168,17 @@ const TimeInputComponent = ({ date, setDate, closePicker }) => {
 				<span>:</span>
 				<TimeInputContainer>
 					<button
-						onClick={() => setTime({...time, minute: time.minute + 15})}
+						onClick={() => setTime({...time, minute: String(parseInt(time.minute) + 15)})}
 					>
 						<RightArrow />
 					</button>
 					<TimeInput
-						value={`${time.minute < 10 ? "0" : ""}${time.minute}`}
+						value={`${time.minute}`}
 						type="number"
 						onChange={(e) => setTime({...time, minute: e.target.value})}
 					/>
 					<button
-						onClick={() => setTime({...time, minute: time.minute - 15})}
+						onClick={() => setTime({...time, minute: String(parseInt(time.minute) - 15)})}
 					>
 						<RightArrow />
 					</button>
