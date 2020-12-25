@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, forwardRef, useEffect } from 'react'
 import styled from "styled-components"
 import { FormActions, PrimaryButton, SecondaryButton } from '../styles/GlobalComponents'
 import DatePicker, { registerLocale } from 'react-datepicker'
@@ -6,6 +6,7 @@ import th from 'date-fns/locale/th'
 import { RightArrow } from './Icons'
 import TimeInputComponent from './TimeInputComponent'
 import { pad } from '../utilities/helper'
+import DateInputComponent from './DateInputComponent'
 registerLocale('th', th)
 
 interface DateAndTimePickerInterface {
@@ -103,6 +104,11 @@ const DatePickerContainer = styled.div`
 			color: hsl(211, 28%, 28%);
 			line-height: 2.4rem;
 			font-weight: 500;
+
+			&:hover {
+				border-radius: 50%;
+				background-color: hsl(16, 56%, 90%);
+			}
 		}
 
 		.react-datepicker__day--today {
@@ -122,6 +128,13 @@ const DatePickerContainer = styled.div`
 			border-radius: 50%;
     		background-color: hsl(16, 56%, 51%);
 			color: white;
+			outline: none;
+		}
+
+		.react-datepicker__day--keyboard-selected {
+			border-radius: 50%;
+			background-color: hsl(16, 56%, 90%);
+			outline: none;
 		}
 	}
 `
@@ -189,15 +202,21 @@ const DateAndTimePickerContainer = styled.div`
 const DateAndTimePicker = (props:DateAndTimePickerInterface) => {
 	const { dateAndTime, setDateAndTime } = props
 	const timepicker = useRef(null)
-
+	const datepicker = useRef(null)
+	
 	const closePicker = () => {
 		timepicker.current.setOpen(false)
+	}
+
+	const toggleDatePicker = (toggle: boolean) => {
+		datepicker.current.setOpen(toggle)
 	}
 
 	return (
 		<DateAndTimePickerContainer>
 			<DatePickerContainer>
 				<DatePicker
+					ref={datepicker}
 					renderCustomHeader={({
 						date,
 						decreaseMonth,
@@ -215,14 +234,19 @@ const DateAndTimePicker = (props:DateAndTimePickerInterface) => {
 							</button>
 						</CalendarHeader>
 					)}
-					value={`${dateAndTime.getDate()} ${months[dateAndTime.getMonth()]} ${dateAndTime.getFullYear() + 543}`}
+					dateFormat="dd MMMM yyyy"
 					selected={dateAndTime}
 					onChange={(date: Date) => setDateAndTime(date)}
+					customInput={<DateInputComponent
+						value={String(dateAndTime)}
+						toggleCalendar={toggleDatePicker}
+						setDateAndTime={setDateAndTime}
+						time={dateAndTime.getTime()}
+					/>}
 					locale={"th"}
 					minDate={new Date()}
 					showPopperArrow={false}
 					showDisabledMonthNavigation
-					disabledKeyboardNavigation
 				/>
 			</DatePickerContainer>
 			<TimePickerContainer>

@@ -405,7 +405,7 @@ const Success = () => (
 
 const PlusIcon = () => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="22" height="23" viewBox="0 0 22 23" fill="none">
-		<path d="M2 11.5H10.9109M20 11.5H10.9109M10.9109 11.5V3M10.9109 11.5V20" stroke="white" stroke-width="2" stroke-linecap="round" />
+		<path d="M2 11.5H10.9109M20 11.5H10.9109M10.9109 11.5V3M10.9109 11.5V20" stroke="white" strokeWidth="2" strokeLinecap="round" />
 	</svg>
 )
 
