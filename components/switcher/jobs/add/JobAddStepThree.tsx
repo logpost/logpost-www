@@ -27,11 +27,11 @@ const InputContainer = styled.div`
 
 const ButtonItem = styled.button`
 	border-radius: 0.6rem;
-	border: solid
-		${(props) =>
+	box-shadow: 0 0 0 ${(props) =>
 		props.value == props.name
 			? "0.2rem hsl(212, 28%, 28%)"
 			: "0.1rem hsl(0, 0%, 66%)"};
+	outline: none;
 	width: 9.1rem;
 	padding: 1rem 0;
 	font-size: 1.6rem;
