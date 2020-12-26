@@ -23,7 +23,7 @@ const AddJobSwitcherPage = () => {
 				}
 			},
 			driver: {
-				driver_license_type: "12345555"
+				driver_license_type: "ประเภท 1"
 			}
 		},
 		description: "ไม่มี",

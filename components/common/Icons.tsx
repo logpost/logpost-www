@@ -166,13 +166,14 @@ const SuccessIcon = () => (
 	</svg>
 )
 
-const RightArrow = () => (
+const RightArrow = ({className}) => (
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="10"
 		height="10"
 		fill="none"
 		viewBox="0 0 10 10"
+		className={className}
 	>
 		<path
 			fill="#232830"

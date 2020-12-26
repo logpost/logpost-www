@@ -9,6 +9,9 @@ import {
 } from "../../../styles/GlobalComponents"
 import { JobAddInterface } from "../../../../entities/interface/common"
 import { useRouter } from "next/router"
+import SelectComponent from '../../../common/SelectComponent'
+
+const DRIVER_LICENSE_TYPE = ["ประเภท 1", "ประเภท 2 (บ.2 หรือ ท.2)", "ประเภท 3 (บ.3 หรือ ท.3)", "ประเภท 4"]
 
 const InputContainer = styled.div`
 	padding: 1.8rem 2.6rem;
@@ -56,7 +59,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
 	const { details, setDetails } = props
 	const [stepThreeDetails, setStepThreeDetails] = useState({
 		age: details.carrier_specification.truck.age,
-		driver_license_type: details.carrier_specification.driver.driver_license_type
+		driver_license_type: DRIVER_LICENSE_TYPE.indexOf(details.carrier_specification.driver.driver_license_type) + 1 || 1
 	})
 	const [truckType, setTruckType] = useState(details.carrier_specification.truck.type.wheel)
 	const [addOn, setAddOn] = useState(details.carrier_specification.truck.type.options)
@@ -81,7 +84,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
 					}
 				},
 				driver: {
-					driver_license_type: stepThreeDetails.driver_license_type,
+					driver_license_type: DRIVER_LICENSE_TYPE[stepThreeDetails.driver_license_type - 1],
 				}
 			}
 		})
@@ -170,10 +173,14 @@ const JobAddStepThree = (props: JobAddInterface) => {
 					name="driver_license_type"
 					labelTH="ประเภทใบขับขี่"
 					labelEN="Driver License Type"
-					type="short"
-					value={stepThreeDetails.driver_license_type}
-					handleOnChange={handleInputOnChange}
-				/>
+					type="other"
+				>
+					<SelectComponent 
+						menuList={DRIVER_LICENSE_TYPE}
+						value={stepThreeDetails.driver_license_type}
+						setValue={(value: number) => setStepThreeDetails({...stepThreeDetails, driver_license_type: value})}
+					/>
+				</InputComponent>
 				<FormActions>
 					<SecondaryButton onClick={() => router.push(`/jobs/add/2`)}>
 						ย้อนกลับ
