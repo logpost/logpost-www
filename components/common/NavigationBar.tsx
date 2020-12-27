@@ -57,7 +57,7 @@ const NavigationBar = () => {
 				<SearchIconLarge />
 				ค้นหางาน
 			</NavBarItem>
-			<NavBarItem onClick={() => router.push(`/shipper/profile`)} isActive={currentPath === `/shipper/profile`}>
+			<NavBarItem onClick={() => router.push(`/shipper/profile`)} isActive={currentPath === `/shipper/profile` }>
 				<PersonIcon />
 				บัญชีของฉัน
 			</NavBarItem>
