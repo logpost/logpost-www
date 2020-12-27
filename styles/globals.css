@@ -36,10 +36,15 @@ button {
   border: 0;
   font: inherit;
   padding: 0;
+  cursor: pointer;
 }
 
 input, textarea {
   font-family: -apple-system, "Bai Jamjuree";
+}
+
+input[type="radio"] {
+  cursor: pointer;
 }
 
 * {

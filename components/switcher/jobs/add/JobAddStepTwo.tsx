@@ -1,112 +1,112 @@
 import React, { useState } from "react"
 import Progress from "../../../common/Progress"
 import styled from "styled-components"
-import InputComponent from "../../../common/Input"
+import InputComponent from "../../../common/InputComponent"
 import {
-  FormActions,
-  PrimaryButton,
-  SecondaryButton,
+	FormActions,
+	PrimaryButton,
+	SecondaryButton,
 } from "../../../styles/GlobalComponents"
 import { JobAddInterface } from "../../../../entities/interface/common"
 import { useRouter } from "next/router"
 
 const Header = styled.div`
-  background-color: hsl(0, 0%, 98%);
-  padding: 1.4rem 2.4rem;
+	background-color: hsl(0, 0%, 98%);
+	padding: 1.4rem 2.4rem;
 `
 
 const InputContainer = styled.div`
-  padding: 1.8rem 2.6rem;
+	padding: 1.8rem 2.6rem;
 
-  > div:not(:first-child) {
-    margin-top: 2rem;
-  }
+	> div:not(:first-child) {
+		margin-top: 2rem;
+	}
 
-  ${PrimaryButton} {
-    margin-top: 3rem;
-  }
+	${PrimaryButton} {
+		margin-top: 3rem;
+	}
 `
 
 const JobAddStepTwo = (props: JobAddInterface) => {
-  const router = useRouter()
-  const { details, setDetails } = props
-  const [stepTwoDetails, setStepTwoDetails] = useState(details)
-  const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setStepTwoDetails({ ...stepTwoDetails, [e.target.name]: value })
-  }
+	const router = useRouter()
+	const { details, setDetails } = props
+	const [stepTwoDetails, setStepTwoDetails] = useState(details)
+	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value
+		setStepTwoDetails({ ...stepTwoDetails, [e.target.name]: value })
+	}
 
-  const submitDetails = () => {
-    setDetails({
-      ...details,
-      product_type: stepTwoDetails.product_type,
-      weight: stepTwoDetails.weight,
-      waiting_time: stepTwoDetails.waiting_time,
-      offer_price: stepTwoDetails.offer_price,
-      description: stepTwoDetails.description,
-    })
-    router.push(`/jobs/add/3`, undefined, { shallow: true })
-  }
+	const submitDetails = () => {
+		setDetails({
+			...details,
+			product_type: stepTwoDetails.product_type,
+			weight: stepTwoDetails.weight,
+			waiting_time: stepTwoDetails.waiting_time,
+			offer_price: stepTwoDetails.offer_price,
+			description: stepTwoDetails.description,
+		})
+		router.push(`/jobs/add/3`, undefined, { shallow: true })
+	}
 
-  return (
-    <div>
-      <Header>
-        <Progress
-          currentStep="ข้อมูลสินค้าและราคา"
-          nextStep="ข้อมูลรถบรรทุก"
-          percent={2 / 4}
-        />
-      </Header>
-      <InputContainer>
-        <InputComponent
-          name="product_type"
-          labelEN="Product Type"
-          labelTH="ชนิดสินค้า"
-          value={stepTwoDetails.product_type}
-          handleOnChange={handleInputOnChange}
-        />
-        <InputComponent
-            name="weight"
-            labelEN="Product Weight"
-            labelTH="น้ำหนักสินค้า"
-            type="short"
-            description="1 ตัน = 1,000 กิโลกรัม"
-            classifier="ตัน"
-            value={`${stepTwoDetails.weight}`}
-            handleOnChange={handleInputOnChange}
-        />
-        <InputComponent
-          name="waiting_time"
-          labelEN="Waiting Time"
-          type="short"
-          labelTH="เวลารอขึ้น - ลงสินค้า"
-          classifier="ชั่วโมง"
-          value={`${stepTwoDetails.waiting_time}`}
-          handleOnChange={handleInputOnChange}
-        />
-        <InputComponent
-          name="offer_price"
-          labelEN="Offer Price"
-          labelTH="ราคาเสนอ"
-          type="short"
-          classifier="บาท"
-          value={`${stepTwoDetails.offer_price}`}
-          handleOnChange={handleInputOnChange}
-        />
-        <InputComponent
-          name="description"
-          labelEN="Description"
-          labelTH="คำอธิบายเพิ่มเติม"
-          value={stepTwoDetails.description}
-          handleOnChange={handleInputOnChange}
-        />
-        <FormActions>
-          <SecondaryButton onClick={() => router.push(`/jobs/add/1`)}>ย้อนกลับ</SecondaryButton>
-          <PrimaryButton onClick={submitDetails}>ส่วนถัดไป</PrimaryButton>
-        </FormActions>
-      </InputContainer>
-    </div>
-  )
+	return (
+		<div>
+			<Header>
+				<Progress
+					currentStep="ข้อมูลสินค้าและราคา"
+					nextStep="ข้อมูลรถบรรทุก"
+					percent={2 / 4}
+				/>
+			</Header>
+			<InputContainer>
+				<InputComponent
+					name="product_type"
+					labelEN="Product Type"
+					labelTH="ชนิดสินค้า"
+					value={stepTwoDetails.product_type}
+					handleOnChange={handleInputOnChange}
+				/>
+				<InputComponent
+					name="weight"
+					labelEN="Product Weight"
+					labelTH="น้ำหนักสินค้า"
+					type="short"
+					description="1 ตัน = 1,000 กิโลกรัม"
+					classifier="ตัน"
+					value={`${stepTwoDetails.weight}`}
+					handleOnChange={handleInputOnChange}
+				/>
+				<InputComponent
+					name="waiting_time"
+					labelEN="Waiting Time"
+					type="short"
+					labelTH="เวลารอขึ้น - ลงสินค้า"
+					classifier="ชั่วโมง"
+					value={`${stepTwoDetails.waiting_time}`}
+					handleOnChange={handleInputOnChange}
+				/>
+				<InputComponent
+					name="offer_price"
+					labelEN="Offer Price"
+					labelTH="ราคาเสนอ"
+					type="short"
+					classifier="บาท"
+					value={`${stepTwoDetails.offer_price}`}
+					handleOnChange={handleInputOnChange}
+				/>
+				<InputComponent
+					name="description"
+					labelEN="Description"
+					labelTH="คำอธิบายเพิ่มเติม"
+					value={stepTwoDetails.description}
+					handleOnChange={handleInputOnChange}
+				/>
+				<FormActions>
+					<SecondaryButton onClick={() => router.push(`/jobs/add/1`)}>ย้อนกลับ</SecondaryButton>
+					<PrimaryButton onClick={submitDetails}>ส่วนถัดไป</PrimaryButton>
+				</FormActions>
+			</InputContainer>
+		</div>
+	)
 }
 
 export default JobAddStepTwo

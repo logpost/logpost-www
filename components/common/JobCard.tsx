@@ -1,154 +1,180 @@
 import React from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
-import { DetailRow, PrimaryButton } from "../styles/GlobalComponents"
+import { DetailRow, PrimaryButton, SecondaryButton } from "../styles/GlobalComponents"
 import {
-  DownArrowLine,
-  PersonIcon,
-  ProductIcon,
-  RightArrowLine,
-  TruckIcon,
-  UpArrowLine,
-  NoteIcon
+	DownArrowLine,
+	PersonIcon,
+	ProductIcon,
+	RightArrowLine,
+	TruckIcon,
+	UpArrowLine,
+	NoteIcon
 } from "./Icons"
 import { JobDetailsInterface } from "../../entities/interface/common"
 
 interface JobCardInterface {
-  origin: string
-  details: JobDetailsInterface
+	origin: string
+	details: JobDetailsInterface
 }
 
 const CardContainer = styled.div`
-  display: flex;
-  padding: 1.8rem 2rem;
-  flex-direction: column;
-  font-size: 14px;
-  font-weight: 500;
+	display: flex;
+	padding: 1.8rem 2rem;
+	flex-direction: column;
+	font-size: 14px;
+	font-weight: 500;
 
-  &:nth-child(even) {
-    background-color: hsl(220, 27%, 96%);
-  }
+	&:nth-child(even) {
+		background-color: hsl(220, 27%, 96%);
+	}
 
-  > div:not(:last-child) {
-    margin-bottom: 1.2rem;
-  }
+	> div:not(:last-child) {
+		margin-bottom: 1.2rem;
+	}
+
+	${DetailRow} {
+		grid-gap: 1.2rem 0.2rem;
+		margin-bottom: 1.2rem;
+	}
+`
+
+const BottomDetails = styled.div`
+	display: grid;
+	grid-template-columns: 2fr auto;
+
+	${DetailRow} {
+		display: flex;
+		flex-wrap: wrap;
+	}
 `
 
 const Locations = styled.div`
-  display: flex;
-  width: 16.5rem;
-  justify-content: space-between;
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: hsl(217, 16%, 16%);
+	display: flex;
+	width: 16.5rem;
+	justify-content: space-between;
+	font-size: 1.8rem;
+	font-weight: bold;
+	color: hsl(217, 16%, 16%);
 `
 
 const DateAndTime = styled.div`
-  display: flex;
+	display: flex;
+	white-space: nowrap;
 
-  svg {
-    margin-right: 0.6rem;
-  }
+	svg {
+		margin-right: 0.6rem;
+	}
 
-  span {
-    margin: 0 0.8rem;
-  }
+	span {
+		margin: 0 0.8rem;
+	}
 `
 
-const PrimaryButtonCustom = styled(PrimaryButton)`
-  box-shadow: none;
-  font-size: 1.2rem;
-  padding: 0.4rem 1.2rem;
-  align-self: flex-end;
+const SecondaryButtonCustom = styled(SecondaryButton)`
+	box-shadow: none;
+	border-width: 1px;
+	font-size: 1.2rem;
+	padding: 0.4rem 1.2rem;
+	align-self: flex-end;
 `
 
 const DetailColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 
-  span {
-    font-size: 1.8rem;
-    margin-bottom: 0.6rem;
-  }
+	> span {
+		font-size: 1.8rem;
+		margin-bottom: 0.6rem;
+	}
+`
+
+const CardActions = styled(DetailColumn)`
+	justify-content: flex-end;
 `
 
 const Detail = styled.div`
-  display: flex;
-  margin-right: 1.6rem;
+	display: flex;
+	margin-right: 1.6rem;
 
-  svg {
-    width: 2rem;
-    height: 2rem;
-    margin-right: 1rem;
+	span {
+		width: 80%;
+		line-height: 170%;
+	}
 
-    path {
-      stroke: hsl(16, 56%, 51%);
+	svg {
+		width: 20px;
+		height: 20px;
+		margin-right: 1rem;
 
-      &#note {
-        stroke: none;
-      }
+		path {
+			stroke: hsl(16, 56%, 51%);
 
-      &#person {
-        stroke-width: 0.2rem;
-      }
+			&#note {
+				stroke: none;
+			}
 
-      &#truck {
-        stroke-width: 0.3rem;
-      }
-    }
-  }
+			&#person {
+				stroke-width: 0.2rem;
+			}
+
+			&#truck {
+				stroke-width: 0.3rem;
+			}
+		}
+	}
 `
 
 const JobCard = (props: JobCardInterface) => {
-  const { origin, details } = props
-  const router = useRouter()
+	const { origin, details } = props
+	const router = useRouter()
 
-  return (
-    <CardContainer>
-      <Locations>
-        {details.pickup_location}
-        <RightArrowLine />
-        {details.dropoff_location}
-      </Locations>
-      <DetailRow>
-        <DateAndTime>
-          <UpArrowLine />
-          20 ต.ค. 63 <span>|</span> 09:00 น.
-        </DateAndTime>
-        <DateAndTime>
-          <DownArrowLine />
-          20 ต.ค. 63 <span>|</span> 18:00 น.
-        </DateAndTime>
-      </DetailRow>
-      <DetailRow>
-        <DetailColumn>
-          <DetailRow>
-            <Detail>
-              <TruckIcon />
-              รถ {details.carrier_specification.truck.type.wheel} ล้อ
-            </Detail>
-            <Detail>
-              <ProductIcon />
-              {details.product_type} {details.weight} ตัน
-            </Detail>
-          </DetailRow>
-          <Detail>
-          {
-            origin === "jobs-page" ?
-              <><NoteIcon />{details.description}</>
-              : <PersonIcon />
-          }
-            {/* นายคนขับ ขนส่ง */}
-          </Detail>
-        </DetailColumn>
-        <DetailColumn>
-          <span>{details.offer_price} บาท</span>
-          <PrimaryButtonCustom onClick={() => router.push(`/jobs/details/${details._id}`)}>รายละเอียด</PrimaryButtonCustom>
-        </DetailColumn>
-      </DetailRow>
-    </CardContainer>
-  )
+	return (
+		<CardContainer>
+			<Locations>
+				{details.pickup_location}
+				<RightArrowLine />
+				{details.dropoff_location}
+			</Locations>
+			<DetailRow>
+				<DateAndTime>
+					<UpArrowLine />
+					20 ต.ค. 63 <span>|</span> 09:00 น.
+				</DateAndTime>
+				<DateAndTime>
+					<DownArrowLine />
+					20 ต.ค. 63 <span>|</span> 18:00 น.
+				</DateAndTime>
+			</DetailRow>
+			<BottomDetails>
+				<DetailColumn>
+					<DetailRow>
+						<Detail>
+							<TruckIcon />
+							รถ {details.carrier_specification.truck.type.wheel} ล้อ
+						</Detail>
+						<Detail>
+							<ProductIcon />
+							{details.product_type} {details.weight} ตัน
+						</Detail>
+					</DetailRow>
+					<Detail>
+						{
+							origin === "jobs-page" ?
+								<><NoteIcon /><span>{details.description}</span></>
+								: <PersonIcon />
+						}
+						{/* นายคนขับ ขนส่ง */}
+					</Detail>
+				</DetailColumn>
+				<CardActions>
+					<span>{details.offer_price} บาท</span>
+					<SecondaryButtonCustom onClick={() => router.push(`/jobs/details/${details._id}`)}>รายละเอียด</SecondaryButtonCustom>
+				</CardActions>
+			</BottomDetails>
+		</CardContainer>
+	)
 }
 
 export default JobCard

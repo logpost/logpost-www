@@ -1,11 +1,11 @@
 import React from 'react'
 
 const AddTransporterPage = () => {
-    return (
-        <div>
-            
-        </div>
-    )
+	return (
+		<div>
+			
+		</div>
+	)
 }
 
 export default AddTransporterPage

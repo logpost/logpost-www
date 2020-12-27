@@ -1,7 +1,6 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
-
 interface ProgressCircleInterface {
 	percent: number
 }
@@ -26,9 +25,9 @@ const CircularProgress = styled.svg`
 
 	circle {
 		position: absolute;
-    fill: none;
-    stroke-width: 7.6;
-    stroke-dasharray: 340;
+		fill: none;
+		stroke-width: 7.6;
+		stroke-dasharray: 340;
 	}
 `
 const ProgressCircle = styled.circle<ProgressCircleInterface>`
@@ -44,8 +43,8 @@ const BackgroundCircle = styled.circle`
 const StepContainer = styled.div`
 	margin-left: 2rem;
 	font-size: 1.8rem;
-  font-weight: 500;
-  color: hsl(217, 16%, 16%);
+	font-weight: 500;
+	color: hsl(217, 16%, 16%);
 
 	span {
 		margin-left: 0.6rem;
