@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SignUpFormInterface } from '../../entities/interface/common'
 import InputComponent from './InputComponent'
-import { PrimaryButton, Title, Form } from '../styles/GlobalComponents'
+import { PrimaryButton, Title, Form, FormActions, SecondaryButton } from '../styles/GlobalComponents'
 import appStore from '../../store/AppStore'
 import { useRouter } from 'next/router'
 import { view } from '@risingstack/react-easy-state'
@@ -63,7 +63,6 @@ const SignUpForm = (props: SignUpFormInterface) => {
 			query: { email: profile.email },
 		})
 	}
-
 
 	return (
 		<Form>
@@ -128,7 +127,15 @@ const SignUpForm = (props: SignUpFormInterface) => {
 				labelTH="อีเมล"
 				labelEN="E-mail"
 				handleOnChange={handleInputOnChange} />
-			<PrimaryButton type="button" onClick={handleSignup/* () => submitForm(profile) */}>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</PrimaryButton>
+			<FormActions>
+				<SecondaryButton
+					type="button"
+					onClick={() => router.back()}
+				>
+					ยกเลิก
+        		</SecondaryButton>
+				<PrimaryButton type="button" onClick={handleSignup/* () => submitForm(profile) */}>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</PrimaryButton>
+			</FormActions>
 		</Form>
 	)
 }

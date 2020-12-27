@@ -14,8 +14,16 @@ const DetailSectionContainer = styled.div`
 
 		&:not(#space-between) {
 			justify-content: flex-start;
+		}
 
-			${Detail}:first-child {
+		&${Detail} {
+			white-space: nowrap;
+
+			span {
+				white-space: pre-wrap;
+			}
+
+			&:first-child {
 				margin-right: 1.2rem;
 			}
 		}
@@ -49,7 +57,7 @@ const PickUpDeliverContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	border-radius: 0.6rem;
-	border: solid 0.2rem hsl(16, 56%, 51%);
+	border: solid 2px hsl(16, 56%, 51%);
 	color: hsl(16, 56%, 51%);
 	padding: 0.9rem 1.55rem;
 	font-weight: 600;
@@ -127,14 +135,12 @@ const DetailSection = (props: DetailInterface) => {
 				<div>รายละเอียดรถบรรทุก</div> <Line />
 			</SectionHeader>
 			<>
-				<DetailRow>
-					<Detail>
-						ประเภทรถ <span>รถ {details.carrier_specification.truck.type.wheel} ล้อ {details.carrier_specification.truck.type.options}</span>
-					</Detail>
-					<Detail>
-						อายุไม่เกิน <span>{details.carrier_specification.truck.age}</span> <span>ปี</span>
-					</Detail>
-				</DetailRow>
+				<Detail>
+					ประเภทรถ <span>รถ {details.carrier_specification.truck.type.wheel} ล้อ {details.carrier_specification.truck.type.options}</span>
+				</Detail>
+				<Detail>
+					อายุไม่เกิน <span>{details.carrier_specification.truck.age}</span> <span>ปี</span>
+				</Detail>
 				<Detail>
 					พนักงานขับรถใบขับขี่ <span>{details.carrier_specification.driver.driver_license_type}</span>
 				</Detail>

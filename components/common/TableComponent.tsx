@@ -26,11 +26,11 @@ interface CellInterface {
 }
 
 interface TableContainerInterface {
-	height: boolean
+	tableHeight: boolean
 }
 
 const TableContainer = styled.div<TableContainerInterface>`
-    height: ${props => props.height ? "auto" : "30rem"};
+    height: ${props => props.tableHeight ? "auto" : "30rem"};
     width: 100%;
 `
 
@@ -125,7 +125,7 @@ const TableComponent = (props: TableComponentInterface) => {
 
 	return (
 		<>
-			<TableContainer height={numberOfRow < 7}>
+			<TableContainer tableHeight={numberOfRow < 7}>
 				<Table>
 					<tbody>
 						<HeaderRow>

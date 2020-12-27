@@ -36,6 +36,8 @@ const LabelsContainer = styled.div`
 	display: flex;
 	font-weight: 500;
 	align-items: center;
+	white-space: nowrap;
+	flex-wrap: wrap;
 `
 
 const LabelTH = styled.div<Label>`

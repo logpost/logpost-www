@@ -166,23 +166,31 @@ const SuccessIcon = () => (
 	</svg>
 )
 
-const RightArrow = ({className}) => (
-	<svg
-		xmlns="http://www.w3.org/2000/svg"
-		width="10"
-		height="10"
-		fill="none"
-		viewBox="0 0 10 10"
-		className={className}
-	>
-		<path
-			fill="#232830"
-			fillRule="evenodd"
-			d="M2.906 9.133c-.362-.317-.398-.866-.082-1.227L5.366 5 2.824 2.094c-.316-.361-.28-.91.082-1.227.361-.316.91-.28 1.227.082l3.043 3.478c.287.328.287.818 0 1.145L4.133 9.051c-.317.361-.866.398-1.227.082z"
-			clipRule="evenodd"
-		/>
-	</svg>
-)
+interface RightArrowInterface {
+	className?: string
+}
+
+const RightArrow = (props: RightArrowInterface) => {
+	const { className } = props
+
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="10"
+			height="10"
+			fill="none"
+			viewBox="0 0 10 10"
+			className={className}
+		>
+			<path
+				fill="#232830"
+				fillRule="evenodd"
+				d="M2.906 9.133c-.362-.317-.398-.866-.082-1.227L5.366 5 2.824 2.094c-.316-.361-.28-.91.082-1.227.361-.316.91-.28 1.227.082l3.043 3.478c.287.328.287.818 0 1.145L4.133 9.051c-.317.361-.866.398-1.227.082z"
+				clipRule="evenodd"
+			/>
+		</svg>
+	)
+}
 
 const DoubleRightArrow = () => (
 	<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">

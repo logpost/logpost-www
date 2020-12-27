@@ -150,7 +150,6 @@ const JOB_MOCK_DETAILS = {
 const FormActionsCustom = styled(FormActions)`
 	${PrimaryButton}, ${SecondaryButton} {
 		font-size: 1.6rem;
-		margin-top: 0;
 		font-weight: 500;
 		border-radius: 0.6rem;
 	}
@@ -170,6 +169,11 @@ const JobDetails = styled.div`
 
 		span {
 			margin-left: 1.2rem;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+
+		button {
 			text-overflow: ellipsis;
 			overflow: hidden;
 		}

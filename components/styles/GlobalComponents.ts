@@ -16,10 +16,11 @@ export const PrimaryButton = styled.button`
 	font-size: 1.8rem;
 	border-radius: 4rem;
 	color: white;
-	padding: 1rem 3rem;
+	padding: 1rem 2.4rem;
 	width: fit-content;
 	background-color: hsl(16, 56%, 51%);
 	box-shadow: 0.4rem 0.4rem 1.2rem 0 hsla(212, 28%, 28%, 0.24);
+	white-space: nowrap;
 `
 
 export const SecondaryButton = styled.button`
@@ -28,12 +29,14 @@ export const SecondaryButton = styled.button`
 	color: hsl(212, 28%, 28%);
 	font-size: 1.8rem;
 	font-weight: 500;
-	padding: 1rem 3rem;
+	padding: 1rem 2.4rem;
+	white-space: nowrap;
 `
 
 export const TextButton = styled.button`
 	color: hsl(212, 28%, 28%);
 	text-decoration: underline;
+	white-space: nowrap;
 `
 
 export const HeaderTitle = styled.div`
@@ -63,14 +66,12 @@ export const Form = styled.form`
 	}
 
 	${PrimaryButton} {
-		margin-top: 3rem;
 		align-self: center;
 	}
 
 	${TextButton} {
 		font-size: 1.8rem;
 		color: hsl(16, 56%, 51%);
-		margin-top: 3rem;
 		/* margin-bottom: 3.8rem; */
 
 		> span {
@@ -83,18 +84,35 @@ export const FormActions = styled.span`
 	display: flex;
 	justify-content: space-between;
 	width: 100%;
+	margin-top: 3rem;
 
 	${SecondaryButton} {
 		border: solid 1px hsl(0, 0%, 66%);
 		color: hsl(0, 0%, 66%);
-		margin-top: 3rem;
+		margin-right: 1.6rem;
 	}
+
+	@media screen and (max-width: 360px) {
+		flex-direction: column-reverse;
+		justify-content: center;
+		align-items: center;
+
+		button {
+			width: 100%;
+		}
+
+		${SecondaryButton} {
+			margin-top: 1.6rem;
+			margin-right: 0;
+		}
+	}
+
 `
 
 export const DetailRow = styled.div`
-	display: flex;
-	justify-content: space-between;
-	flex-flow: wrap;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(16.2rem, 1fr));
+	grid-gap: 1.6rem;
 `
 
 export const Detail = styled.div`

@@ -15,6 +15,7 @@ const JobsPageContainer = styled.div`
 		padding: 0.45rem 1.2rem;
 		display: flex;
 		height: fit-content;
+		margin-left: 2rem;
 
 		svg {
 			margin-right: 0.6rem;
@@ -44,6 +45,7 @@ const SearchBar = styled.input`
 	font-size: 1.6rem;
 	border: 0;
 	border-radius: 3.3rem;
+	width: 100%;
 
 	::placeholder {
 		color: hsl(0, 0%, 66%);

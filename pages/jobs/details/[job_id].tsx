@@ -161,6 +161,7 @@ const HorizontalLine = styled.div`
 	height: auto;
 	background-color: hsl(212, 28%, 88%);
 	width: 0.2rem;
+	margin: 0 0.4rem;
 `
 
 const JobPrice = styled.div`
