@@ -10,8 +10,7 @@ import {
 	Title,
 	FormActions
 } from "../../../components/styles/GlobalComponents"
-
-const account_type = "personal" // MOCK
+import { ACCOUNT_TYPE } from "../../../data/account.mock"
 
 const ProfileSettingPage = () => {
 	const router = useRouter()
@@ -68,12 +67,12 @@ const ProfileSettingPage = () => {
 				name="name"
 				value={profile.name}
 				labelTH={
-					account_type === "personal" ? "ชื่อจริง - นามสกุล" : "ชื่อบริษัท"
+					ACCOUNT_TYPE === "personal" ? "ชื่อจริง - นามสกุล" : "ชื่อบริษัท"
 				}
-				labelEN={account_type === "personal" ? "Name" : "Company Name"}
+				labelEN={ACCOUNT_TYPE === "personal" ? "Name" : "Company Name"}
 				handleOnChange={handleInputOnChange}
 			/>
-			{account_type === "personal" && (
+			{ACCOUNT_TYPE === "personal" && (
 				<InputComponent
 					name="display_name"
 					value={profile.display_name}

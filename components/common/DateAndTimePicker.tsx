@@ -7,27 +7,13 @@ import { RightArrow } from './Icons'
 import TimeInputComponent from './TimeInputComponent'
 import { pad } from '../utilities/helper'
 import DateInputComponent from './DateInputComponent'
+import { MONTHS } from '../../data/jobs'
 registerLocale('th', th)
 
 interface DateAndTimePickerInterface {
 	dateAndTime: Date
 	setDateAndTime: (date: Date) => void
 }
-
-const months = [
-	"มกราคม",
-	"กุมภาพันธ์",
-	"มีนาคม",
-	"เมษายน",
-	"พฤษภาคม",
-	"มิถุนายน",
-	"กรกฎาคม",
-	"สิงหาคม",
-	"กันยายน",
-	"ตุลาคม",
-	"พฤศจิกายน",
-	"ธันวาคม"
-]
 
 const CalendarHeader = styled.div`
 	font-size: 1.6rem;
@@ -228,7 +214,7 @@ const DateAndTimePicker = (props:DateAndTimePickerInterface) => {
 							<button onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
 								<RightArrow />
 							</button>
-							{`${months[date.getMonth()]} ${date.getFullYear() + 543}`}
+							{`${MONTHS[date.getMonth()]} ${date.getFullYear() + 543}`}
 							<button onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
 								<RightArrow />
 							</button>

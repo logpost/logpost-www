@@ -1,4 +1,5 @@
 import React, { forwardRef, useState, useEffect } from 'react'
+import { MONTHS } from '../../data/jobs'
 import { pad } from '../utilities/helper'
 
 interface DateInputComponentInterface {
@@ -7,21 +8,6 @@ interface DateInputComponentInterface {
 	setDateAndTime: (date: Date) => void,
 	time: number
 }
-
-const months = [
-	"มกราคม",
-	"กุมภาพันธ์",
-	"มีนาคม",
-	"เมษายน",
-	"พฤษภาคม",
-	"มิถุนายน",
-	"กรกฎาคม",
-	"สิงหาคม",
-	"กันยายน",
-	"ตุลาคม",
-	"พฤศจิกายน",
-	"ธันวาคม"
-]
 
 const DateInputComponent = forwardRef((props: DateInputComponentInterface, ref) => {
 	const { value, toggleCalendar, setDateAndTime, time } = props
@@ -47,7 +33,7 @@ const DateInputComponent = forwardRef((props: DateInputComponentInterface, ref) 
 		const isYearNotValid = (isNaN(selectedYear) || (selectedYear <= todayYear))
 		date.setFullYear(isYearNotValid ? todayYear : selectedYear)
 
-		const selectedMonth = months.indexOf(dateList[1])
+		const selectedMonth = MONTHS.indexOf(dateList[1])
 		const todayMonth = today.getMonth()
 		const isMonthNotValid = (selectedMonth === -1 || (selectedMonth <= todayMonth))
 		date.setMonth(isYearNotValid && isMonthNotValid ? todayMonth : selectedMonth)
@@ -58,7 +44,7 @@ const DateInputComponent = forwardRef((props: DateInputComponentInterface, ref) 
 		date.setDate(isYearNotValid && isMonthNotValid && isDateNotValid ? todayDate : selectedDate)
 
 		setDateAndTime(date)
-		setDisplayValue(`${pad(String(date.getDate()), 2)} ${months[date.getMonth()]} ${date.getFullYear() + 543}`)
+		setDisplayValue(`${pad(String(date.getDate()), 2)} ${MONTHS[date.getMonth()]} ${date.getFullYear() + 543}`)
 	}
 
 	const handleEnter = (e: React.KeyboardEvent) => {

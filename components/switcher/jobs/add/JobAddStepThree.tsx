@@ -10,8 +10,7 @@ import {
 import { JobAddInterface } from "../../../../entities/interface/common"
 import { useRouter } from "next/router"
 import SelectComponent from '../../../common/SelectComponent'
-
-const DRIVER_LICENSE_TYPE = ["ประเภท 1", "ประเภท 2 (บ.2 หรือ ท.2)", "ประเภท 3 (บ.3 หรือ ท.3)", "ประเภท 4"]
+import { DRIVER_LICENSE_TYPE } from "../../../../data/carrier"
 
 const InputContainer = styled.div`
 	padding: 1.8rem 2.6rem;

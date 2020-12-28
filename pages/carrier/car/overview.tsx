@@ -9,37 +9,8 @@ import { filterData } from '../../../components/utilities/helper'
 import { useRouter } from "next/router"
 import { AlertIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
 import Modal from '../../../components/common/Modal'
-
-const MOCKUP_TRUCK = [
-	{
-		truck_id: 0,
-		license_number: "90-6179",
-		wheel: "หัวลาก",
-		add_on: "2 เพลา",
-		status: 100
-	},
-	{
-		truck_id: 1,
-		license_number: "89-7280",
-		wheel: "6 ล้อ",
-		add_on: "-",
-		status: 200
-	},
-	{
-		truck_id: 2,
-		license_number: "กข-1111",
-		wheel: "4 ล้อ",
-		add_on: "ตู้ทึบ",
-		status: 400
-	},
-]
-
-const STATUS_LIST = {
-	100: "ทุกสถานะ",
-	200: "จอดว่าง",
-	300: "กำลังขนส่ง",
-	400: "ซ่อมบำรุง"
-}
+import { TRUCK_STATUS_LIST } from '../../../data/carrier'
+import { MOCKUP_TRUCK } from '../../../data/carrier.mock'
 
 const OverviewCarPageContainer = styled.div`
 	margin-top: 3.6rem;
@@ -162,7 +133,7 @@ const OverviewCarPage = () => {
 			id: "status",
 			label: "สถานะ",
 			format: (_: number, statusCode: number): ReactElement => (
-				<span>{STATUS_LIST[statusCode]}</span>
+				<span>{TRUCK_STATUS_LIST[statusCode]}</span>
 			)
 		},
 		{
@@ -179,7 +150,7 @@ const OverviewCarPage = () => {
 	]
 
 	useEffect(() => {
-		const statusCode = Object.keys(STATUS_LIST)[statusFilter - 1]
+		const statusCode = Object.keys(TRUCK_STATUS_LIST)[statusFilter - 1]
 		if (statusCode === "100") {
 			filterData(MOCKUP_TRUCK, filter, setFilteredData)
 		} else {
@@ -188,7 +159,7 @@ const OverviewCarPage = () => {
 	}, [filter])
 
 	useEffect(() => {
-		const statusCode = Object.keys(STATUS_LIST)[statusFilter - 1]
+		const statusCode = Object.keys(TRUCK_STATUS_LIST)[statusFilter - 1]
 		if (statusCode !== "100") {
 			filterData(MOCKUP_TRUCK, statusCode, setFilteredData)
 		} else {
@@ -209,7 +180,7 @@ const OverviewCarPage = () => {
 					setValue={setFilter}
 				/>
 				<SelectComponent
-					menuList={Object.values(STATUS_LIST)}
+					menuList={Object.values(TRUCK_STATUS_LIST)}
 					value={statusFilter}
 					setValue={(value: number) => setStatusFilter(value)}
 				/>
