@@ -3,13 +3,15 @@ import { StringDecoder } from "string_decoder"
 export interface InputComponentInterface {
 	name?: string
 	value?: string
-	labelTH: string
-	labelEN: string
+	labelTH?: string
+	labelEN?: string
+	subLabel?: string
 	labelSize?: string
 	handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 	description?: string
 	type?: string
 	classifier?: string
+	disableLabel?: boolean
 }
 
 export interface ProfileInterface {

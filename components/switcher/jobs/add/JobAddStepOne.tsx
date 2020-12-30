@@ -29,10 +29,6 @@ const InputContainer = styled.div`
 	> div:not(:first-child) {
 		margin-top: 2rem;
 	}
-
-	${PrimaryButton} {
-		margin-top: 3rem;
-	}
 `
 
 const SectionHeader = styled.div`
@@ -65,7 +61,6 @@ const JobAddStepOne = (props: JobAddInterface) => {
 		const value = e.target.value
 		setStepOneDetails({ ...stepOneDetails, [e.target.name]: value })
 	}
-	console.log(stepOneDetails)
 
 	const submitDetails = () => {
 		setDetails({
@@ -132,7 +127,7 @@ const JobAddStepOne = (props: JobAddInterface) => {
 					/>
 				</InputComponent>
 				<FormActions>
-					<SecondaryButton>ยกเลิก</SecondaryButton>
+					<SecondaryButton onClick={() => router.back()}>ยกเลิก</SecondaryButton>
 					<PrimaryButton onClick={submitDetails}>ส่วนถัดไป</PrimaryButton>
 				</FormActions>
 			</InputContainer>

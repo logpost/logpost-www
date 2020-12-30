@@ -4,6 +4,12 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { RightArrow } from "./Icons"
 
+interface SelectComponentInterface {
+	value: string,
+	setValue: (value: string | number) => void,
+	menuList: string[]
+}
+
 const SelectCustom = styled(Select)`
 	width: 22rem;
 	height: 3.4rem;
@@ -85,14 +91,14 @@ const CustomSelectIcon = () => {
     );
 };
 
-const SelectComponent = (props) => {
+const SelectComponent = (props: SelectComponentInterface) => {
 	const { value, setValue, menuList } = props
 
 	return (
 		<SelectCustom
 			id="select-component"
 			value={value}
-			onChange={(e: React.ChangeEvent<{ value: number }>) => setValue(e.target.value)}
+			onChange={(e: React.ChangeEvent<{ value: string }>) => setValue(e.target.value)}
 			MenuProps={{
 				anchorOrigin: {
 					vertical: "bottom",
@@ -110,7 +116,7 @@ const SelectComponent = (props) => {
 			{
 				menuList.map((menuItem: string, index: number) => {
 					return (
-						<MenuItemCustom key={index} value={index + 1}>{menuItem}</MenuItemCustom>
+						<MenuItemCustom key={index} value={menuItem}>{menuItem}</MenuItemCustom>
 					)
 				})
 			}

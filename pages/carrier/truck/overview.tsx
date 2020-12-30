@@ -109,7 +109,7 @@ const ModalContent = styled.div`
 
 const OverviewCarPage = () => {
 	const [filteredData, setFilteredData] = useState([])
-	const [statusFilter, setStatusFilter] = useState(1)
+	const [statusFilter, setStatusFilter] = useState("ทุกสถานะ")
 	const [filter, setFilter] = useState("")
 	const [toggleModal, setToggleModal] = useState(false)
 	const [deleteTruckIndex, setDeleteTruckIndex] = useState(0)
@@ -142,7 +142,7 @@ const OverviewCarPage = () => {
 			width: "15%",
 			format: (truckIndex: number): ReactElement => (
 				<RowAction>
-					<button onClick={() => router.push(`/carrier/car/add/1`)}><EditIcon /></button>
+					<button onClick={() => router.push(`/carrier/truck/add/1`)}><EditIcon /></button>
 					<button onClick={() => toggleDeleteModal(truckIndex)} ><CancelIcon /></button>
 				</RowAction>
 			),
@@ -150,8 +150,7 @@ const OverviewCarPage = () => {
 	]
 
 	useEffect(() => {
-		const statusCode = Object.keys(TRUCK_STATUS_LIST)[statusFilter - 1]
-		if (statusCode === "100") {
+		if (statusFilter === "ทุกสถานะ") {
 			filterData(MOCKUP_TRUCK, filter, setFilteredData)
 		} else {
 			filterData(filteredData, filter, setFilteredData)
@@ -159,8 +158,8 @@ const OverviewCarPage = () => {
 	}, [filter])
 
 	useEffect(() => {
-		const statusCode = Object.keys(TRUCK_STATUS_LIST)[statusFilter - 1]
-		if (statusCode !== "100") {
+		const statusCode = Object.keys(TRUCK_STATUS_LIST)[Object.values(TRUCK_STATUS_LIST).indexOf(statusFilter)]
+		if (statusFilter !== "ทุกสถานะ") {
 			filterData(MOCKUP_TRUCK, statusCode, setFilteredData)
 		} else {
 			setFilteredData(MOCKUP_TRUCK)
@@ -172,7 +171,7 @@ const OverviewCarPage = () => {
 			<NavigationBar />
 			<Header>
 				รถบรรทุก
-				<SecondaryButton onClick={() => router.push(`/carrier/car/add/1`)}>เพิ่มรถ</SecondaryButton>
+				<SecondaryButton onClick={() => router.push(`/carrier/truck/add/1`)}>เพิ่มรถ</SecondaryButton>
 			</Header>
 			<TableHeader>
 				<SearchBar
@@ -182,7 +181,7 @@ const OverviewCarPage = () => {
 				<SelectComponent
 					menuList={Object.values(TRUCK_STATUS_LIST)}
 					value={statusFilter}
-					setValue={(value: number) => setStatusFilter(value)}
+					setValue={(value: string) => setStatusFilter(value)}
 				/>
 			</TableHeader>
 			<TableComponent

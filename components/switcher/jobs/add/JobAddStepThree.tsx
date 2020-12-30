@@ -18,10 +18,6 @@ const InputContainer = styled.div`
 	> div:not(:first-child) {
 		margin-top: 2rem;
 	}
-
-	${PrimaryButton} {
-		margin-top: 3rem;
-	}
 `
 
 const ButtonItem = styled.button`
@@ -58,7 +54,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
 	const { details, setDetails } = props
 	const [stepThreeDetails, setStepThreeDetails] = useState({
 		age: details.carrier_specification.truck.age,
-		driver_license_type: DRIVER_LICENSE_TYPE.indexOf(details.carrier_specification.driver.driver_license_type) + 1 || 1
+		driver_license_type: details.carrier_specification.driver.driver_license_type
 	})
 	const [truckType, setTruckType] = useState(details.carrier_specification.truck.type.wheel)
 	const [addOn, setAddOn] = useState(details.carrier_specification.truck.type.options)
@@ -83,7 +79,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
 					}
 				},
 				driver: {
-					driver_license_type: DRIVER_LICENSE_TYPE[stepThreeDetails.driver_license_type - 1],
+					driver_license_type: stepThreeDetails.driver_license_type,
 				}
 			}
 		})
@@ -177,7 +173,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
 					<SelectComponent 
 						menuList={DRIVER_LICENSE_TYPE}
 						value={stepThreeDetails.driver_license_type}
-						setValue={(value: number) => setStepThreeDetails({...stepThreeDetails, driver_license_type: value})}
+						setValue={(value: string) => setStepThreeDetails({...stepThreeDetails, driver_license_type: value})}
 					/>
 				</InputComponent>
 				<FormActions>

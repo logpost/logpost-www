@@ -21,10 +21,6 @@ const InputContainer = styled.div`
 	> div:not(:first-child) {
 		margin-top: 2rem;
 	}
-
-	${PrimaryButton} {
-		margin-top: 3rem;
-	}
 `
 
 const JobAddStepTwo = (props: JobAddInterface) => {

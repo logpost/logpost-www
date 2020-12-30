@@ -26,9 +26,6 @@ const Header = styled.div`
 
 const JobDetailsContainer = styled.div`
 	margin: 1.8rem 2rem;
-	${PrimaryButton} {
-		margin-top: 3rem;
-	}
 `
 
 const JobPrice = styled.div`
