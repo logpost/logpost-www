@@ -159,7 +159,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
 					name="age"
 					labelTH="อายุรถสูงสุด"
 					labelEN="Maximum Truck Age"
-					type="short"
+					type="number"
 					classifier="ปี"
 					value={`${stepThreeDetails.age}`}
 					handleOnChange={handleInputOnChange}

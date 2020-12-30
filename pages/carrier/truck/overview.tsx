@@ -12,7 +12,7 @@ import Modal from '../../../components/common/Modal'
 import { TRUCK_STATUS_LIST } from '../../../data/carrier'
 import { MOCKUP_TRUCK } from '../../../data/carrier.mock'
 
-const OverviewCarPageContainer = styled.div`
+const OverviewTruckPageContainer = styled.div`
 	margin-top: 3.6rem;
 
 	${SecondaryButton} {
@@ -107,7 +107,7 @@ const ModalContent = styled.div`
 	}
 `
 
-const OverviewCarPage = () => {
+const OverviewTruckPage = () => {
 	const [filteredData, setFilteredData] = useState([])
 	const [statusFilter, setStatusFilter] = useState("ทุกสถานะ")
 	const [filter, setFilter] = useState("")
@@ -167,7 +167,7 @@ const OverviewCarPage = () => {
 	}, [statusFilter])
 
 	return (
-		<OverviewCarPageContainer>
+		<OverviewTruckPageContainer>
 			<NavigationBar />
 			<Header>
 				รถบรรทุก
@@ -198,8 +198,8 @@ const OverviewCarPage = () => {
 					</FormActions>
 				</ModalContent>
 			</Modal>
-		</OverviewCarPageContainer>
+		</OverviewTruckPageContainer>
 	)
 }
 
-export default OverviewCarPage
+export default OverviewTruckPage

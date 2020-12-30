@@ -7,7 +7,7 @@ interface Label {
 }
 
 const Input = styled.input`
-	width: ${(props) => (props.type === "short" ? "15rem" : props.type === "number" ? "6.5rem" : "100%")};
+	width: ${(props) => (props.type === "short" ? "15rem" : props.type === "number" ? "7.2rem" : "100%")};
 	height: 3.4rem;
 	border-radius: 0.6rem;
 	border: solid 0.1rem hsl(0, 0%, 66%);

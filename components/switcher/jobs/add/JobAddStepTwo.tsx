@@ -65,19 +65,10 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 					name="weight"
 					labelEN="Product Weight"
 					labelTH="น้ำหนักสินค้า"
-					type="short"
+					type="number"
 					description="1 ตัน = 1,000 กิโลกรัม"
 					classifier="ตัน"
 					value={`${stepTwoDetails.weight}`}
-					handleOnChange={handleInputOnChange}
-				/>
-				<InputComponent
-					name="waiting_time"
-					labelEN="Waiting Time"
-					type="short"
-					labelTH="เวลารอขึ้น - ลงสินค้า"
-					classifier="ชั่วโมง"
-					value={`${stepTwoDetails.waiting_time}`}
 					handleOnChange={handleInputOnChange}
 				/>
 				<InputComponent
@@ -90,9 +81,20 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 					handleOnChange={handleInputOnChange}
 				/>
 				<InputComponent
+					name="waiting_time"
+					labelEN="Waiting Time"
+					type="number"
+					labelTH="เวลารอขึ้น - ลงสินค้า"
+					classifier="ชั่วโมง"
+					required={false}
+					value={`${stepTwoDetails.waiting_time}`}
+					handleOnChange={handleInputOnChange}
+				/>
+				<InputComponent
 					name="description"
 					labelEN="Description"
 					labelTH="คำอธิบายเพิ่มเติม"
+					required={false}
 					value={stepTwoDetails.description}
 					handleOnChange={handleInputOnChange}
 				/>
