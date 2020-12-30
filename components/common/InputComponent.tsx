@@ -81,6 +81,15 @@ const FieldContainer = styled.div`
 	align-items: baseline;
 `
 
+const RequiredDot = styled.div`
+	background-color: hsla(0, 75%, 63%, 0.6);
+	height: 0.5rem;
+	width: 0.5rem;
+	border-radius: 50%;
+	align-self: start;
+    margin: 0.2rem;
+`
+
 const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 	const {
 		name,
@@ -94,7 +103,8 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 		description,
 		handleOnChange,
 		children,
-		classifier
+		classifier,
+		required = true
 	} = props
 
 	return (
@@ -104,6 +114,9 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 				<LabelsContainer>
 					<LabelTH labelSize={labelSize}>{labelTH}</LabelTH>
 					<LabelEN labelSize={labelSize}>/ {labelEN}</LabelEN>
+					{
+						required && <RequiredDot />
+					}
 				</LabelsContainer>
 			}
 			{description && <Description>{description}</Description>}

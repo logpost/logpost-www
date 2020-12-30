@@ -12,6 +12,7 @@ export interface InputComponentInterface {
 	type?: string
 	classifier?: string
 	disableLabel?: boolean
+	required?: boolean
 }
 
 export interface ProfileInterface {

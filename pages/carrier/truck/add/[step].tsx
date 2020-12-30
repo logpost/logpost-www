@@ -9,7 +9,7 @@ const AddTruckSwitcherPage = () => {
 	const [truckDetails, setTruckDetails] = useState({
 		status: 100,
 		license_number: "",
-		gasoline: "",
+		gasoline: "ดีเซล",
 		age: 0,
 		is_insure: false,
 		property: {

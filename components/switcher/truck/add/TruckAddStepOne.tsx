@@ -64,7 +64,7 @@ const TruckAddStepOne = (props) => {
 	}
 
 	return (
-		<>
+		<div>
 			<Header>
 				<Progress currentStep="ข้อมูลรถส่วนที่ 1" nextStep="ข้อมูลรถส่วนที่ 2" percent={1 / 2} />
 			</Header>
@@ -117,7 +117,7 @@ const TruckAddStepOne = (props) => {
 					<PrimaryButton onClick={submitDetails}>ส่วนถัดไป</PrimaryButton>
 				</FormActions>
 			</InputContainer>
-		</>
+		</div>
 	)
 }
 

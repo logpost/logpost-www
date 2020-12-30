@@ -7,6 +7,10 @@ const TRUCK_STATUS_LIST = {
 	300: "ซ่อมบำรุง"
 }
 
+const GASOLINE_LIST = [
+	"ดีเซล"
+]
+
 const TRUCK_TYPE_LIST = {
 	"รถ 4 ล้อ": {
 		option: [
@@ -64,5 +68,6 @@ const TRUCK_TYPE_LIST = {
 export {
 	DRIVER_LICENSE_TYPE,
 	TRUCK_TYPE_LIST,
-	TRUCK_STATUS_LIST
+	TRUCK_STATUS_LIST,
+	GASOLINE_LIST
 }
