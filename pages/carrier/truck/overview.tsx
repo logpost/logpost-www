@@ -150,17 +150,22 @@ const OverviewTruckPage = () => {
 	]
 
 	useEffect(() => {
+		const statusCode = Object.keys(TRUCK_STATUS_LIST)[Object.values(TRUCK_STATUS_LIST).indexOf(statusFilter)]
 		if (statusFilter === "ทุกสถานะ") {
-			filterData(MOCKUP_TRUCK, filter, setFilteredData)
+			const filteredResult = filterData(MOCKUP_TRUCK, filter)
+			setFilteredData(filteredResult)
 		} else {
-			filterData(filteredData, filter, setFilteredData)
+			const filteredByStatusCode = filterData(MOCKUP_TRUCK, statusCode)
+			const filteredBySearch = filterData(filteredByStatusCode, filter)
+			setFilteredData(filteredBySearch)
 		}
 	}, [filter])
 
 	useEffect(() => {
 		const statusCode = Object.keys(TRUCK_STATUS_LIST)[Object.values(TRUCK_STATUS_LIST).indexOf(statusFilter)]
 		if (statusFilter !== "ทุกสถานะ") {
-			filterData(MOCKUP_TRUCK, statusCode, setFilteredData)
+			const filteredResult = filterData(MOCKUP_TRUCK, statusCode)
+			setFilteredData(filteredResult)
 		} else {
 			setFilteredData(MOCKUP_TRUCK)
 		}

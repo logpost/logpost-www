@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AddTransporterPage = () => {
+const AddDriverPage = () => {
 	return (
 		<div>
 			
@@ -8,4 +8,4 @@ const AddTransporterPage = () => {
 	)
 }
 
-export default AddTransporterPage
+export default AddDriverPage

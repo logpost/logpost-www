@@ -251,9 +251,11 @@ const GetJobPage = () => {
 
 	useEffect(() => {
 		if (toggleDriverModal) {
-			filterData(MOCKUP_DRIVER, filter, setFilteredData)
+			const filteredResult = filterData(MOCKUP_DRIVER, filter)
+			setFilteredData(filteredResult)
 		} else if (toggleTruckModal) {
-			filterData(MOCKUP_DRIVER, filter, setFilteredData)
+			const filteredResult = filterData(MOCKUP_DRIVER, filter)
+			setFilteredData(filteredResult)
 		}
 	}, [filter])
 
@@ -326,8 +328,7 @@ const GetJobPage = () => {
 						{carrierDetails.driver && (
 							<span>
 								{
-									MOCKUP_DRIVER[carrierDetails.driver]
-										.driver_name
+									MOCKUP_DRIVER[carrierDetails.driver].name
 								}
 							</span>
 						)}
@@ -343,8 +344,7 @@ const GetJobPage = () => {
 						{carrierDetails.truck && (
 							<span>
 								{
-									MOCKUP_TRUCK[carrierDetails.truck]
-										.license_number
+									MOCKUP_TRUCK[carrierDetails.truck].license_number
 								}
 							</span>
 						)}

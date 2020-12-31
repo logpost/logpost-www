@@ -1,7 +1,6 @@
 export const filterData = (
 	data: Object[],
 	filter: string,
-	setFilteredData: (filteredData: Object[]) => void
 ) => {
 	const filteredData = data.filter((item) => {
 		return Object.values(item)
@@ -12,7 +11,7 @@ export const filterData = (
 				return value.toLowerCase().includes(filter)
 			})
 	})
-	setFilteredData(filteredData)
+	return filteredData
 }
 
 export const pad = (num: string, size: number) => {

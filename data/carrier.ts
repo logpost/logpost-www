@@ -7,6 +7,13 @@ const TRUCK_STATUS_LIST = {
 	300: "ซ่อมบำรุง"
 }
 
+const DRIVER_STATUS_LIST = {
+	0: "ทุกสถานะ",
+	100: "ว่าง",
+	200: "กำลังขนส่ง",
+	300: "ไม่รับงาน"
+}
+
 const GASOLINE_LIST = [
 	"ดีเซล"
 ]
@@ -69,5 +76,6 @@ export {
 	DRIVER_LICENSE_TYPE,
 	TRUCK_TYPE_LIST,
 	TRUCK_STATUS_LIST,
-	GASOLINE_LIST
+	GASOLINE_LIST,
+	DRIVER_STATUS_LIST
 }
