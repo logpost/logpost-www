@@ -6,6 +6,8 @@ import {
 	FormActions,
 	PrimaryButton,
 	SecondaryButton,
+	FormInputContainer,
+	FormHeader
 } from "../../../styles/GlobalComponents"
 import { JobAddInterface } from "../../../../entities/interface/common"
 import { useRouter } from "next/router"
@@ -16,23 +18,6 @@ const JobMap = styled.div`
 	background: url(/images/job-map.png) no-repeat;
 	background-size: contain;
 	height: 19rem;
-`
-
-const Header = styled.div`
-	background-color: hsl(0, 0%, 98%);
-	padding: 1.4rem 2.4rem;
-`
-
-const InputContainer = styled.div`
-	padding: 1.8rem 2.6rem;
-
-	> div:not(:first-child) {
-		margin-top: 2rem;
-	}
-
-	${PrimaryButton} {
-		margin-top: 3rem;
-	}
 `
 
 const SectionHeader = styled.div`
@@ -65,7 +50,6 @@ const JobAddStepOne = (props: JobAddInterface) => {
 		const value = e.target.value
 		setStepOneDetails({ ...stepOneDetails, [e.target.name]: value })
 	}
-	console.log(stepOneDetails)
 
 	const submitDetails = () => {
 		setDetails({
@@ -80,15 +64,15 @@ const JobAddStepOne = (props: JobAddInterface) => {
 
 	return (
 		<div>
-			<Header>
+			<FormHeader>
 				<Progress
 					currentStep="จุดขึ้น - ลงสินค้า"
 					nextStep="ข้อมูลสินค้าและราคา"
 					percent={1 / 4}
 				/>
-			</Header>
+			</FormHeader>
 			<JobMap />
-			<InputContainer>
+			<FormInputContainer>
 				<SectionHeader>
 					<div>ขึ้นสินค้า</div> <Line />
 				</SectionHeader>
@@ -132,10 +116,10 @@ const JobAddStepOne = (props: JobAddInterface) => {
 					/>
 				</InputComponent>
 				<FormActions>
-					<SecondaryButton>ยกเลิก</SecondaryButton>
+					<SecondaryButton onClick={() => router.back()}>ยกเลิก</SecondaryButton>
 					<PrimaryButton onClick={submitDetails}>ส่วนถัดไป</PrimaryButton>
 				</FormActions>
-			</InputContainer>
+			</FormInputContainer>
 		</div>
 	)
 }

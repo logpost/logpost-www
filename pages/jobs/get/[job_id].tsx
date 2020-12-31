@@ -21,131 +21,8 @@ import TableComponent from "../../../components/common/TableComponent"
 import NavigationBar from "../../../components/common/NavigationBar"
 import SearchBar from "../../../components/common/SearchBar"
 import { filterData } from "../../../components/utilities/helper"
-
-const MOCKUP_DRIVER = [
-	{
-		id: "01",
-		driver_name: "อสมาภรณ์ ดีวรัตน์",
-		driver_license_type: "ท.2",
-	},
-	{
-		id: "02",
-		driver_name: "ปูรณ์ โชตธีรวสุ",
-		driver_license_type: "ท.4",
-	},
-	{
-		id: "03",
-		driver_name: "ชัญญา พุกกะรัตน​์",
-		driver_license_type: "ท.2",
-	},
-	{
-		id: "04",
-		driver_name: "ชิษณุพงศ์ วรวิจิตรชัยกุล",
-		driver_license_type: "ท.3",
-	},
-	{
-		id: "05",
-		driver_name: "จิรัชฌา วิทยาชีวะ",
-		driver_license_type: "ท.3",
-	},
-	{
-		id: "06",
-		driver_name: "นรเศรษฐ์ โพธิ์ทอง",
-		driver_license_type: "ท.3",
-	},
-	{
-		id: "07",
-		driver_name: "ศิวกร ไทยแท้",
-		driver_license_type: "ท.4",
-	},
-	{
-		id: "08",
-		driver_name: "ฐิติวัชร์ นาพรหม",
-		driver_license_type: "ท.2",
-	},
-	{
-		id: "09",
-		driver_name: "ณัฐพัชร์ วัฒนชาญสิทธิ์",
-		driver_license_type: "ท.1",
-	},
-	{
-		id: "10",
-		driver_name: "ชัชวิน แท่งทอง",
-		driver_license_type: "ท.3",
-	},
-	{
-		id: "11",
-		driver_name: "จารวี ทองเจริญ",
-		driver_license_type: "ท.1",
-	},
-	{
-		id: "12",
-		driver_name: "กฤตพล จันทร์ศุภกุล",
-		driver_license_type: "ท.1",
-	},
-	{
-		id: "13",
-		driver_name: "ธีรธัชช์ นักร้อง",
-		driver_license_type: "ท.1",
-	},
-	{
-		id: "14",
-		driver_name: "ปัณฑา ปราโมทย์กุล",
-		driver_license_type: "ท.3",
-	},
-	{
-		id: "15",
-		driver_name: "พรรษชล เผ่าทิตธรรม",
-		driver_license_type: "ท.4",
-	}
-]
-
-const MOCKUP_TRUCK = [
-	{
-		license_number: "90-6179",
-		wheel: "หัวลาก",
-		add_on: "2 เพลา",
-	},
-	{
-		license_number: "89-7280",
-		wheel: "6 ล้อ",
-		add_on: "-",
-	},
-	{
-		license_number: "กข-1111",
-		wheel: "4 ล้อ",
-		add_on: "ตู้ทึบ",
-	},
-]
-
-const JOB_MOCK_DETAILS = {
-	shipper_id: "01",
-	carrier_id: "",
-	driver_name: "",
-	license_number: "",
-	pickup_location: "กรุงเทพ",
-	dropoff_location: "ชลบุรี",
-	pickup_date: "20 ต.ค. 63 09:00 น.",
-	dropoff_date: "20 ต.ค. 63 18:00 น.",
-	weight: 2,
-	product_type: "ไม้อัด",
-	description: "งานด่วน ไม่ต้องรอขึ้นของ",
-	waiting_time: 0,
-	carrier_specification: {
-		truck: {
-			age: 5,
-			type: {
-				wheel: 6,
-				options: "ตู้ทึบ",
-			},
-		},
-		driver: {
-			driver_license_type: "12345555",
-		},
-	},
-	offer_price: 8000,
-	auto_price: 4800,
-}
+import { MOCKUP_JOB } from "../../../data/job.mock"
+import { MOCKUP_TRUCK, MOCKUP_DRIVER } from "../../../data/carrier.mock"
 
 const FormActionsCustom = styled(FormActions)`
 	${PrimaryButton}, ${SecondaryButton} {
@@ -374,9 +251,11 @@ const GetJobPage = () => {
 
 	useEffect(() => {
 		if (toggleDriverModal) {
-			filterData(MOCKUP_DRIVER, filter, setFilteredData)
+			const filteredResult = filterData(MOCKUP_DRIVER, filter)
+			setFilteredData(filteredResult)
 		} else if (toggleTruckModal) {
-			filterData(MOCKUP_TRUCK, filter, setFilteredData)
+			const filteredResult = filterData(MOCKUP_DRIVER, filter)
+			setFilteredData(filteredResult)
 		}
 	}, [filter])
 
@@ -441,7 +320,7 @@ const GetJobPage = () => {
 				</JobTitle>
 			</Header>
 			<JobDetails>
-				<DetailSection details={JOB_MOCK_DETAILS} />
+				<DetailSection details={MOCKUP_JOB} />
 				<Warning>เลือกพนักงานและรถที่ใช้รับงาน</Warning>
 				<CarrierDetailsContainer>
 					<Detail>
@@ -449,8 +328,7 @@ const GetJobPage = () => {
 						{carrierDetails.driver && (
 							<span>
 								{
-									MOCKUP_DRIVER[carrierDetails.driver]
-										.driver_name
+									MOCKUP_DRIVER[carrierDetails.driver].name
 								}
 							</span>
 						)}
@@ -466,8 +344,7 @@ const GetJobPage = () => {
 						{carrierDetails.truck && (
 							<span>
 								{
-									MOCKUP_TRUCK[carrierDetails.truck]
-										.license_number
+									MOCKUP_TRUCK[carrierDetails.truck].license_number
 								}
 							</span>
 						)}

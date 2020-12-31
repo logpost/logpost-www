@@ -1,15 +1,19 @@
 import { StringDecoder } from "string_decoder"
+import { ReactElement } from 'react'
 
 export interface InputComponentInterface {
 	name?: string
 	value?: string
-	labelTH: string
-	labelEN: string
+	labelTH?: string
+	labelEN?: string
+	subLabel?: string
 	labelSize?: string
 	handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 	description?: string
 	type?: string
 	classifier?: string
+	disableLabel?: boolean
+	required?: boolean
 }
 
 export interface ProfileInterface {
@@ -60,9 +64,10 @@ export interface ToggleComponentInterface {
 	carrier_specification?: { 
 		truck?: {
 			age?: number
-			type?: {
-				wheel?: number,
-				options?: string
+			property?: {
+				type?: string,
+				option?: string,
+				chassis?: number
 			}
 		}
 		driver?: {
@@ -74,4 +79,22 @@ export interface ToggleComponentInterface {
 export interface JobAddInterface {
 	details: JobDetailsInterface
 	setDetails: (details: JobDetailsInterface) => void
+}
+
+export interface TableComponentInterface {
+	columns: {
+		id: string
+		label: string
+		align?: string
+		width?: string
+		format?: (index: number, value?: string | number) => ReactElement
+	}[]
+	data: {
+		id?: string
+		driver_name?: string
+		driver_license_type?: string
+		license_number?: string
+		wheel?: string
+		add_on?: string
+	}[]
 }

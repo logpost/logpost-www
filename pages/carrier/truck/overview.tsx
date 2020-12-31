@@ -5,8 +5,8 @@ import { FormActions, PrimaryButton, SecondaryButton, TableRowActions } from '..
 import { useRouter } from "next/router"
 import { AlertIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
 import Modal from '../../../components/common/Modal'
-import { DRIVER_STATUS_LIST } from '../../../data/carrier'
-import { MOCKUP_DRIVER } from '../../../data/carrier.mock'
+import { TRUCK_STATUS_LIST } from '../../../data/carrier'
+import { MOCKUP_TRUCK } from '../../../data/carrier.mock'
 import ResourceOverview from '../../../components/common/ResourceOverview'
 
 const ModalContent = styled.div`
@@ -35,51 +35,44 @@ const ModalContent = styled.div`
 	}
 `
 
-const OverviewDriverPage = () => {
-	const [deleteDriverIndex, setDeleteDriverIndex] = useState(0)
+const OverviewTruckPage = () => {
+	const [deleteTruckIndex, setDeleteTruckIndex] = useState(0)
 	const [toggleModal, setToggleModal] = useState(false)
 	const router = useRouter()
 
 	const toggleDeleteModal = (index: number) => {
 		setToggleModal(true)
-		setDeleteDriverIndex(index)
+		setDeleteTruckIndex(index)
 	}
 
-	const navigateToAddDriverPage = () => {
-		router.push(`/carrier/driver/add`)
+	const navigateToAddTruckPage = () => {
+		router.push(`/carrier/truck/add/1`)
 	}
 
-	const driverColumns = [
+	const truckColumns = [
 		{
-			id: "driver_id",
-			label: "รหัส",
+			id: "license_number",
+			label: "ทะเบียน",
 		},
 		{
-			id: "name",
-			label: "ชื่อ - นามสกุล",
-			align: "left",
-			width: "30%"
-		},
-		{
-			id: "driver_license_type",
-			label: "ใบขับขี่",
-			width: "15%"
+			id: "wheel",
+			label: "ประเภท",
 		},
 		{
 			id: "status",
 			label: "สถานะ",
 			format: (_: number, statusCode: number): ReactElement => (
-				<span>{DRIVER_STATUS_LIST[statusCode]}</span>
+				<span>{TRUCK_STATUS_LIST[statusCode]}</span>
 			)
 		},
 		{
 			id: "actions",
 			label: "",
 			width: "15%",
-			format: (driverIndex: number): ReactElement => (
+			format: (truckIndex: number): ReactElement => (
 				<TableRowActions>
-					<button onClick={navigateToAddDriverPage}><EditIcon /></button>
-					<button onClick={() => toggleDeleteModal(driverIndex)} ><CancelIcon /></button>
+					<button onClick={navigateToAddTruckPage}><EditIcon /></button>
+					<button onClick={() => toggleDeleteModal(truckIndex)} ><CancelIcon /></button>
 				</TableRowActions>
 			),
 		},
@@ -89,18 +82,18 @@ const OverviewDriverPage = () => {
 		<>
 			<NavigationBar />
 			<ResourceOverview 
-				headerTitle={"พนักงานขับรถ"}
-				headerButton={"เพิ่มพนักงาน"}
-				buttonOnClick={navigateToAddDriverPage}
+				headerTitle={"รถบรรทุก"}
+				headerButton={"เพิ่มรถ"}
+				buttonOnClick={navigateToAddTruckPage}
 				defaultSelect={"ทุกสถานะ"}
-				statusList={DRIVER_STATUS_LIST}
-				columns={driverColumns}
-				data={MOCKUP_DRIVER}
+				statusList={TRUCK_STATUS_LIST}
+				columns={truckColumns}
+				data={MOCKUP_TRUCK}
 			>
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>
 						<AlertIcon />
-						<span>ยืนยันลบข้อมูลพนักงานขับรถ <br /> ชื่อ {MOCKUP_DRIVER[deleteDriverIndex].name} หรือไม่ ?</span>
+						<span>ยืนยันลบข้อมูลรถ <br /> ทะเบียน {MOCKUP_TRUCK[deleteTruckIndex].license_number} หรือไม่ ?</span>
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleModal(false)}>ยกเลิก</SecondaryButton>
 							<PrimaryButton onClick={() => setToggleModal(false)}>ยืนยันลบข้อมูล</PrimaryButton>
@@ -112,4 +105,4 @@ const OverviewDriverPage = () => {
 	)
 }
 
-export default OverviewDriverPage
+export default OverviewTruckPage

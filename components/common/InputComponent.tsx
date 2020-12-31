@@ -7,13 +7,21 @@ interface Label {
 }
 
 const Input = styled.input`
-	width: ${(props) => (props.type === "short" ? "15rem" : "100%")};
+	width: ${(props) => (props.type === "short" ? "15rem" : props.type === "number" ? "7.2rem" : "100%")};
 	height: 3.4rem;
 	border-radius: 0.6rem;
 	border: solid 0.1rem hsl(0, 0%, 66%);
 	margin-top: 1rem;
 	font-size: 1.6rem;
 	padding: 1.2rem;
+	&::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	&[type=number] {
+		 -moz-appearance:textfield;
+	}
 `
 
 const TextArea = styled.textarea`
@@ -59,42 +67,70 @@ const LabelEN = styled(Description) <Label>`
 
 const Classifier = styled.div`
 	font-size: 1.8rem;
-	color: hsl(0, 0%, 66%);
-	margin-top: 1rem;
+	color: hsl(212, 28%, 28%);
 	margin-left: 1.8rem;
+`
+
+const SubLabel = styled(Classifier)`
+	margin-left: 0;
+	margin-right: 1.8rem;
 `
 
 const FieldContainer = styled.div`
 	display: flex;
-	align-items: center;
+	align-items: baseline;
+`
+
+const RequiredDot = styled.div`
+	background-color: hsla(0, 75%, 63%, 0.6);
+	height: 0.5rem;
+	width: 0.5rem;
+	border-radius: 50%;
+	align-self: start;
+    margin: 0.2rem;
 `
 
 const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 	const {
 		name,
 		value,
+		disableLabel = false,
 		labelTH,
 		labelEN,
+		subLabel,
 		type,
 		labelSize,
 		description,
 		handleOnChange,
 		children,
-		classifier
+		classifier,
+		required = true
 	} = props
 
 	return (
 		<InputContainer>
-			<LabelsContainer>
-				<LabelTH labelSize={labelSize}>{labelTH}</LabelTH>
-				<LabelEN labelSize={labelSize}>/ {labelEN}</LabelEN>
-			</LabelsContainer>
+			{
+				!disableLabel &&
+				<LabelsContainer>
+					<LabelTH labelSize={labelSize}>{labelTH}</LabelTH>
+					<LabelEN labelSize={labelSize}>/ {labelEN}</LabelEN>
+					{
+						required && <RequiredDot />
+					}
+				</LabelsContainer>
+			}
 			{description && <Description>{description}</Description>}
 			{type === "other" ? (
 				children
 			) : type === "textarea" ? (
 				<TextArea />
 			) : (<FieldContainer>
+				{
+					subLabel && 
+					<SubLabel>
+						{subLabel}
+					</SubLabel>
+				}
 				<Input
 					type={type}
 					onChange={(e) => handleOnChange(e)}

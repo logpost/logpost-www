@@ -1,24 +1,7 @@
 import React, { useState, ReactElement } from "react"
 import styled from "styled-components"
+import { TableComponentInterface } from "../../entities/interface/common"
 import { RightArrow, DoubleRightArrow } from "./Icons"
-
-interface TableComponentInterface {
-	columns: {
-		id: string
-		label: string
-		align?: string
-		width?: string
-		format?: (driver_index: number) => ReactElement
-	}[]
-	data: {
-		id?: string
-		driver_name?: string
-		driver_license_type?: string
-		license_number?: string
-		wheel?: string
-		add_on?: string
-	}[]
-}
 
 interface CellInterface {
 	width?: string
@@ -72,6 +55,7 @@ const TableCaption = styled.div`
     justify-content: space-between;
 	width: 100%;
     padding: 0 5%;
+	margin-top: 1.4rem;
 `
 
 const Pagination = styled.div`
@@ -120,8 +104,13 @@ const TableComponent = (props: TableComponentInterface) => {
 	const maxRowPerPage = 7
 	const firstRowOfPage = (currentPage - 1)*maxRowPerPage
 	const LastRowOfPage = currentPage*maxRowPerPage
-	const maxPage = Math.ceil(numberOfRow / 7)
+	let maxPage = Math.ceil(numberOfRow / 7)
 	const remainingRow = numberOfRow - firstRowOfPage
+
+	if (maxPage <= 0) {
+		maxPage = 1
+	} 
+
 
 	return (
 		<>
@@ -141,7 +130,7 @@ const TableComponent = (props: TableComponentInterface) => {
 										return (
 											<Cell key={column.id} cellAlign={column.align} width={column.width}>
 												{(column.format &&
-													column.format(index)) ||
+													column.format(index, item[column.id])) ||
 													cellValue}
 											</Cell>
 										)

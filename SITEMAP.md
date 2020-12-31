@@ -23,9 +23,9 @@ shipper
 
 carrier
 - carrier/profile
-- carrier/car/overview
-- carrier/car/add/step=1
-- carrier/car/add/step=2
+- carrier/truck/overview
+- carrier/truck/add/step=1
+- carrier/truck/add/step=2
 - carrier/driver/overview
 - carrier/driver/add
 
