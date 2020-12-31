@@ -1,4 +1,5 @@
 import { StringDecoder } from "string_decoder"
+import { ReactElement } from 'react'
 
 export interface InputComponentInterface {
 	name?: string
@@ -77,4 +78,22 @@ export interface ToggleComponentInterface {
 export interface JobAddInterface {
 	details: JobDetailsInterface
 	setDetails: (details: JobDetailsInterface) => void
+}
+
+export interface TableComponentInterface {
+	columns: {
+		id: string
+		label: string
+		align?: string
+		width?: string
+		format?: (index: number, value?: string | number) => ReactElement
+	}[]
+	data: {
+		id?: string
+		driver_name?: string
+		driver_license_type?: string
+		license_number?: string
+		wheel?: string
+		add_on?: string
+	}[]
 }

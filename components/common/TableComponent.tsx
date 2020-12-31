@@ -1,24 +1,7 @@
 import React, { useState, ReactElement } from "react"
 import styled from "styled-components"
+import { TableComponentInterface } from "../../entities/interface/common"
 import { RightArrow, DoubleRightArrow } from "./Icons"
-
-interface TableComponentInterface {
-	columns: {
-		id: string
-		label: string
-		align?: string
-		width?: string
-		format?: (index: number, value?: string | number) => ReactElement
-	}[]
-	data: {
-		id?: string
-		driver_name?: string
-		driver_license_type?: string
-		license_number?: string
-		wheel?: string
-		add_on?: string
-	}[]
-}
 
 interface CellInterface {
 	width?: string
