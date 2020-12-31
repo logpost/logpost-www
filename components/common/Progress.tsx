@@ -20,8 +20,8 @@ const ProgressContainer = styled.div`
 
 const CircularProgress = styled.svg`
 	transform: rotate(270deg);
-	width: 5.2rem;
-	height: 5.2rem;
+	width: 6rem;
+	height: 6rem;
 
 	circle {
 		position: absolute;
@@ -30,6 +30,7 @@ const CircularProgress = styled.svg`
 		stroke-dasharray: 340;
 	}
 `
+
 const ProgressCircle = styled.circle<ProgressCircleInterface>`
 	stroke-dashoffset: calc(340 - (340 * (${props => props.percent}*48)) / 100); 
 	stroke: hsl(16, 56%, 51%);
@@ -42,7 +43,8 @@ const BackgroundCircle = styled.circle`
 
 const StepContainer = styled.div`
 	margin-left: 2rem;
-	font-size: 1.8rem;
+	padding: 0.9rem 0;
+	font-size: 2.2rem;
 	font-weight: 500;
 	color: hsl(217, 16%, 16%);
 
@@ -52,7 +54,7 @@ const StepContainer = styled.div`
 `
 
 const NextStep = styled.div`
-	font-size: 1.2rem;
+	font-size: 1.4rem;
 	font-weight: normal;
 	color: hsl(0, 0%, 66%);
 	margin-top: 0.4rem;
