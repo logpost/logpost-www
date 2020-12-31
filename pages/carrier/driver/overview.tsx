@@ -1,29 +1,13 @@
 import React, { ReactElement, useState } from 'react'
 import styled from "styled-components"
 import NavigationBar from '../../../components/common/NavigationBar'
-import { FormActions, PrimaryButton, SecondaryButton } from '../../../components/styles/GlobalComponents'
+import { FormActions, PrimaryButton, SecondaryButton, TableRowActions } from '../../../components/styles/GlobalComponents'
 import { useRouter } from "next/router"
 import { AlertIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
 import Modal from '../../../components/common/Modal'
 import { DRIVER_STATUS_LIST } from '../../../data/carrier'
 import { MOCKUP_DRIVER } from '../../../data/carrier.mock'
 import ResourceOverview from '../../../components/common/ResourceOverview'
-
-const RowAction = styled.div`
-	display: flex;
-	justify-content: space-evenly;
-
-	button:last-child {
-		svg {
-			height: 1.4rem;
-			width: 1.4rem;
-
-			path {
-				stroke: hsl(0, 0%, 66%);
-			}
-		}
-	}
-`
 
 const ModalContent = styled.div`
 	display: flex;
@@ -93,10 +77,10 @@ const OverviewDriverPage = () => {
 			label: "",
 			width: "15%",
 			format: (driverIndex: number): ReactElement => (
-				<RowAction>
+				<TableRowActions>
 					<button onClick={navigateToAddDriverPage}><EditIcon /></button>
 					<button onClick={() => toggleDeleteModal(driverIndex)} ><CancelIcon /></button>
-				</RowAction>
+				</TableRowActions>
 			),
 		},
 	]

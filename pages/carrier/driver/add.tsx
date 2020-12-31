@@ -4,22 +4,13 @@ import { useRouter } from "next/router"
 import InputComponent from '../../../components/common/InputComponent'
 import SelectComponent from '../../../components/common/SelectComponent'
 import { DRIVER_LICENSE_TYPE } from '../../../data/carrier'
-import { FormActions, PrimaryButton, SecondaryButton } from '../../../components/styles/GlobalComponents'
+import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHeader } from '../../../components/styles/GlobalComponents'
 
-const Header = styled.div`
-	background-color: hsl(0, 0%, 98%);
+const FormHeaderCustom = styled(FormHeader)`
 	padding: 3.4rem 0 3.4rem 3.7rem;
 	font-size: 2.2rem;
 	font-weight: 500;
 	color: hsl(217, 16%, 16%);
-`
-
-const InputContainer = styled.div`
-	padding: 1.8rem 2.6rem;
-
-	> div:not(:first-child) {
-		margin-top: 2rem;
-	}
 `
 
 const AddDriverPage = () => {
@@ -48,10 +39,10 @@ const AddDriverPage = () => {
 
 	return (
 		<div>
-			<Header>
+			<FormHeaderCustom>
 				ข้อมูลพนักงานขับรถ
-			</Header>
-			<InputContainer>
+			</FormHeaderCustom>
+			<FormInputContainer>
 				<InputComponent 
 					name="name"
 					labelTH="ชื่อจริง - นามสกุล"
@@ -101,7 +92,7 @@ const AddDriverPage = () => {
 					</SecondaryButton>
 					<PrimaryButton onClick={submitDetails}>เพิ่มพนักงานขับรถ</PrimaryButton>
 				</FormActions>
-			</InputContainer>
+			</FormInputContainer>
 		</div>
 	)
 }

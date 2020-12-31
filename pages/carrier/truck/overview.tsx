@@ -1,29 +1,13 @@
 import React, { ReactElement, useState } from 'react'
 import styled from "styled-components"
 import NavigationBar from '../../../components/common/NavigationBar'
-import { FormActions, PrimaryButton, SecondaryButton } from '../../../components/styles/GlobalComponents'
+import { FormActions, PrimaryButton, SecondaryButton, TableRowActions } from '../../../components/styles/GlobalComponents'
 import { useRouter } from "next/router"
 import { AlertIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
 import Modal from '../../../components/common/Modal'
 import { TRUCK_STATUS_LIST } from '../../../data/carrier'
 import { MOCKUP_TRUCK } from '../../../data/carrier.mock'
 import ResourceOverview from '../../../components/common/ResourceOverview'
-
-const RowAction = styled.div`
-	display: flex;
-	justify-content: space-evenly;
-
-	button:last-child {
-		svg {
-			height: 1.4rem;
-			width: 1.4rem;
-
-			path {
-				stroke: hsl(0, 0%, 66%);
-			}
-		}
-	}
-`
 
 const ModalContent = styled.div`
 	display: flex;
@@ -86,10 +70,10 @@ const OverviewTruckPage = () => {
 			label: "",
 			width: "15%",
 			format: (truckIndex: number): ReactElement => (
-				<RowAction>
+				<TableRowActions>
 					<button onClick={navigateToAddTruckPage}><EditIcon /></button>
 					<button onClick={() => toggleDeleteModal(truckIndex)} ><CancelIcon /></button>
-				</RowAction>
+				</TableRowActions>
 			),
 		},
 	]

@@ -6,6 +6,7 @@ import {
 	PrimaryButton,
 	SecondaryButton,
 	Detail,
+	FormHeader
 } from "../../../styles/GlobalComponents"
 import { JobDetailsInterface } from "../../../../entities/interface/common"
 import DetailSection from "../../../common/DetailSection"
@@ -17,11 +18,6 @@ const JobMap = styled.div`
 	background: url(/images/job-map.png) no-repeat;
 	background-size: cover;
 	height: 19rem;
-`
-
-const Header = styled.div`
-	background-color: hsl(0, 0%, 98%);
-	padding: 1.4rem 2.4rem;
 `
 
 const JobDetailsContainer = styled.div`
@@ -67,9 +63,9 @@ const JobAddStepFour = (props: { details: JobDetailsInterface }) => {
 
 	return (
 		<div>
-			<Header>
+			<FormHeader>
 				<Progress currentStep="ตัวอย่างงาน" percent={4 / 4} />
-			</Header>
+			</FormHeader>
 			<JobMap />
 			<JobDetailsContainer>
 				<DetailSection details={details} />

@@ -1,47 +1,10 @@
 import React, { useState } from 'react'
-import styled from "styled-components"
 import { TRUCK_TYPE_LIST } from '../../../../data/carrier'
 import InputComponent from '../../../common/InputComponent'
 import Progress from '../../../common/Progress'
 import SelectComponent from '../../../common/SelectComponent'
-import { FormActions, PrimaryButton, SecondaryButton } from '../../../styles/GlobalComponents'
+import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHeader, ButtonGroupContainer, ButtonItem } from '../../../styles/GlobalComponents'
 import { useRouter } from 'next/router'
-
-const Header = styled.div`
-	background-color: hsl(0, 0%, 98%);
-	padding: 1.4rem 2.4rem;
-`
-
-const InputContainer = styled.div`
-	padding: 1.8rem 2.6rem;
-
-	> div:not(:first-child) {
-		margin-top: 2rem;
-	}
-`
-
-const ButtonItem = styled.button`
-	border-radius: 0.6rem;
-	box-shadow: 0 0 0 ${(props) =>
-		props.value == props.name
-			? "0.2rem hsl(212, 28%, 28%)"
-			: "0.1rem hsl(0, 0%, 66%)"};
-	outline: none;
-	width: 9.1rem;
-	padding: 1rem 0;
-	font-size: 1.6rem;
-	font-weight: 500;
-	color: ${(props) =>
-		props.value == props.name ? "hsl(212, 28%, 28%)" : "hsl(0, 0%, 66%)"};
-	margin-right: 1.4rem;
-`
-
-const ButtonContainer = styled.div`
-	margin-top: 0.8rem;
-	display: grid;
-    grid-gap: 1.2rem 1.4rem;
-    grid-template-columns: repeat(auto-fill,9rem);
-`
 
 const TruckAddStepOne = (props) => {
 	const { details, setDetails } = props
@@ -65,10 +28,10 @@ const TruckAddStepOne = (props) => {
 
 	return (
 		<div>
-			<Header>
+			<FormHeader>
 				<Progress currentStep="ข้อมูลรถส่วนที่ 1" nextStep="ข้อมูลรถส่วนที่ 2" percent={1 / 2} />
-			</Header>
-			<InputContainer>
+			</FormHeader>
+			<FormInputContainer>
 				<InputComponent labelTH="ประเภทรถ" labelEN="Truck Type" type="other">
 					<SelectComponent
 						menuList={Object.keys(TRUCK_TYPE_LIST)}
@@ -77,7 +40,7 @@ const TruckAddStepOne = (props) => {
 					/>
 				</InputComponent>
 				<InputComponent labelTH="ส่วนเสริม" labelEN="Option" type="other">
-					<ButtonContainer>
+					<ButtonGroupContainer>
 						{
 							TRUCK_TYPE_LIST[truckProperty.type].option.map((option: string, index: number) => {
 								return (
@@ -92,8 +55,29 @@ const TruckAddStepOne = (props) => {
 								)
 							})
 						}
-					</ButtonContainer>
+					</ButtonGroupContainer>
 				</InputComponent>
+				{
+					TRUCK_TYPE_LIST[truckProperty.type].chassis && 
+					<InputComponent labelTH="จำนวนเพลา" labelEN="Chassis" type="other">
+						<ButtonGroupContainer>
+							{
+								TRUCK_TYPE_LIST[truckProperty.type].chassis.map((chassis: number, index: number) => {
+									return (
+										<ButtonItem
+											key={index}
+											onClick={() => setTruckProperty({ ...truckProperty, chassis: chassis })}
+											name={String(chassis)}
+											value={String(truckProperty.chassis)}
+										>
+											{`${chassis} เพลา`}
+										</ButtonItem>
+									)
+								})
+							}
+						</ButtonGroupContainer>
+					</InputComponent>
+				}
 				<div>
 					<InputComponent 
 						labelTH="น้ำหนักบรรทุก" 
@@ -116,7 +100,7 @@ const TruckAddStepOne = (props) => {
 					<SecondaryButton onClick={() => router.back()}>ยกเลิก</SecondaryButton>
 					<PrimaryButton onClick={submitDetails}>ส่วนถัดไป</PrimaryButton>
 				</FormActions>
-			</InputContainer>
+			</FormInputContainer>
 		</div>
 	)
 }

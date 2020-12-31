@@ -64,9 +64,10 @@ export interface ToggleComponentInterface {
 	carrier_specification?: { 
 		truck?: {
 			age?: number
-			type?: {
-				wheel?: number,
-				options?: string
+			property?: {
+				type?: string,
+				option?: string,
+				chassis?: number
 			}
 		}
 		driver?: {

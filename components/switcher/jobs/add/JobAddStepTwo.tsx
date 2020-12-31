@@ -6,22 +6,11 @@ import {
 	FormActions,
 	PrimaryButton,
 	SecondaryButton,
+	FormInputContainer,
+	FormHeader
 } from "../../../styles/GlobalComponents"
 import { JobAddInterface } from "../../../../entities/interface/common"
 import { useRouter } from "next/router"
-
-const Header = styled.div`
-	background-color: hsl(0, 0%, 98%);
-	padding: 1.4rem 2.4rem;
-`
-
-const InputContainer = styled.div`
-	padding: 1.8rem 2.6rem;
-
-	> div:not(:first-child) {
-		margin-top: 2rem;
-	}
-`
 
 const JobAddStepTwo = (props: JobAddInterface) => {
 	const router = useRouter()
@@ -46,14 +35,14 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 
 	return (
 		<div>
-			<Header>
+			<FormHeader>
 				<Progress
 					currentStep="ข้อมูลสินค้าและราคา"
 					nextStep="ข้อมูลรถบรรทุก"
 					percent={2 / 4}
 				/>
-			</Header>
-			<InputContainer>
+			</FormHeader>
+			<FormInputContainer>
 				<InputComponent
 					name="product_type"
 					labelEN="Product Type"
@@ -102,7 +91,7 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 					<SecondaryButton onClick={() => router.push(`/jobs/add/1`)}>ย้อนกลับ</SecondaryButton>
 					<PrimaryButton onClick={submitDetails}>ส่วนถัดไป</PrimaryButton>
 				</FormActions>
-			</InputContainer>
+			</FormInputContainer>
 		</div>
 	)
 }

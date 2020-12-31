@@ -154,3 +154,55 @@ export const CarrierDetailsContainer = styled.div`
 		margin-top: 0.8rem;
 	}
 `
+
+export const FormInputContainer = styled.div`
+	padding: 1.8rem 2.6rem;
+
+	> div:not(:first-child) {
+		margin-top: 2rem;
+	}
+`
+
+export const FormHeader = styled.div`
+	background-color: hsl(0, 0%, 98%);
+	padding: 1.4rem 2.4rem;
+`
+
+export const ButtonGroupContainer = styled.div`
+	margin-top: 0.8rem;
+	display: grid;
+    grid-gap: 1.2rem 1.4rem;
+    grid-template-columns: repeat(auto-fill,9rem);
+`
+
+export const ButtonItem = styled.button`
+	border-radius: 0.6rem;
+	box-shadow: 0 0 0 ${(props) =>
+		props.value == props.name
+			? "0.2rem hsl(212, 28%, 28%)"
+			: "0.1rem hsl(0, 0%, 66%)"};
+	outline: none;
+	width: 9.1rem;
+	padding: 1rem 0;
+	font-size: 1.6rem;
+	font-weight: 500;
+	color: ${(props) =>
+		props.value == props.name ? "hsl(212, 28%, 28%)" : "hsl(0, 0%, 66%)"};
+	margin-right: 1.4rem;
+`
+
+export const TableRowActions = styled.div`
+	display: flex;
+	justify-content: space-evenly;
+
+	button:last-child {
+		svg {
+			height: 1.4rem;
+			width: 1.4rem;
+
+			path {
+				stroke: hsl(0, 0%, 66%);
+			}
+		}
+	}
+`

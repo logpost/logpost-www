@@ -11,9 +11,10 @@ const MOCKUP_JOB = {
 	carrier_specification: { 
 		truck: {
 			age: 5,
-			type: {
-				wheel: "4",
-				options: "ตู้ทึบ"
+			property: {
+				type: "รถ 4 ล้อ",
+				option: "ตู้ทึบ",
+				chassis: null
 			}
 		},
 		driver: {
