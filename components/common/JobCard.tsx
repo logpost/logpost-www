@@ -152,7 +152,7 @@ const JobCard = (props: JobCardInterface) => {
 					<DetailRow>
 						<Detail>
 							<TruckIcon />
-							รถ {details.carrier_specification.truck.type.wheel} ล้อ
+							{details.carrier_specification.truck.property.type}
 						</Detail>
 						<Detail>
 							<ProductIcon />

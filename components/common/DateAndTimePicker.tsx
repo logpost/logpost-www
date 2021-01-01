@@ -12,6 +12,7 @@ registerLocale('th', th)
 
 interface DateAndTimePickerInterface {
 	dateAndTime: Date
+	minDate?: Date
 	setDateAndTime: (date: Date) => void
 }
 
@@ -186,7 +187,7 @@ const DateAndTimePickerContainer = styled.div`
 `
 
 const DateAndTimePicker = (props:DateAndTimePickerInterface) => {
-	const { dateAndTime, setDateAndTime } = props
+	const { dateAndTime, setDateAndTime, minDate } = props
 	const timepicker = useRef(null)
 	const datepicker = useRef(null)
 	
@@ -230,7 +231,7 @@ const DateAndTimePicker = (props:DateAndTimePickerInterface) => {
 						time={dateAndTime.getTime()}
 					/>}
 					locale={"th"}
-					minDate={new Date()}
+					minDate={minDate || new Date()}
 					showPopperArrow={false}
 					showDisabledMonthNavigation
 				/>

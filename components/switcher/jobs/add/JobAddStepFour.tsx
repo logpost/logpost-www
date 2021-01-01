@@ -8,11 +8,10 @@ import {
 	Detail,
 	FormHeader
 } from "../../../styles/GlobalComponents"
-import { JobDetailsInterface } from "../../../../entities/interface/common"
 import DetailSection from "../../../common/DetailSection"
 import { useRouter } from "next/router"
-import appStore from "../../../../store/AppStore"
-import { view } from '@risingstack/react-easy-state'
+import { createJob } from "../../../utilities/apis"
+import { JobInterface } from "../../../../entities/interface/job"
 
 const JobMap = styled.div`
 	background: url(/images/job-map.png) no-repeat;
@@ -51,14 +50,13 @@ const Price = styled.div`
 	height: fit-content;
 `
 
-const JobAddStepFour = (props: { details: JobDetailsInterface }) => {
+const JobAddStepFour = (props: { details: JobInterface }) => {
 	const router = useRouter()
 	const { details } = props
-	const { createJob } = appStore
 
 	const handleNewJob = () => {
 		createJob(details)
-		router.push(`/shipper/profile`)
+		// router.push(`/shipper/profile`)
 	}
 
 	return (
@@ -89,4 +87,4 @@ const JobAddStepFour = (props: { details: JobDetailsInterface }) => {
 	)
 }
 
-export default view(JobAddStepFour)
+export default JobAddStepFour

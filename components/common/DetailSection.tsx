@@ -136,7 +136,7 @@ const DetailSection = (props: DetailInterface) => {
 			</SectionHeader>
 			<>
 				<Detail>
-					ประเภทรถ <span>รถ {details.carrier_specification.truck.type.wheel} ล้อ {details.carrier_specification.truck.type.options}</span>
+					ประเภทรถ <span>{details.carrier_specification.truck.property.type} {details.carrier_specification.truck.property.option} {details.carrier_specification.truck.property.chassis}</span>
 				</Detail>
 				<Detail>
 					อายุไม่เกิน <span>{details.carrier_specification.truck.age}</span> <span>ปี</span>

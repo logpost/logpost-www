@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { CarrierProfile } from '../../entities/interface/carrier'
 import { AuthInterface } from '../../entities/interface/common'
+import { JobInterface } from '../../entities/interface/job'
 const ACCOUNT_URL = "https://account-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app/account"
 const JOB_URL = "https://jobs-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app/jobs"
 
 const signup = async (role: string, data: CarrierProfile) => {
 	try {
-		const res = await axios.post(`${ACCOUNT_URL}/signup/${role}`, data )
+		const res = await axios.post(`${ACCOUNT_URL}/signup/${role}`, data)
 		console.log(res)
 	} catch (error) {
 		console.log(error)
@@ -28,18 +29,30 @@ const logout = async () => {
 	window.location.href = "/login"
 }
 
-const getAllJobs = async () => {
+const getAllJobs = async (next: (jobs: JobInterface[]) => void) => {
 	try {
 		const res = await axios.get(`${JOB_URL}/all`)
+		next(res.data)
+	} catch (error) {
+		console.log(error)
+	}
+}
+
+const createJob = async (data: JobInterface) => {
+	console.log(data)
+	axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('access_token')}`
+	try {
+		const res = await axios.post(`${JOB_URL}/create`, data)
 		console.log(res)
 	} catch (error) {
 		console.log(error)
 	}
-} 
+}
 
 export {
 	signup,
 	login,
 	logout,
-	getAllJobs
+	getAllJobs,
+	createJob
 }

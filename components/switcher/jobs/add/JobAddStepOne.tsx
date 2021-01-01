@@ -111,7 +111,8 @@ const JobAddStepOne = (props: JobAddInterface) => {
 					type="other"
 				>
 					<DateAndTimePicker
-						dateAndTime={stepOneDetails.dropoff_date || new Date()}
+						minDate={stepOneDetails.pickup_date}
+						dateAndTime={stepOneDetails.dropoff_date || stepOneDetails.pickup_date || new Date()}
 						setDateAndTime={(value: Date) => setStepOneDetails({ ...stepOneDetails, dropoff_date: value })}
 					/>
 				</InputComponent>

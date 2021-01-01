@@ -1,5 +1,6 @@
 import { StringDecoder } from "string_decoder"
 import { ReactElement } from 'react'
+import { JobInterface } from "./job"
 
 export interface AuthInterface {
 	username: string
@@ -49,40 +50,9 @@ export interface ToggleComponentInterface {
 	setToggle: (toggle: boolean) => void
 }
 
- export interface JobDetailsInterface {
-	_id?: string
-	carrier_id?: string
-	pickup_location?: string
-	dropoff_location?: string
-	pickup_date?: Date
-	dropoff_date?: Date
-	product_type?: string
-	weight?: number
-	waiting_time?: number
-	offer_price?: number
-	auto_price?: number
-	status?: number
-	distance?: number
-	permission?: StringDecoder
-	description?: string
-	carrier_specification?: { 
-		truck?: {
-			age?: number
-			property?: {
-				type?: string,
-				option?: string,
-				chassis?: number
-			}
-		}
-		driver?: {
-			driver_license_type?: string
-		}
-	}
-}
-
 export interface JobAddInterface {
-	details: JobDetailsInterface
-	setDetails: (details: JobDetailsInterface) => void
+	details: JobInterface
+	setDetails: (details: JobInterface) => void
 }
 
 export interface TableComponentInterface {
