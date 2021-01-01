@@ -13,6 +13,7 @@ import { JobAddInterface } from "../../../../entities/interface/common"
 import { useRouter } from "next/router"
 import "react-datepicker/dist/react-datepicker.css"
 import DateAndTimePicker from "../../../common/DateAndTimePicker"
+import GoogleMap from "../../../common/GoogleMap"
 
 const JobMap = styled.div`
 	background: url(/images/job-map.png) no-repeat;
@@ -46,6 +47,7 @@ const JobAddStepOne = (props: JobAddInterface) => {
 	const router = useRouter()
 	const { details, setDetails } = props
 	const [stepOneDetails, setStepOneDetails] = useState(details)
+
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
 		setStepOneDetails({ ...stepOneDetails, [e.target.name]: value })
@@ -71,18 +73,25 @@ const JobAddStepOne = (props: JobAddInterface) => {
 					percent={1 / 4}
 				/>
 			</FormHeader>
-			<JobMap />
+			<GoogleMap 
+				pickupInput={document.getElementById("pickup-location") as HTMLInputElement} 
+				dropoffInput={document.getElementById("dropoff-location") as HTMLInputElement} 
+			/>
+			{/* <JobMap /> */}
 			<FormInputContainer>
 				<SectionHeader>
 					<div>ขึ้นสินค้า</div> <Line />
 				</SectionHeader>
 				<InputComponent
 					name="pickup_location"
+					id="pickup-location"
 					labelEN="Location"
 					labelTH="สถานที่"
-					value={stepOneDetails.pickup_location}
 					handleOnChange={handleInputOnChange}
 				/>
+				<div>
+				
+				</div>
 				<InputComponent
 					name="pickup_date"
 					labelEN="Date and Time"
@@ -99,6 +108,7 @@ const JobAddStepOne = (props: JobAddInterface) => {
 				</SectionHeader>
 				<InputComponent
 					name="dropoff_location"
+					id="dropoff-location"
 					labelEN="Location"
 					labelTH="สถานที่"
 					value={stepOneDetails.dropoff_location}

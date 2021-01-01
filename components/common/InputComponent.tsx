@@ -104,6 +104,7 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 		handleOnChange,
 		children,
 		classifier,
+		id,
 		required = true
 	} = props
 
@@ -136,6 +137,7 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 					onChange={(e) => handleOnChange(e)}
 					value={value}
 					name={name}
+					id={id}
 				/>
 				{
 					classifier &&
