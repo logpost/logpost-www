@@ -1,6 +1,10 @@
 import { StringDecoder } from "string_decoder"
 import { ReactElement } from 'react'
 
+export interface AuthInterface {
+	username: string
+	password: string
+}
 export interface InputComponentInterface {
 	name?: string
 	value?: string

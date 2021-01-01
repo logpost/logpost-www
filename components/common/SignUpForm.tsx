@@ -3,9 +3,8 @@ import styled from 'styled-components'
 import { SignUpFormInterface } from '../../entities/interface/common'
 import InputComponent from './InputComponent'
 import { PrimaryButton, Title, Form, FormActions, SecondaryButton } from '../styles/GlobalComponents'
-import appStore from '../../store/AppStore'
 import { useRouter } from 'next/router'
-import { view } from '@risingstack/react-easy-state'
+import { signup } from '../utilities/apis'
 
 const RadioInputContainer = styled.div`
 	display: flex;
@@ -47,8 +46,6 @@ const SignUpForm = (props: SignUpFormInterface) => {
 		display_name: "",
 		email: ""
 	})
-
-	const { signup } = appStore
 	const router = useRouter()
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +54,8 @@ const SignUpForm = (props: SignUpFormInterface) => {
 	}
 
 	const handleSignup = () => {
-		signup(role, profile)
+		const {confirm_password, ...signupData} = profile
+		signup(role, signupData)
 		router.push({
 			pathname: '/alert/confirm/email',
 			query: { email: profile.email },

@@ -2,22 +2,23 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import InputComponent from "../../components/common/InputComponent"
 import { useRouter } from "next/router"
-import appStore from '../../store/AppStore'
-import { view } from '@risingstack/react-easy-state'
 import {
 	Background,
 	PrimaryButton,
 	Title,
 	TextButton,
 } from "../../components/styles/GlobalComponents"
+import { login } from "../../components/utilities/apis"
 
 const LoginContainer = styled.div`
 	position: absolute;
 	bottom: 0;
 	width: 100%;
+	display: flex;
+    flex-direction: column;
 `
 
-const InputContainer = styled.div`
+const InputContainer = styled.form`
 	display: flex;
 	align-items: center;
 	flex-direction: column;
@@ -35,13 +36,14 @@ const PrimaryButtonCustom = styled(PrimaryButton)`
 	font-size: 2.4rem;
 	background-color: hsl(212, 28%, 28%);
 	font-weight: 500;
+	align-self: center;
 `
 
 const SignUpContainer = styled.div`
 	display: flex;
 	align-items: center;
 	flex-direction: column;
-	margin-top: 2.6rem;
+	margin: 2.6rem 0;
 	font-size: 2rem;
 	color: hsl(217, 16%, 16%);
 
@@ -91,55 +93,55 @@ const TitleContainer = styled.div`
 
 const LoginPage = () => {
 	const router = useRouter()
+	const [role, setRole] = useState("shipper")
 	const [auth, setAuth] = useState({
-		role: "shipper",
 		username: "",
 		password: "",
 	})
-
-	const { login } = appStore
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
 		setAuth({ ...auth, [e.target.name]: value })
 	}
 
-	// const handleLogin = () => {
-	//	 login(auth)
-	//	 router.push('/jobs')
-	// }
+	const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		login(role, auth)
+		router.push('/jobs')
+	}
 
 	return (
 		<Background>
 			<TitleContainer>
 				<Title>เข้าสู่ระบบ</Title>
-				{auth.role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
+				{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
 			</TitleContainer>
 			<LoginContainer>
 				<div>
 					<RadioInput
 						type="button"
-						value={auth.role}
+						value={role}
 						name="shipper"
-						onClick={() => setAuth({ ...auth, role: "shipper" })}
+						onClick={() => setRole("shipper")}
 					>
 						ผู้ส่ง
 					</RadioInput>
 					<RadioInput
 						type="button"
-						value={auth.role}
+						value={role}
 						name="carrier"
-						onClick={() => setAuth({ ...auth, role: "carrier" })}
+						onClick={() => setRole("carrier")}
 					>
 						ขนส่ง
 					</RadioInput>
 				</div>
-				<InputContainer>
+				<InputContainer onSubmit={handleLogin}>
 					<InputComponent
 						labelSize="large"
 						labelTH="ชื่อผู้ใช้"
 						labelEN="Username"
 						name="username"
+						required={false}
 						value={auth.username}
 						handleOnChange={handleInputOnChange}
 					/>
@@ -149,15 +151,15 @@ const LoginPage = () => {
 						labelTH="รหัสผ่าน"
 						labelEN="Password"
 						name="password"
+						required={false}
 						value={auth.password}
 						handleOnChange={handleInputOnChange}
 					/>
-					{/* <PrimaryButtonCustom onClick={handleLogin}>เข้าสู่ระบบ</PrimaryButtonCustom> */}
-					<PrimaryButtonCustom onClick={() => router.push("/jobs")}>เข้าสู่ระบบ</PrimaryButtonCustom>
+					<PrimaryButtonCustom type="submit">เข้าสู่ระบบ</PrimaryButtonCustom>
 					<SignUpContainer>
 						ยังไม่ได้ลงทะเบียน?
-						<TextButton onClick={() => router.push(`/signup/${auth.role}`)}>
-							ลงทะเบียน{auth.role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
+						<TextButton onClick={() => router.push(`/signup/${role}`)}>
+							ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
 						</TextButton>
 					</SignUpContainer>
 				</InputContainer>
@@ -166,4 +168,4 @@ const LoginPage = () => {
 	)
 }
 
-export default view(LoginPage)
+export default LoginPage
