@@ -105,7 +105,8 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 		children,
 		classifier,
 		id,
-		required = true
+		required = true,
+		readOnly = false
 	} = props
 
 	return (
@@ -138,6 +139,7 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 					value={value}
 					name={name}
 					id={id}
+					readOnly={readOnly}
 				/>
 				{
 					classifier &&

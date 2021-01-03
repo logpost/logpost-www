@@ -14,6 +14,8 @@ import { useRouter } from "next/router"
 import "react-datepicker/dist/react-datepicker.css"
 import DateAndTimePicker from "../../../common/DateAndTimePicker"
 import GoogleMap from "../../../common/GoogleMap"
+import Modal from "../../../common/Modal"
+import { extractAddress } from "../../../utilities/helper"
 
 const JobMap = styled.div`
 	background: url(/images/job-map.png) no-repeat;
@@ -43,10 +45,37 @@ const Line = styled.div`
 	width: 100%;
 `
 
+const ModalContent = styled.div`
+	padding: 0 2rem;
+	text-align: center;
+
+	span {
+		font-weight: 500;
+	}
+
+	> div:nth-child(3), ${FormActions} {
+		margin-top: 1rem;
+	}
+`
+
+interface LatLngInterface {
+	latitude: number
+	longtitude: number
+}
+
 const JobAddStepOne = (props: JobAddInterface) => {
 	const router = useRouter()
 	const { details, setDetails } = props
 	const [stepOneDetails, setStepOneDetails] = useState(details)
+	const [pickupLocation, setPickupLocation] = useState(details.pickup_location)
+	const [dropoffLocation, setDropoffLocation] = useState(details.dropoff_location)
+	const [toggleModal, setToggleModal] = useState(false)
+	const [place, setPlace] = useState({
+		pickup: {},
+		dropoff: {}
+	})
+
+	console.log(details)
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
@@ -54,14 +83,24 @@ const JobAddStepOne = (props: JobAddInterface) => {
 	}
 
 	const submitDetails = () => {
+		const extractedAddress = extractAddress(place.pickup.address_components)
+		const address = {
+			latitude: place.pickup.geometry.location.lat(),
+			longtitude: place.pickup.geometry.location.lng(),
+			address: extractedAddress.address,  
+			province: extractedAddress.province,
+			district: extractedAddress.district,
+			zipcode: extractedAddress.zipcode,	
+		}
 		setDetails({
 			...details,
-			pickup_location: stepOneDetails.pickup_location,
-			dropoff_location: stepOneDetails.dropoff_location,
+			pickup_location: address,
+			dropoff_location: dropoffLocation,
 			pickup_date: stepOneDetails.pickup_date,
 			dropoff_date: stepOneDetails.dropoff_date,
+			distance: stepOneDetails.distance
 		})
-		router.push(`/jobs/add/2`, undefined, { shallow: true })
+		// router.push(`/jobs/add/2`, undefined, { shallow: true })
 	}
 
 	return (
@@ -73,25 +112,52 @@ const JobAddStepOne = (props: JobAddInterface) => {
 					percent={1 / 4}
 				/>
 			</FormHeader>
-			<GoogleMap 
+			{/* <GoogleMap 
 				pickupInput={document.getElementById("pickup-location") as HTMLInputElement} 
 				dropoffInput={document.getElementById("dropoff-location") as HTMLInputElement} 
-			/>
+				setPickupLatLng={(value: Object) => setPickupLocation(value)}
+				setDropoffLatLng={(value: Object) => setDropoffLocation(value)}
+				setDistance={(value: number) => setStepOneDetails({...stepOneDetails, distance: value})}
+			/> */}
 			{/* <JobMap /> */}
 			<FormInputContainer>
 				<SectionHeader>
 					<div>ขึ้นสินค้า</div> <Line />
 				</SectionHeader>
-				<InputComponent
-					name="pickup_location"
-					id="pickup-location"
-					labelEN="Location"
-					labelTH="สถานที่"
-					handleOnChange={handleInputOnChange}
-				/>
-				<div>
-				
+				<div onClick={() => setToggleModal(true)}>
+					<InputComponent
+						name="pickup_location"
+						labelEN="Location"
+						labelTH="สถานที่"
+						readOnly={true}
+						value={place.pickup.formatted_address}
+					/>
 				</div>
+				<Modal toggle={toggleModal} setToggle={setToggleModal}>
+					<ModalContent>
+						<span>เลือกสถานที่ขึ้นสินค้า</span>
+						<InputComponent
+							name="pickup_location"
+							id="pickup-location"
+							labelEN="Location"
+							labelTH="สถานที่"
+							disableLabel={true}
+							handleOnChange={handleInputOnChange}
+						/>
+						<GoogleMap 
+							originInput={document.getElementById("pickup-location") as HTMLInputElement} 
+							dropoffInput={document.getElementById("dropoff-location") as HTMLInputElement} 
+							setAddress={(value: Object) => setPickupLocation(value)}
+							setDistance={(value: number) => setStepOneDetails({...stepOneDetails, distance: value})}
+							setPlace={(value: string) => setPlace({...place, pickup: value})}
+							submitButton={document.getElementById("submit-address") as HTMLButtonElement}
+						/>
+						<FormActions>
+							<SecondaryButton onClick={() => setToggleModal(false)}>ย้อนกลับ</SecondaryButton>
+							<PrimaryButton id="submit-address" onClick={() => setToggleModal(false)}>เลือกตำแหน่ง</PrimaryButton>
+						</FormActions>
+					</ModalContent>
+				</Modal>
 				<InputComponent
 					name="pickup_date"
 					labelEN="Date and Time"
@@ -108,10 +174,9 @@ const JobAddStepOne = (props: JobAddInterface) => {
 				</SectionHeader>
 				<InputComponent
 					name="dropoff_location"
-					id="dropoff-location"
 					labelEN="Location"
 					labelTH="สถานที่"
-					value={stepOneDetails.dropoff_location}
+					readOnly={true}
 					handleOnChange={handleInputOnChange}
 				/>
 				<InputComponent

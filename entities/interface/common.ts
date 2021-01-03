@@ -15,6 +15,7 @@ export interface InputComponentInterface {
 	disableLabel?: boolean
 	required?: boolean
 	id?: string
+	readOnly?: boolean
 }
 
 export interface ProfileInterface {
@@ -49,8 +50,18 @@ export interface ToggleComponentInterface {
  export interface JobDetailsInterface {
 	_id?: string
 	carrier_id?: string
-	pickup_location?: string
-	dropoff_location?: string
+	pickup_location?: {
+		latitude: number,
+		longitude: number
+	}
+	dropoff_location?: {
+		latitude: number,
+		longitude: number,
+		address: string,  
+		province: string,
+		district: string,
+		zipcode: string,
+	}
 	pickup_date?: Date
 	dropoff_date?: Date
 	product_type?: string
