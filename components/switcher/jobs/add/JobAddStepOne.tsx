@@ -7,20 +7,19 @@ import {
 	PrimaryButton,
 	SecondaryButton
 } from '../../../styles/GlobalComponents';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 import DateAndTimePicker from '../../../common/DateAndTimePicker';
-import GoogleMap from '../../../common/GoogleMap';
 import InputComponent from '../../../common/InputComponent';
 import { JobAddInterface } from '../../../../entities/interface/common';
 import Modal from '../../../common/Modal';
 import Progress from '../../../common/Progress';
 import { extractAddress } from '../../../utilities/helper';
-import { initMap, route, selectPosition } from '../../../utilities/googlemaps'
+import { initMap, route, selectPositionOnMap } from '../../../utilities/googlemaps'
 import styled from 'styled-components';
 import { useEffect } from 'react'
 import { useRouter } from 'next/router';
-import { pl } from 'date-fns/locale'
+import { MapInterface, PlaceInterface } from '../../../../entities/interface/googlemaps'
 
 const SectionHeader = styled.div`
 	font-size: 2rem;
@@ -66,23 +65,13 @@ const Map = styled.div`
 	}
 `
 
-interface LatLngInterface {
-	latitude: number
-	longtitude: number
-}
-
-interface PlaceInterface {
-	pickup: google.maps.places.PlaceResult | google.maps.GeocoderResult
-	dropoff: google.maps.places.PlaceResult | google.maps.GeocoderResult
-}
-
 const JobAddStepOne = (props: JobAddInterface) => {
 	const router = useRouter()
 	const { details, setDetails } = props
 	const [stepOneDetails, setStepOneDetails] = useState(details)
 	const [togglePickupModal, setTogglePickupModal] = useState(false)
 	const [toggleDropoffModal, setToggleDropoffModal] = useState(false)
-	const [routeMap, setRouteMap] = useState({
+	const [routeMap, setRouteMap] = useState<MapInterface>({
 		map: null,
 		directionsService: null,
 		directionsRenderer: null
@@ -93,39 +82,25 @@ const JobAddStepOne = (props: JobAddInterface) => {
 	})
 	console.log(details)
 
-	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value
-		setStepOneDetails({ ...stepOneDetails, [e.target.name]: value })
+	const getAddressFromPlace = (place: google.maps.places.PlaceResult | google.maps.GeocoderResult) => {
+		const extractedAddress = extractAddress(place.address_components)
+		return {
+			latitude: place.geometry.location.lat(),
+			longitude: place.geometry.location.lng(),
+			...extractedAddress
+		}
 	}
 
 	const submitDetails = () => {
-		const pickupExtractedAddress = extractAddress(place.pickup.address_components)
-		const pickupAddress = {
-			latitude: place.pickup.geometry.location.lat(),
-			longitude: place.pickup.geometry.location.lng(),
-			address: pickupExtractedAddress.address,  
-			province: pickupExtractedAddress.province,
-			district: pickupExtractedAddress.district,
-			zipcode: pickupExtractedAddress.zipcode,	
-		}
-		const dropoffExtractedAddress = extractAddress(place.dropoff.address_components)
-		const dropoffAddress = {
-			latitude: place.dropoff.geometry.location.lat(),
-			longitude: place.dropoff.geometry.location.lng(),
-			address: dropoffExtractedAddress.address,  
-			province: dropoffExtractedAddress.province,
-			district: dropoffExtractedAddress.district,
-			zipcode: dropoffExtractedAddress.zipcode,	
-		}
 		setDetails({
 			...details,
-			pickup_location: pickupAddress,
-			dropoff_location: dropoffAddress,
+			pickup_location: getAddressFromPlace(place.pickup),
+			dropoff_location: getAddressFromPlace(place.dropoff),
 			pickup_date: stepOneDetails.pickup_date,
 			dropoff_date: stepOneDetails.dropoff_date,
 			distance: stepOneDetails.distance
 		})
-		// router.push(`/jobs/add/2`, undefined, { shallow: true })
+		router.push(`/jobs/add/2`, undefined, { shallow: true })
 	}
 
 	useEffect(() => {
@@ -141,22 +116,22 @@ const JobAddStepOne = (props: JobAddInterface) => {
 		}
 	}, [place])
 
-	const openDropoff = () => {
+	const chooseDropoff = () => {
 		setToggleDropoffModal(true)
 		const targetMap = document.getElementById("dropoff-map") as HTMLElement
 		const placeInput = document.getElementById("dropoff-location") as HTMLInputElement
 		const setDropoffPlace = (value: google.maps.places.PlaceResult | google.maps.GeocoderResult) => setPlace({...place, dropoff: value})
 		const submitButton = document.getElementById("submit-dropoff") as HTMLButtonElement
-		selectPosition(targetMap, placeInput, setDropoffPlace, submitButton)
+		selectPositionOnMap(targetMap, placeInput, setDropoffPlace, submitButton)
 	}
 
-	const openPickup = () => {
+	const choosePickup = () => {
 		setTogglePickupModal(true)
 		const targetMap = document.getElementById("pickup-map") as HTMLElement
 		const placeInput = document.getElementById("pickup-location") as HTMLInputElement
 		const setPickupPlace = (value: google.maps.places.PlaceResult | google.maps.GeocoderResult) => setPlace({...place, pickup: value})
 		const submitButton = document.getElementById("submit-pickup") as HTMLButtonElement
-		selectPosition(targetMap, placeInput, setPickupPlace, submitButton)
+		selectPositionOnMap(targetMap, placeInput, setPickupPlace, submitButton)
 	}
 
 	return (
@@ -169,18 +144,11 @@ const JobAddStepOne = (props: JobAddInterface) => {
 				/>
 			</FormHeader>
 			<Map id="route-map" />
-			{/* <GoogleMap 
-				pickupInput={document.getElementById("pickup-location") as HTMLInputElement} 
-				dropoffInput={document.getElementById("dropoff-location") as HTMLInputElement} 
-				setPickupLatLng={(value: Object) => setPickupLocation(value)}
-				setDropoffLatLng={(value: Object) => setDropoffLocation(value)}
-				setDistance={(value: number) => setStepOneDetails({...stepOneDetails, distance: value})}
-			/> */}
 			<FormInputContainer>
 				<SectionHeader>
 					<div>ขึ้นสินค้า</div> <Line />
 				</SectionHeader>
-				<div onClick={openPickup}>
+				<div onClick={choosePickup}>
 					<InputComponent
 						name="pickup_location"
 						labelEN="Location"
@@ -198,7 +166,6 @@ const JobAddStepOne = (props: JobAddInterface) => {
 							labelEN="Location"
 							labelTH="สถานที่"
 							disableLabel={true}
-							handleOnChange={handleInputOnChange}
 						/>
 						<Map id="pickup-map" />
 						<FormActions>
@@ -221,7 +188,7 @@ const JobAddStepOne = (props: JobAddInterface) => {
 				<SectionHeader>
 					<div>ลงสินค้า</div> <Line />
 				</SectionHeader>
-				<div onClick={openDropoff}>
+				<div onClick={chooseDropoff}>
 					<InputComponent
 						name="dropoff_location"
 						labelEN="Location"
@@ -239,7 +206,6 @@ const JobAddStepOne = (props: JobAddInterface) => {
 							labelEN="Location"
 							labelTH="สถานที่"
 							disableLabel={true}
-							handleOnChange={handleInputOnChange}
 						/>
 						<Map id="dropoff-map" />
 						<FormActions>

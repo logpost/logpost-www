@@ -1,4 +1,5 @@
 import { Loader } from "@googlemaps/js-api-loader"
+import { MapInterface } from "../../entities/interface/googlemaps"
 const loader = new Loader({
 	apiKey: "AIzaSyBgAfMFqGXkbbWSqmebn95UOGnjb5w-rso",
 	version: "weekly",
@@ -6,13 +7,11 @@ const loader = new Loader({
 	language: "th"
 });
 
-export const initMap = (targetMap, setMap) => {
-	let map: google.maps.Map;
-
+export const initMap = (targetMap: HTMLElement, setMap:(mapProperty: MapInterface) => void):void => {
 	loader.load().then(() => {
 		const bangkokLatLng = { lat: 13.7563, lng: 100.5018 }
 		if (targetMap) {
-			map = new google.maps.Map(targetMap, {
+			const map = new google.maps.Map(targetMap, {
 				center: bangkokLatLng,
 				zoom: 8,
 				streetViewControl: false,
@@ -29,9 +28,9 @@ export const initMap = (targetMap, setMap) => {
 export const route = (
 	originPlace: google.maps.LatLng, 
 	destinationPlace:  google.maps.LatLng,
-	map: Object,
+	map: MapInterface,
 	setDistance: (distance: number) => void
-	) => {
+	): void => {
 	loader.load().then(() => {
 		const travelMode = google.maps.TravelMode.DRIVING;
 		const directionsService = map.directionsService;
@@ -49,9 +48,9 @@ export const route = (
 			},
 			(response, status) => {
 				if (status === "OK") {
-					console.log("!!!")
 					directionsRenderer.setDirections(response);
-					setDistance((response.routes[0].legs[0].distance.value)/1000)
+					const distance = (response.routes[0].legs[0].distance.value)/1000
+					setDistance(distance)
 				} else {
 					window.alert("Directions request failed due to " + status);
 				}
@@ -60,7 +59,11 @@ export const route = (
 	})
 }
 
-export const selectPosition = (targetMap, placeInput, setPlace, submitButton) => {
+export const selectPositionOnMap = (
+	targetMap: HTMLElement, 
+	placeInput: HTMLInputElement, 
+	setPlace: (place: google.maps.places.PlaceResult | google.maps.GeocoderResult) => void, 
+	submitButton: HTMLButtonElement) => {
 	let map: google.maps.Map;
 	let currentPlace: google.maps.places.PlaceResult | google.maps.GeocoderResult
 	let marker: google.maps.Marker
