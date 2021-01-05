@@ -53,6 +53,10 @@ export interface ToggleComponentInterface {
 	pickup_location?: {
 		latitude: number,
 		longitude: number
+		address: string,  
+		province: string,
+		district: string,
+		zipcode: string,
 	}
 	dropoff_location?: {
 		latitude: number,

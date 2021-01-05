@@ -1,5 +1,5 @@
 import { Loader } from "@googlemaps/js-api-loader"
-import { MapInterface } from "../../entities/interface/googlemaps"
+import { MapInterface, PlaceInterface } from "../../entities/interface/googlemaps"
 const loader = new Loader({
 	apiKey: "AIzaSyBgAfMFqGXkbbWSqmebn95UOGnjb5w-rso",
 	version: "weekly",
@@ -59,10 +59,55 @@ export const route = (
 	})
 }
 
+export interface LatLng {
+	lat: number,
+	lng: number
+}
+
+export const getPlaceDetails = (
+	pickupLatLng: LatLng, 
+	dropoffLatLng: LatLng, 
+	setPlace: (value: PlaceInterface) => void)
+	:(google.maps.GeocoderResult | void) => {
+	loader.load().then(() => {
+		const geocoder = new google.maps.Geocoder();
+		const result = {
+			pickup: null,
+			dropoff: null
+		}
+		if (pickupLatLng.lat && pickupLatLng.lng && dropoffLatLng.lat && dropoffLatLng.lng) {
+			geocoder.geocode(
+				{ location: new google.maps.LatLng(pickupLatLng.lat, pickupLatLng.lng) },
+				(
+					results: google.maps.GeocoderResult[],
+					status: google.maps.GeocoderStatus
+				) => {
+					if (status === "OK") {
+						result.pickup = results[0]
+						geocoder.geocode(
+							{ location: new google.maps.LatLng(dropoffLatLng.lat, dropoffLatLng.lng) },
+							(
+								results: google.maps.GeocoderResult[],
+								status: google.maps.GeocoderStatus
+							) => {
+								if (status === "OK") {
+									result.dropoff = results[0]
+									setPlace(result)
+								}
+							}
+						)
+					}
+				}
+			)
+		}
+	})
+}
+
 export const selectPositionOnMap = (
 	targetMap: HTMLElement, 
 	placeInput: HTMLInputElement, 
 	setPlace: (place: google.maps.places.PlaceResult | google.maps.GeocoderResult) => void, 
+	currentPosition: google.maps.LatLng,
 	submitButton: HTMLButtonElement) => {
 	let map: google.maps.Map;
 	let currentPlace: google.maps.places.PlaceResult | google.maps.GeocoderResult
@@ -92,10 +137,10 @@ export const selectPositionOnMap = (
 
 	const setupCenterChangedListener = () => {
 		google.maps.event.addListener(map, 'center_changed', () => {
-			window.setTimeout(function() {
+			// window.setTimeout(function() {
 				let center = map.getCenter();
 				marker.setPosition(center);
-			}, 100);
+			// }, 100);
 			const geocoder = new google.maps.Geocoder();
 			geocoder.geocode(
 				{ location: marker.getPosition() },
@@ -120,14 +165,14 @@ export const selectPositionOnMap = (
 		const bangkokLatLng = { lat: 13.7563, lng: 100.5018 }
 		if (targetMap) {
 			map = new google.maps.Map(targetMap, {
-				center: bangkokLatLng,
+				center: currentPosition || bangkokLatLng,
 				zoom: 8,
 				streetViewControl: false,
 			});
 		}
 
 		marker = new google.maps.Marker({
-			position: bangkokLatLng,
+			position: currentPosition || bangkokLatLng,
 			map: map,
 		});
 
@@ -140,7 +185,9 @@ export const selectPositionOnMap = (
 
 		if (submitButton) {
 			submitButton.addEventListener("click", () => {
-				setPlace(currentPlace)
+				if (currentPlace) {
+					setPlace(currentPlace)
+				}
 			});
 		}
 	})

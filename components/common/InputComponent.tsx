@@ -133,14 +133,24 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 						{subLabel}
 					</SubLabel>
 				}
-				<Input
-					type={type}
-					onChange={(e) => handleOnChange(e)}
-					value={value}
-					name={name}
-					id={id}
-					readOnly={readOnly}
-				/>
+				{
+					handleOnChange ?
+					<Input
+						type={type}
+						onChange={(e) => handleOnChange(e)}
+						value={value}
+						name={name}
+						id={id}
+						readOnly={readOnly}
+					/> : 
+					<Input
+						type={type}
+						value={value}
+						name={name}
+						id={id}
+						readOnly={readOnly}
+					/>
+				}
 				{
 					classifier &&
 					<Classifier>
