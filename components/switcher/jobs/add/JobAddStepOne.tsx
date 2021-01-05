@@ -14,8 +14,8 @@ import InputComponent from '../../../common/InputComponent';
 import { JobAddInterface } from '../../../../entities/interface/common';
 import Modal from '../../../common/Modal';
 import Progress from '../../../common/Progress';
-import { extractAddress, getAddressFromPlace } from '../../../utilities/helper';
-import { getPlaceDetails, initMap, route, selectPositionOnMap } from '../../../utilities/googlemaps'
+import { getAddressFromPlace } from '../../../utilities/helper';
+import { initMap, route, selectPositionOnMap } from '../../../utilities/googlemaps'
 import styled from 'styled-components';
 import { useEffect } from 'react'
 import { useRouter } from 'next/router';
@@ -77,8 +77,8 @@ const JobAddStepOne = (props: JobAddInterface) => {
 		directionsRenderer: null
 	})
 	const [place, setPlace] = useState<PlaceInterface>({
-		pickup: null,
-		dropoff: null
+		pickup: (details.geocoder_result && details.geocoder_result.pickup) || null,
+		dropoff: (details.geocoder_result && details.geocoder_result.dropoff) || null
 	})
 	console.log(place)
 
@@ -89,34 +89,24 @@ const JobAddStepOne = (props: JobAddInterface) => {
 			dropoff_location: getAddressFromPlace(place.dropoff),
 			pickup_date: stepOneDetails.pickup_date,
 			dropoff_date: stepOneDetails.dropoff_date,
-			distance: stepOneDetails.distance
+			distance: stepOneDetails.distance,
+			geocoder_result: place
 		})
 		router.push(`/jobs/add/2`, undefined, { shallow: true })
 	}
 
 	useEffect(() => {
 		initMap(document.getElementById("route-map") as HTMLElement, setRouteMap)
-		const pickupLatLng = {
-			lat: details.pickup_location.latitude, 
-			lng: details.pickup_location.longitude
-		}
-		const dropoffLatLng = {
-			lat: details.dropoff_location.latitude, 
-			lng: details.dropoff_location.longitude
-		}
-		console.log(pickupLatLng, dropoffLatLng)
-		const setCurrentPlace = (value: PlaceInterface) => setPlace(value)
-		getPlaceDetails(pickupLatLng, dropoffLatLng, setCurrentPlace)
 	}, [])
 
 	useEffect(() => {
 		const setRouteDistance = (value: number) => setStepOneDetails({...stepOneDetails, distance: value})
-		if (place.pickup && place.dropoff) {
+		if (place.pickup && place.dropoff && routeMap.map) {
 			const pickupLatLng = place.pickup.geometry.location
 			const dropoffLatLng = place.dropoff.geometry.location
 			route(pickupLatLng, dropoffLatLng, routeMap, setRouteDistance)
 		}
-	}, [place])
+	}, [place, routeMap])
 
 	const chooseDropoff = () => {
 		setToggleDropoffModal(true)

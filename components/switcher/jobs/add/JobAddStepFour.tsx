@@ -57,7 +57,8 @@ const JobAddStepFour = (props: { details: JobDetailsInterface }) => {
 	const { createJob } = appStore
 
 	const handleNewJob = () => {
-		createJob(details)
+		const {geocoder_result, ...jobDetails} = details
+		createJob(jobDetails)
 		router.push(`/shipper/profile`)
 	}
 

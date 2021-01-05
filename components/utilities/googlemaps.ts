@@ -64,44 +64,44 @@ export interface LatLng {
 	lng: number
 }
 
-export const getPlaceDetails = (
-	pickupLatLng: LatLng, 
-	dropoffLatLng: LatLng, 
-	setPlace: (value: PlaceInterface) => void)
-	:(google.maps.GeocoderResult | void) => {
-	loader.load().then(() => {
-		const geocoder = new google.maps.Geocoder();
-		const result = {
-			pickup: null,
-			dropoff: null
-		}
-		if (pickupLatLng.lat && pickupLatLng.lng && dropoffLatLng.lat && dropoffLatLng.lng) {
-			geocoder.geocode(
-				{ location: new google.maps.LatLng(pickupLatLng.lat, pickupLatLng.lng) },
-				(
-					results: google.maps.GeocoderResult[],
-					status: google.maps.GeocoderStatus
-				) => {
-					if (status === "OK") {
-						result.pickup = results[0]
-						geocoder.geocode(
-							{ location: new google.maps.LatLng(dropoffLatLng.lat, dropoffLatLng.lng) },
-							(
-								results: google.maps.GeocoderResult[],
-								status: google.maps.GeocoderStatus
-							) => {
-								if (status === "OK") {
-									result.dropoff = results[0]
-									setPlace(result)
-								}
-							}
-						)
-					}
-				}
-			)
-		}
-	})
-}
+// export const getPlaceDetails = (
+// 	pickupLatLng: LatLng, 
+// 	dropoffLatLng: LatLng, 
+// 	setPlace: (value: PlaceInterface) => void)
+// 	:(google.maps.GeocoderResult | void) => {
+// 	loader.load().then(() => {
+// 		const geocoder = new google.maps.Geocoder();
+// 		const result = {
+// 			pickup: null,
+// 			dropoff: null
+// 		}
+// 		if (pickupLatLng.lat && pickupLatLng.lng && dropoffLatLng.lat && dropoffLatLng.lng) {
+// 			geocoder.geocode(
+// 				{ location: new google.maps.LatLng(pickupLatLng.lat, pickupLatLng.lng) },
+// 				(
+// 					results: google.maps.GeocoderResult[],
+// 					status: google.maps.GeocoderStatus
+// 				) => {
+// 					if (status === "OK") {
+// 						result.pickup = results[0]
+// 						geocoder.geocode(
+// 							{ location: new google.maps.LatLng(dropoffLatLng.lat, dropoffLatLng.lng) },
+// 							(
+// 								results: google.maps.GeocoderResult[],
+// 								status: google.maps.GeocoderStatus
+// 							) => {
+// 								if (status === "OK") {
+// 									result.dropoff = results[0]
+// 									setPlace(result)
+// 								}
+// 							}
+// 						)
+// 					}
+// 				}
+// 			)
+// 		}
+// 	})
+// }
 
 export const selectPositionOnMap = (
 	targetMap: HTMLElement, 

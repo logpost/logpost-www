@@ -1,5 +1,6 @@
 import { StringDecoder } from "string_decoder"
 import { ReactElement } from 'react'
+import { PlaceInterface } from "./googlemaps"
 
 export interface InputComponentInterface {
 	name?: string
@@ -90,6 +91,7 @@ export interface ToggleComponentInterface {
 			driver_license_type?: string
 		}
 	}
+	geocoder_result?: PlaceInterface
 }
 
 export interface JobAddInterface {
