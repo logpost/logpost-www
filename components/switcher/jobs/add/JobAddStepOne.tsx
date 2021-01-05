@@ -11,7 +11,6 @@ import React, { useState } from 'react';
 
 import DateAndTimePicker from '../../../common/DateAndTimePicker';
 import InputComponent from '../../../common/InputComponent';
-import { JobAddInterface } from '../../../../entities/interface/common';
 import Modal from '../../../common/Modal';
 import Progress from '../../../common/Progress';
 import { getAddressFromPlace } from '../../../utilities/helper';
@@ -20,6 +19,7 @@ import styled from 'styled-components';
 import { useEffect } from 'react'
 import { useRouter } from 'next/router';
 import { MapInterface, PlaceInterface } from '../../../../entities/interface/googlemaps'
+import { JobAddInterface } from '../../../../entities/interface/job'
 
 const SectionHeader = styled.div`
 	font-size: 2rem;

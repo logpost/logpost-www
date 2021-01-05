@@ -1,6 +1,15 @@
 import { CarrierSpecificationInterface } from "./carrier"
 import { PlaceInterface } from "./googlemaps"
 
+export interface Location {
+	latitude: number
+	longitude: number
+	address: string
+	province: string 
+	district: string
+	zipcode: string
+}
+
 export interface JobInterface {
 	job_id?: string 
 	shipper_id?: string 
@@ -8,8 +17,8 @@ export interface JobInterface {
 	driver_id?: string
 	truck_id?: string
 	owner_display_name?: string
-	pickup_location: string //***
-	dropoff_location: string //***
+	pickup_location: Location
+	dropoff_location: Location 
 	pickup_date: Date
 	dropoff_date: Date
 	weight: number
@@ -26,4 +35,9 @@ export interface JobInterface {
 	updated_at?: Date
 	delete_at?: Date
 	geocoder_result?: PlaceInterface
+}
+
+export interface JobAddInterface {
+	details: JobInterface
+	setDetails: (details: JobInterface) => void
 }

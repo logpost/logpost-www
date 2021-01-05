@@ -1,6 +1,20 @@
 const MOCKUP_JOB = {
-	pickup_location: "กรุงเทพ",
-	dropoff_location: "ชลบุรี",
+	pickup_location: {
+		address: "",
+		district: "",
+		province: "",
+		zipcode: "",
+		latitude: null,
+		longitude: null
+	},
+	dropoff_location: {
+		address: "",
+		district: "",
+		province: "",
+		zipcode: "",
+		latitude: null,
+		longitude: null
+	},
 	pickup_date: "",
 	dropoff_date: "",
 	weight: 1.2,

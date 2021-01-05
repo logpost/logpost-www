@@ -1,3 +1,5 @@
+import { SHORT_MONTHS } from "../../data/jobs"
+
 export const filterData = (
 	data: Object[],
 	filter: string,
@@ -17,6 +19,17 @@ export const filterData = (
 export const pad = (num: string, size: number) => {
 	while (num.length < size) num = "0" + num;
 	return num;
+}
+
+export const dateFormatter = (fullDate: Date) => {
+	const hour = pad(String(fullDate.getHours()), 2)
+	const minute = pad(String(fullDate.getMinutes()), 2)
+	const year = fullDate.getFullYear()
+	const month = fullDate.getMonth()
+	const date = fullDate.getDate()
+	const shortThaiYear = String(year + 543).slice(2, 4)
+	const formattedDate = `${date} ${SHORT_MONTHS[month]} ${shortThaiYear} ${hour}:${minute} น.`
+	return formattedDate
 }
 
 interface AddressComponentInterface {
@@ -44,7 +57,7 @@ export const extractAddress = (addressComponents: AddressComponentInterface[]) =
 		if (isDistrictType) {
 			address.district = addressComponent.long_name
 		} else if (isProvinceType) {
-			address.province = addressComponent.long_name
+			address.province = (addressComponent.long_name).replace("จังหวัด", "")
 		} else if (isZipcodeType) {
 			address.zipcode = addressComponent.long_name
 		} else if (isAddressType) {

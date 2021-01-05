@@ -53,11 +53,6 @@ export interface ToggleComponentInterface {
 	setToggle: (toggle: boolean) => void
 }
 
-export interface JobAddInterface {
-	details: JobInterface
-	setDetails: (details: JobInterface) => void
-}
-
 export interface TableComponentInterface {
 	columns: {
 		id: string

@@ -9,16 +9,21 @@ import {
 	FormInputContainer,
 	FormHeader
 } from "../../../styles/GlobalComponents"
-import { JobAddInterface } from "../../../../entities/interface/common"
+import { JobAddInterface } from "../../../../entities/interface/job"
 import { useRouter } from "next/router"
 
 const JobAddStepTwo = (props: JobAddInterface) => {
 	const router = useRouter()
 	const { details, setDetails } = props
 	const [stepTwoDetails, setStepTwoDetails] = useState(details)
+
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
-		setStepTwoDetails({ ...stepTwoDetails, [e.target.name]: value })
+		if (e.target.type === "number" || e.target.name === "offer_price") {
+			setStepTwoDetails({ ...stepTwoDetails, [e.target.name]: parseInt(value) })
+		} else {
+			setStepTwoDetails({ ...stepTwoDetails, [e.target.name]: value })
+		}
 	}
 
 	const submitDetails = () => {

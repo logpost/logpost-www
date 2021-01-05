@@ -13,6 +13,21 @@ const MONTHS = [
 	"ธันวาคม"
 ]
 
+const SHORT_MONTHS = [
+	"ม.ค.",
+	"ก.พ.",
+	"มี.ค.",
+	"เม.ย.",
+	"พ.ค.",
+	"มิ.ย.",
+	"ก.ค.",
+	"ส.ค.",
+	"ก.ย.",
+	"ต.ค.",
+	"พ.ย.",
+	"ธ.ค."
+]
+
 const JOB_STATUS_CODE = {
 	100: {
 		status_name: "รอผู้รับงาน",
@@ -57,5 +72,6 @@ const JOB_STATUS_CODE = {
 
 export {
 	MONTHS,
-	JOB_STATUS_CODE
+	JOB_STATUS_CODE,
+	SHORT_MONTHS
 }

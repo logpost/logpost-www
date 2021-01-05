@@ -12,6 +12,7 @@ import DetailSection from "../../../common/DetailSection"
 import { useRouter } from "next/router"
 import { createJob } from "../../../utilities/apis"
 import { JobInterface } from "../../../../entities/interface/job"
+import { dateFormatter } from "../../../utilities/helper"
 
 const JobMap = styled.div`
 	background: url(/images/job-map.png) no-repeat;
@@ -53,11 +54,12 @@ const Price = styled.div`
 const JobAddStepFour = (props: { details: JobInterface }) => {
 	const router = useRouter()
 	const { details } = props
+	console.log(details)
 
 	const handleNewJob = () => {
 		const {geocoder_result, ...jobDetails} = details
-		// console.log(jobDetails)
-		// createJob(jobDetails)
+		console.log(jobDetails)
+		createJob(jobDetails)
 		// router.push(`/shipper/profile`)
 	}
 
@@ -75,7 +77,7 @@ const JobAddStepFour = (props: { details: JobInterface }) => {
 						<Detail>
 							โดย <span>ล็อกค้าไม้</span>
 						</Detail>
-						<span>18 ต.ค. 63 13.00 น.</span>
+						<span>{dateFormatter(new Date)}</span>
 					</span>
 				</JobPrice>
 				<FormActions>

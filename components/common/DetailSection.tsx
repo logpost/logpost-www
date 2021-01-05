@@ -2,11 +2,8 @@ import React, { FunctionComponent } from "react"
 import styled from "styled-components"
 import { DetailRow, Detail } from "../styles/GlobalComponents"
 import { DownArrowLine, UpArrowLine } from "./Icons"
-import { JobDetailsInterface } from '../../entities/interface/common'
-
-interface DetailInterface {
-	details: JobDetailsInterface
-}
+import { dateFormatter } from "../utilities/helper"
+import { JobInterface } from "../../entities/interface/job"
 
 const DetailSectionContainer = styled.div`
 	> div {
@@ -89,7 +86,7 @@ const PickUpDeliverContainer = styled.div`
 	}
 `
 
-const DetailSection = (props: DetailInterface) => {
+const DetailSection = (props: JobInterface) => {
 	const { details } = props
 
 	return (
@@ -103,17 +100,15 @@ const DetailSection = (props: DetailInterface) => {
 						<span>
 							ขึ้นสินค้า <UpArrowLine />
 						</span>
-						<span>{details.pickup_location}</span>
-						{/* <span>{details.pickup_date}</span> */}
-						<span>30 ต.ค. 63 09:00 น.</span>
+						<span>{details.pickup_location.province}</span>
+						<span>{dateFormatter(details.pickup_date)}</span>
 					</PickUpDeliverContainer>
 					<PickUpDeliverContainer>
 						<span>
 							ลงสินค้า <DownArrowLine />
 						</span>
-						<span>{details.dropoff_location}</span>
-						{/* <span>{details.dropoff_date}</span> */}
-						<span>31 ต.ค. 63 10:00 น.</span>
+						<span>{details.dropoff_location.province}</span>
+						<span>{dateFormatter(details.dropoff_date)}</span>
 					</PickUpDeliverContainer>
 				</DetailRow>
 				<DetailRow>

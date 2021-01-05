@@ -10,7 +10,7 @@ import {
 	ButtonGroupContainer,
 	ButtonItem
 } from "../../../styles/GlobalComponents"
-import { JobAddInterface } from "../../../../entities/interface/common"
+import { JobAddInterface } from "../../../../entities/interface/job"
 import { useRouter } from "next/router"
 import SelectComponent from '../../../common/SelectComponent'
 import { DRIVER_LICENSE_TYPE, TRUCK_TYPE_LIST } from "../../../../data/carrier"

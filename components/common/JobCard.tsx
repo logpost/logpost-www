@@ -133,9 +133,9 @@ const JobCard = (props: JobCardInterface) => {
 	return (
 		<CardContainer>
 			<Locations>
-				{details.pickup_location}
+				{details.pickup_location.province}
 				<RightArrowLine />
-				{details.dropoff_location}
+				{details.dropoff_location.province}
 			</Locations>
 			<DetailRow>
 				<DateAndTime>
