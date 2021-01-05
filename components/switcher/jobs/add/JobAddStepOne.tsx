@@ -1,24 +1,25 @@
-import React, { useState, useRef } from "react"
-import Progress from "../../../common/Progress"
-import styled from "styled-components"
-import InputComponent from "../../../common/InputComponent"
+import 'react-datepicker/dist/react-datepicker.css';
+
 import {
 	FormActions,
-	PrimaryButton,
-	SecondaryButton,
+	FormHeader,
 	FormInputContainer,
-	FormHeader
-} from "../../../styles/GlobalComponents"
-import { JobAddInterface } from "../../../../entities/interface/common"
-import { useRouter } from "next/router"
-import "react-datepicker/dist/react-datepicker.css"
-import DateAndTimePicker from "../../../common/DateAndTimePicker"
+	PrimaryButton,
+	SecondaryButton
+} from '../../../styles/GlobalComponents';
+import React, { useState } from 'react';
 
-const JobMap = styled.div`
-	background: url(/images/job-map.png) no-repeat;
-	background-size: contain;
-	height: 19rem;
-`
+import DateAndTimePicker from '../../../common/DateAndTimePicker';
+import InputComponent from '../../../common/InputComponent';
+import { JobAddInterface } from '../../../../entities/interface/common';
+import Modal from '../../../common/Modal';
+import Progress from '../../../common/Progress';
+import { getAddressFromPlace } from '../../../utilities/helper';
+import { initMap, route, selectPositionOnMap } from '../../../utilities/googlemaps'
+import styled from 'styled-components';
+import { useEffect } from 'react'
+import { useRouter } from 'next/router';
+import { MapInterface, PlaceInterface } from '../../../../entities/interface/googlemaps'
 
 const SectionHeader = styled.div`
 	font-size: 2rem;
@@ -42,24 +43,89 @@ const Line = styled.div`
 	width: 100%;
 `
 
+const ModalContent = styled.div`
+	padding: 0 2rem;
+	text-align: center;
+
+	span {
+		font-weight: 500;
+	}
+
+	> div:nth-child(3), ${FormActions} {
+		margin-top: 1rem;
+	}
+`
+
+const Map = styled.div`
+	height: 45rem;
+	width: 100%;
+
+	&#route-map {
+		height: 19rem;
+	}
+`
+
 const JobAddStepOne = (props: JobAddInterface) => {
 	const router = useRouter()
 	const { details, setDetails } = props
 	const [stepOneDetails, setStepOneDetails] = useState(details)
-	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value
-		setStepOneDetails({ ...stepOneDetails, [e.target.name]: value })
-	}
+	const [togglePickupModal, setTogglePickupModal] = useState(false)
+	const [toggleDropoffModal, setToggleDropoffModal] = useState(false)
+	const [routeMap, setRouteMap] = useState<MapInterface>({
+		map: null,
+		directionsService: null,
+		directionsRenderer: null
+	})
+	const [place, setPlace] = useState<PlaceInterface>({
+		pickup: (details.geocoder_result && details.geocoder_result.pickup) || null,
+		dropoff: (details.geocoder_result && details.geocoder_result.dropoff) || null
+	})
+	console.log(place)
 
 	const submitDetails = () => {
 		setDetails({
 			...details,
-			pickup_location: stepOneDetails.pickup_location,
-			dropoff_location: stepOneDetails.dropoff_location,
+			pickup_location: getAddressFromPlace(place.pickup),
+			dropoff_location: getAddressFromPlace(place.dropoff),
 			pickup_date: stepOneDetails.pickup_date,
 			dropoff_date: stepOneDetails.dropoff_date,
+			distance: stepOneDetails.distance,
+			geocoder_result: place
 		})
 		router.push(`/jobs/add/2`, undefined, { shallow: true })
+	}
+
+	useEffect(() => {
+		initMap(document.getElementById("route-map") as HTMLElement, setRouteMap)
+	}, [])
+
+	useEffect(() => {
+		const setRouteDistance = (value: number) => setStepOneDetails({...stepOneDetails, distance: value})
+		if (place.pickup && place.dropoff && routeMap.map) {
+			const pickupLatLng = place.pickup.geometry.location
+			const dropoffLatLng = place.dropoff.geometry.location
+			route(pickupLatLng, dropoffLatLng, routeMap, setRouteDistance)
+		}
+	}, [place, routeMap])
+
+	const chooseDropoff = () => {
+		setToggleDropoffModal(true)
+		const targetMap = document.getElementById("dropoff-map") as HTMLElement
+		const placeInput = document.getElementById("dropoff-location") as HTMLInputElement
+		const dropoffLatLng = place.dropoff && place.dropoff.geometry.location
+		const setDropoffPlace = (value: google.maps.places.PlaceResult | google.maps.GeocoderResult) => setPlace({...place, dropoff: value})
+		const submitButton = document.getElementById("submit-dropoff") as HTMLButtonElement
+		selectPositionOnMap(targetMap, placeInput, setDropoffPlace, dropoffLatLng,submitButton)
+	}
+
+	const choosePickup = () => {
+		setTogglePickupModal(true)
+		const targetMap = document.getElementById("pickup-map") as HTMLElement
+		const placeInput = document.getElementById("pickup-location") as HTMLInputElement
+		const pickupLatLng = place.pickup && place.pickup.geometry.location
+		const setPickupPlace = (value: google.maps.places.PlaceResult | google.maps.GeocoderResult) => setPlace({...place, pickup: value})
+		const submitButton = document.getElementById("submit-pickup") as HTMLButtonElement
+		selectPositionOnMap(targetMap, placeInput, setPickupPlace, pickupLatLng, submitButton)
 	}
 
 	return (
@@ -71,18 +137,37 @@ const JobAddStepOne = (props: JobAddInterface) => {
 					percent={1 / 4}
 				/>
 			</FormHeader>
-			<JobMap />
+			<Map id="route-map" />
 			<FormInputContainer>
 				<SectionHeader>
 					<div>ขึ้นสินค้า</div> <Line />
 				</SectionHeader>
-				<InputComponent
-					name="pickup_location"
-					labelEN="Location"
-					labelTH="สถานที่"
-					value={stepOneDetails.pickup_location}
-					handleOnChange={handleInputOnChange}
-				/>
+				<div onClick={choosePickup}>
+					<InputComponent
+						name="pickup_location"
+						labelEN="Location"
+						labelTH="สถานที่"
+						readOnly={true}
+						value={(place.pickup && place.pickup.formatted_address) || "เลือกสถานที่ขึ้นสินค้า"}
+					/>
+				</div>
+				<Modal toggle={togglePickupModal} setToggle={setTogglePickupModal}>
+					<ModalContent>
+						<span>เลือกสถานที่ขึ้นสินค้า</span>
+						<InputComponent
+							name="pickup_location"
+							id="pickup-location"
+							labelEN="Location"
+							labelTH="สถานที่"
+							disableLabel={true}
+						/>
+						<Map id="pickup-map" />
+						<FormActions>
+							<SecondaryButton onClick={() => setTogglePickupModal(false)}>ย้อนกลับ</SecondaryButton>
+							<PrimaryButton id="submit-pickup" onClick={() => setTogglePickupModal(false)}>เลือกตำแหน่ง</PrimaryButton>
+						</FormActions>
+					</ModalContent>
+				</Modal>
 				<InputComponent
 					name="pickup_date"
 					labelEN="Date and Time"
@@ -97,13 +182,32 @@ const JobAddStepOne = (props: JobAddInterface) => {
 				<SectionHeader>
 					<div>ลงสินค้า</div> <Line />
 				</SectionHeader>
-				<InputComponent
-					name="dropoff_location"
-					labelEN="Location"
-					labelTH="สถานที่"
-					value={stepOneDetails.dropoff_location}
-					handleOnChange={handleInputOnChange}
-				/>
+				<div onClick={chooseDropoff}>
+					<InputComponent
+						name="dropoff_location"
+						labelEN="Location"
+						labelTH="สถานที่"
+						readOnly={true}
+						value={(place.dropoff && place.dropoff.formatted_address) || "เลือกสถานที่ลงสินค้า"}
+					/>
+				</div>
+				<Modal toggle={toggleDropoffModal} setToggle={setToggleDropoffModal}>
+					<ModalContent>
+						<span>เลือกสถานที่ลงสินค้า</span>
+						<InputComponent
+							name="dropoff_location"
+							id="dropoff-location"
+							labelEN="Location"
+							labelTH="สถานที่"
+							disableLabel={true}
+						/>
+						<Map id="dropoff-map" />
+						<FormActions>
+							<SecondaryButton onClick={() => setToggleDropoffModal(false)}>ย้อนกลับ</SecondaryButton>
+							<PrimaryButton id="submit-dropoff" onClick={() => setToggleDropoffModal(false)}>เลือกตำแหน่ง</PrimaryButton>
+						</FormActions>
+					</ModalContent>
+				</Modal>
 				<InputComponent
 					name="dropoff_date"
 					labelEN="Date and Time"

@@ -1,6 +1,7 @@
 import { StringDecoder } from "string_decoder"
 import { ReactElement } from 'react'
 import { JobInterface } from "./job"
+import { PlaceInterface } from "./googlemaps"
 
 export interface AuthInterface {
 	username: string
@@ -19,6 +20,8 @@ export interface InputComponentInterface {
 	classifier?: string
 	disableLabel?: boolean
 	required?: boolean
+	id?: string
+	readOnly?: boolean
 }
 
 export interface ProfileInterface {
