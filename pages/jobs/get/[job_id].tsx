@@ -5,7 +5,7 @@ import { useRouter } from "next/router"
 import {
 	RightArrow,
 	RightArrowLine,
-	SuccessIcon,
+	JobSuccessIcon,
 } from "../../../components/common/Icons"
 import {
 	CarrierDetailsContainer,
@@ -194,7 +194,7 @@ const GetJobPage = () => {
 			format: (driver_index: number): ReactElement => (
 				<RadioButton>
 					<input type="radio" value={driver_index} name="driver" />
-					<SuccessIcon />
+					<JobSuccessIcon />
 				</RadioButton>
 			),
 		},
@@ -219,7 +219,7 @@ const GetJobPage = () => {
 			format: (truck_index: number): ReactElement => (
 				<RadioButton>
 					<input type="radio" value={truck_index} name="truck" />
-					<SuccessIcon />
+					<JobSuccessIcon />
 				</RadioButton>
 			),
 		},

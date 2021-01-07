@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { useRouter } from "next/router"
 import Header from "../../../components/common/Header"
 import {
-	AlertIcon,
+	WarningIcon,
 	CopyIcon,
 	RightArrowLine,
 } from "../../../components/common/Icons"
@@ -264,7 +264,7 @@ const JobDetailPage = (props: JobDetailsInterface) => {
 			{isLinkGenerated && (
 				<DriverURLContainer>
 					<div>
-						<AlertIcon />
+						<WarningIcon />
 						คัดลอกลิงก์และส่งให้พนักงานขับรถ
 					</div>
 					<URLContainer>
@@ -362,7 +362,7 @@ const JobDetailPage = (props: JobDetailsInterface) => {
 					<>
 						<Modal toggle={toggleModal} setToggle={setToggleModal}>
 							<ModalContent>
-								<AlertIcon />
+								<WarningIcon />
 								<span>เมื่อยืนยันเริ่มงานแล้วจะ<b>ไม่สามารถ</b><br />- แก้ไขพนักงานขับรถ<br />- ยกเลิกงาน<br /></span>
 								<b>ยืนยันเริ่มงานหรือไม่ ?</b>
 								<FormActions>

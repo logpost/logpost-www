@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { useRouter } from "next/router"
 import {
 	JobIcon,
-	SuccessIcon,
+	JobSuccessIcon,
 	TruckIcon,
 } from "../../../components/common/Icons"
 import NavigationBar from "../../../components/common/NavigationBar"
@@ -41,7 +41,7 @@ const ShipperProfilePage = () => {
 					{
 						name: "ขนส่งเสร็จสิ้น",
 						status: "finished",
-						icon: <SuccessIcon />,
+						icon: <JobSuccessIcon />,
 					},
 				]}
 			/>

@@ -3,7 +3,7 @@ import styled from "styled-components"
 import NavigationBar from '../../../components/common/NavigationBar'
 import { FormActions, PrimaryButton, SecondaryButton, TableRowActions } from '../../../components/styles/GlobalComponents'
 import { useRouter } from "next/router"
-import { AlertIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
+import { WarningIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
 import Modal from '../../../components/common/Modal'
 import { TRUCK_STATUS_LIST } from '../../../data/carrier'
 import { MOCKUP_TRUCK } from '../../../data/carrier.mock'
@@ -92,7 +92,7 @@ const OverviewTruckPage = () => {
 			>
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>
-						<AlertIcon />
+						<WarningIcon />
 						<span>ยืนยันลบข้อมูลรถ <br /> ทะเบียน {MOCKUP_TRUCK[deleteTruckIndex].license_number} หรือไม่ ?</span>
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleModal(false)}>ยกเลิก</SecondaryButton>

@@ -140,7 +140,7 @@ const TruckIcon = () => (
 	</svg>
 )
 
-const SuccessIcon = () => (
+const JobSuccessIcon = () => (
 	<svg
 		width="61"
 		height="60"
@@ -163,6 +163,20 @@ const SuccessIcon = () => (
 			fill="black"
 			id="check"
 		/>
+	</svg>
+)
+
+const SuccessIcon = () => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="77" height="77" viewBox="0 0 77 77" fill="none">
+		<path fillRule="evenodd" clipRule="evenodd" d="M38.085 64.17C52.4913 64.17 64.17 52.4913 64.17 38.085C64.17 23.6787 52.4913 12 38.085 12C23.6787 12 12 23.6787 12 38.085C12 52.4913 23.6787 64.17 38.085 64.17ZM38.085 70.17C55.8051 70.17 70.17 55.8051 70.17 38.085C70.17 20.3649 55.8051 6 38.085 6C20.3649 6 6 20.3649 6 38.085C6 55.8051 20.3649 70.17 38.085 70.17Z" fill="#27AE60"/>
+		<path fillRule="evenodd" clipRule="evenodd" d="M50.962 24.9721C52.082 25.7795 52.3354 27.342 51.5279 28.462L36.7367 48.9789C35.4504 50.7632 32.8564 50.9326 31.3489 49.3309L24.1795 41.7134C23.2332 40.708 23.2812 39.1258 24.2866 38.1795C25.292 37.2332 26.8742 37.2812 27.8205 38.2866L33.7439 44.5802L47.4721 25.538C48.2795 24.418 49.842 24.1646 50.962 24.9721Z" fill="#27AE60"/>
+	</svg>
+)
+
+const ErrorIcon = () => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="77" height="77" viewBox="0 0 77 77" fill="none">
+		<path fillRule="evenodd" clipRule="evenodd" d="M38.085 64.17C52.4913 64.17 64.17 52.4913 64.17 38.085C64.17 23.6787 52.4913 12 38.085 12C23.6787 12 12 23.6787 12 38.085C12 52.4913 23.6787 64.17 38.085 64.17ZM38.085 70.17C55.8051 70.17 70.17 55.8051 70.17 38.085C70.17 20.3649 55.8051 6 38.085 6C20.3649 6 6 20.3649 6 38.085C6 55.8051 20.3649 70.17 38.085 70.17Z" fill="#EC8080"/>
+		<path fillRule="evenodd" clipRule="evenodd" d="M25.3675 24.8561C26.5515 23.6971 28.4509 23.7175 29.6099 24.9015L38 33.4732L46.3901 24.9015C47.5491 23.7175 49.4485 23.6971 50.6325 24.8561C51.8166 26.0151 51.8369 27.9145 50.6779 29.0985L42.198 37.762L51.1439 46.9015C52.3029 48.0856 52.2825 49.9849 51.0985 51.1439C49.9145 52.3029 48.0151 52.2825 46.8561 51.0985L38 42.0508L29.1439 51.0985C27.9849 52.2825 26.0856 52.3029 24.9015 51.1439C23.7175 49.9849 23.6971 48.0856 24.8561 46.9015L33.8021 37.762L25.3221 29.0985C24.1631 27.9145 24.1834 26.0151 25.3675 24.8561Z" fill="#EC8080"/>
 	</svg>
 )
 
@@ -276,7 +290,7 @@ const ProductIcon = () => (
 	</svg>
 )
 
-const AlertIcon = () => (
+const WarningIcon = () => (
 	<svg
 		width="77"
 		height="77"
@@ -426,14 +440,14 @@ export {
 	HomeIcon,
 	JobIcon,
 	TruckIcon,
-	SuccessIcon,
+	JobSuccessIcon,
 	RightArrow,
 	CancelIcon,
 	RightArrowLine,
 	DownArrowLine,
 	UpArrowLine,
 	ProductIcon,
-	AlertIcon,
+	WarningIcon,
 	CopyIcon,
 	NoteIcon,
 	SearchIcon,
@@ -442,5 +456,7 @@ export {
 	Success,
 	PlusIcon,
 	DoubleRightArrow,
-	SearchIconLarge
+	SearchIconLarge,
+	SuccessIcon,
+	ErrorIcon
 }

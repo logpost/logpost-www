@@ -3,7 +3,7 @@ import styled from "styled-components"
 import NavigationBar from '../../../components/common/NavigationBar'
 import { FormActions, PrimaryButton, SecondaryButton, TableRowActions } from '../../../components/styles/GlobalComponents'
 import { useRouter } from "next/router"
-import { AlertIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
+import { WarningIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
 import Modal from '../../../components/common/Modal'
 import { DRIVER_STATUS_LIST } from '../../../data/carrier'
 import { MOCKUP_DRIVER } from '../../../data/carrier.mock'
@@ -99,7 +99,7 @@ const OverviewDriverPage = () => {
 			>
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>
-						<AlertIcon />
+						<WarningIcon />
 						<span>ยืนยันลบข้อมูลพนักงานขับรถ <br /> ชื่อ {MOCKUP_DRIVER[deleteDriverIndex].name} หรือไม่ ?</span>
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleModal(false)}>ยกเลิก</SecondaryButton>

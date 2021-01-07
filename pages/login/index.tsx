@@ -9,6 +9,9 @@ import {
 	TextButton,
 } from "../../components/styles/GlobalComponents"
 import { login } from "../../components/utilities/apis"
+import Alert from "../../components/common/Alert"
+import { useSetRecoilState } from "recoil"
+import { alertPropertyState } from "../../store/atoms/alertPropertyState"
 
 const LoginContainer = styled.div`
 	position: absolute;
@@ -98,12 +101,25 @@ const LoginPage = () => {
 		username: "",
 		password: "",
 	})
+	const setAlertProperty = useSetRecoilState(alertPropertyState)
+	const [alertDescriptiton, setAlertDescription] = useState("")
 
 	useEffect(() => {
-		// if login page has params -> user failed to confirm email (token expired or invalid)
-		// if token invalid -> alert : invalid please login to resend confirm email
-		// if token expired -> alert : expired please login to resend confirm email
-	}, [])
+		const statusCode = parseInt(router.query.errorStatus as string)
+		const ExpiredToken = (statusCode === 100)
+		const inValidToken = (statusCode === 200)
+		if (ExpiredToken || inValidToken) {
+			setAlertProperty({
+				type: "error",
+				isShow: true
+			})
+			if (ExpiredToken) {
+				setAlertDescription(`ลิงก์ของคุณหมดอายุ กรุณาเข้าสู่ระบบเพื่อส่งอีเมลยืนยันอีกครั้ง`)
+			} else {
+				setAlertDescription(`ลิงก์ของคุณไม่ถูกต้อง กรุณาเข้าสู่ระบบเพื่อส่งอีเมลยืนยันอีกครั้ง`)
+			}
+		}
+	}, [router.query])
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
@@ -118,6 +134,9 @@ const LoginPage = () => {
 
 	return (
 		<Background>
+			<Alert>
+				{alertDescriptiton}
+			</Alert>
 			<TitleContainer>
 				<Title>เข้าสู่ระบบ</Title>
 				{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
