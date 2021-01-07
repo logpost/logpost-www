@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from "react"
+import { FunctionComponent } from "react"
 import styled from "styled-components"
 import { InputComponentInterface } from "../../entities/interface/common"
 
@@ -6,11 +6,15 @@ interface Label {
 	labelSize: string
 }
 
-const Input = styled.input`
+interface Input {
+	valid: boolean
+}
+
+const Input = styled.input<Input>`
 	width: ${(props) => (props.type === "short" ? "15rem" : props.type === "number" ? "7.2rem" : "100%")};
 	height: 3.4rem;
 	border-radius: 0.6rem;
-	border: solid 0.1rem hsl(0, 0%, 66%);
+	border: solid 0.1rem ${(props) => (props.valid ? "hsl(0, 0%, 66%)" : "hsl(16, 56%, 51%)")};
 	margin-top: 1rem;
 	font-size: 1.6rem;
 	padding: 1.2rem;
@@ -92,21 +96,19 @@ const RequiredDot = styled.div`
 
 const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 	const {
-		name,
-		value,
 		disableLabel = false,
 		labelTH,
 		labelEN,
 		subLabel,
-		type,
 		labelSize,
 		description,
 		handleOnChange,
 		children,
 		classifier,
-		id,
 		required = true,
-		readOnly = false
+		type,
+		valid = true,
+		...inputProps
 	} = props
 
 	return (
@@ -138,17 +140,12 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 					<Input
 						type={type}
 						onChange={(e) => handleOnChange(e)}
-						value={value}
-						name={name}
-						id={id}
-						readOnly={readOnly}
+						valid={valid}
+						{...inputProps}
 					/> : 
 					<Input
-						type={type}
-						value={value}
-						name={name}
-						id={id}
-						readOnly={readOnly}
+						valid={valid}
+						{...inputProps}
 					/>
 				}
 				{

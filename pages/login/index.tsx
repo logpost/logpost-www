@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import InputComponent from "../../components/common/InputComponent"
 import { useRouter } from "next/router"
@@ -98,6 +98,12 @@ const LoginPage = () => {
 		username: "",
 		password: "",
 	})
+
+	useEffect(() => {
+		// if login page has params -> user failed to confirm email (token expired or invalid)
+		// if token invalid -> alert : invalid please login to resend confirm email
+		// if token expired -> alert : expired please login to resend confirm email
+	}, [])
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value

@@ -11,11 +11,11 @@ import {
 	UpArrowLine,
 	NoteIcon
 } from "./Icons"
-import { JobDetailsInterface } from "../../entities/interface/common"
+import { JobInterface } from "../../entities/interface/job"
 
 interface JobCardInterface {
 	origin: string
-	details: JobDetailsInterface
+	details: JobInterface
 }
 
 const CardContainer = styled.div`
@@ -170,7 +170,7 @@ const JobCard = (props: JobCardInterface) => {
 				</DetailColumn>
 				<CardActions>
 					<span>{details.offer_price} บาท</span>
-					<SecondaryButtonCustom onClick={() => router.push(`/jobs/details/${details._id}`)}>รายละเอียด</SecondaryButtonCustom>
+					<SecondaryButtonCustom onClick={() => router.push(`/jobs/details/${details.job_id}`)}>รายละเอียด</SecondaryButtonCustom>
 				</CardActions>
 			</BottomDetails>
 		</CardContainer>

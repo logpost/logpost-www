@@ -22,6 +22,7 @@ export interface InputComponentInterface {
 	required?: boolean
 	id?: string
 	readOnly?: boolean
+	valid?: boolean
 }
 
 export interface ProfileInterface {

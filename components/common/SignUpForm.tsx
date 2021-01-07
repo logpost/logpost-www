@@ -46,6 +46,10 @@ const SignUpForm = (props: SignUpFormInterface) => {
 		display_name: "",
 		email: ""
 	})
+	const [validField, setValidField] = useState({
+		password: true,
+		confirm_password: true
+	})
 	const router = useRouter()
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,11 +59,20 @@ const SignUpForm = (props: SignUpFormInterface) => {
 
 	const handleSignup = () => {
 		const {confirm_password, ...signupData} = profile
-		signup(role, signupData)
-		router.push({
-			pathname: '/alert/confirm/email',
-			query: { email: profile.email },
-		})
+		const passwordsAreMatch = (signupData.password === confirm_password)
+		if (passwordsAreMatch) {
+			signup(role, signupData)
+			router.push({
+				pathname: '/alert/confirm/email',
+				query: { email: profile.email },
+			})
+		} else {
+			const invalidPassword = {
+				password: false,
+				confirm_password: false
+			}
+			setValidField(invalidPassword)
+		}
 	}
 
 	return (
@@ -73,14 +86,14 @@ const SignUpForm = (props: SignUpFormInterface) => {
 						name="personal"
 						onClick={() => setProfile({ ...profile, account_type: "personal" })}>
 						บุคคล
-								</RadioInput>
+						</RadioInput>
 					<RadioInput
 						type="button"
 						value={profile.account_type}
 						name="business"
 						onClick={() => setProfile({ ...profile, account_type: "business" })}>
 						นิติบุคคล
-								</RadioInput>
+						</RadioInput>
 				</RadioInputContainer>
 			</InputComponent>
 			<InputComponent
@@ -94,12 +107,14 @@ const SignUpForm = (props: SignUpFormInterface) => {
 				labelTH="รหัสผ่าน"
 				labelEN="Password"
 				value={profile.password}
+				valid={validField.password}
 				description="ความยาวมากกว่า 6 ตัวอักษร ประกอบด้วยตัวพิมพ์ใหญ่ (A-Z) ตัวพิมพ์เล็ก (a-z) และตัวเลข (0-9)"
 				type="password"
 				handleOnChange={handleInputOnChange} />
 			<InputComponent
 				name="confirm_password"
 				value={profile.confirm_password}
+				valid={validField.confirm_password}
 				labelTH="ยืนยันรหัสผ่าน"
 				labelEN="Confirm Password"
 				type="password"

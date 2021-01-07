@@ -7,16 +7,29 @@ const JOB_URL = "https://jobs-management-service-logpost-stag-qjrfn6j7kq-as.a.ru
 
 const signup = async (role: string, data: CarrierProfile) => {
 	try {
+		// sign up with data
 		const res = await axios.post(`${ACCOUNT_URL}/signup/${role}`, data)
-		console.log(res)
+		// get email token from response and save it to local storage
+		localStorage.setItem("email_token", res.data.email_token)
 	} catch (error) {
 		console.log(error)
 	}
 }
 
+const resendEmail = async () => {
+	try {
+		const email_token = localStorage.getItem("email_token")
+		// get email token from local storage and resend email with email token 
+		await axios.post(`${ACCOUNT_URL}/email/confirm/send?email_token=${email_token}`)
+	} catch (error) {
+		console.log(error)
+	}
+} 
+
 const login = async (role: string, auth: AuthInterface) => {
 	try {
 		const res = await axios.post(`${ACCOUNT_URL}/login/${role}`, auth)
+		// if got email_token in response -> alert: please confirm your email 
 		localStorage.setItem("access_token", res.data.access_token)
 		console.log(res)
 	} catch (error) {
@@ -54,5 +67,6 @@ export {
 	login,
 	logout,
 	getAllJobs,
-	createJob
+	createJob,
+	resendEmail
 }
