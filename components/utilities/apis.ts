@@ -29,8 +29,17 @@ const resendEmail = async () => {
 const login = async (role: string, auth: AuthInterface) => {
 	try {
 		const res = await axios.post(`${ACCOUNT_URL}/login/${role}`, auth)
-		// if got email_token in response -> alert: please confirm your email 
 		localStorage.setItem("access_token", res.data.access_token)
+		console.log(res.headers)
+		return res.status
+	} catch (error) {
+		return error.response?.status
+	}
+}
+
+const getToken = async () => {
+	try {
+		const res = await axios.get(`${ACCOUNT_URL}/token`)
 		console.log(res)
 	} catch (error) {
 		console.log(error)
@@ -68,5 +77,6 @@ export {
 	logout,
 	getAllJobs,
 	createJob,
-	resendEmail
+	resendEmail,
+	getToken
 }

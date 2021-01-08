@@ -105,6 +105,12 @@ const LoginPage = () => {
 	const [alertDescriptiton, setAlertDescription] = useState("")
 
 	useEffect(() => {
+		if (localStorage.getItem("access_token") !== null) {
+			router.push('/jobs')
+		}
+	}, [])
+
+	useEffect(() => {
 		const statusCode = parseInt(router.query.errorStatus as string)
 		const ExpiredToken = (statusCode === 100)
 		const inValidToken = (statusCode === 200)
@@ -126,10 +132,25 @@ const LoginPage = () => {
 		setAuth({ ...auth, [e.target.name]: value })
 	}
 
-	const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+	const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		login(role, auth)
-		router.push('/jobs')
+		const loginResponse = await login(role, auth)
+		if (loginResponse === 200) {
+			router.push('/jobs')
+		} else {
+			setAlertProperty({
+				type: "error",
+				isShow: true
+			})
+			if (loginResponse === 400) {
+				setAlertDescription("รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง")
+			} else if (loginResponse === 404) {
+				setAlertDescription("ไม่พบบัญชีผู้ใช้ กรุณาลงทะเบียนก่อนเข้าสู่ระบบ")
+			} 
+			else {
+				setAlertDescription("เข้าสู่ระบบไม่สำเร็จ")
+			}
+		}
 	}
 
 	return (

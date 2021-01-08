@@ -2,6 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 import { PersonIcon, JobIcon, SearchIconLarge } from './Icons'
+import { userInfoState } from '../../store/atoms/userInfoState'
+import { useEffect } from 'react'
+import { useRecoilState } from 'recoil'
+import { getUserInfo } from '../utilities/tokenHelper'
 
 interface NavBarItemInterface {
 	isActive: boolean
@@ -45,11 +49,17 @@ const NavBarItem = styled.button<NavBarItemInterface>`
 
 const NavigationBar = () => {
 	const router = useRouter()
+	const [userInfo, setUserInfo] = useRecoilState(userInfoState)
 	const currentPath = router.pathname
+
+	useEffect(() => {
+		const decodedUserInfo = getUserInfo()
+		setUserInfo(decodedUserInfo)
+	}, [])
 
 	return (
 		<NavBarContainer>
-			<NavBarItem onClick={() => router.push(`/shipper/jobs?status=all`)} isActive={currentPath === `/shipper/jobs`}>
+			<NavBarItem onClick={() => router.push(`/${userInfo.role}/jobs?status=all`)} isActive={currentPath === `/${userInfo.role}/jobs`}>
 				<JobIcon />
 				งานของฉัน
 			</NavBarItem>
@@ -57,7 +67,7 @@ const NavigationBar = () => {
 				<SearchIconLarge />
 				ค้นหางาน
 			</NavBarItem>
-			<NavBarItem onClick={() => router.push(`/shipper/profile`)} isActive={currentPath === `/shipper/profile` }>
+			<NavBarItem onClick={() => router.push(`/${userInfo.role}/profile`)} isActive={currentPath === `/${userInfo.role}/profile` }>
 				<PersonIcon />
 				บัญชีของฉัน
 			</NavBarItem>
