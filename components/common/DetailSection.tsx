@@ -2,11 +2,8 @@ import React, { FunctionComponent } from "react"
 import styled from "styled-components"
 import { DetailRow, Detail } from "../styles/GlobalComponents"
 import { DownArrowLine, UpArrowLine } from "./Icons"
-import { JobDetailsInterface } from '../../entities/interface/common'
-
-interface DetailInterface {
-	details: JobDetailsInterface
-}
+import { dateFormatter } from "../utilities/helper"
+import { JobDetails, JobDocument } from '../../entities/interface/job'
 
 const DetailSectionContainer = styled.div`
 	> div {
@@ -14,8 +11,16 @@ const DetailSectionContainer = styled.div`
 
 		&:not(#space-between) {
 			justify-content: flex-start;
+		}
 
-			${Detail}:first-child {
+		&${Detail} {
+			white-space: nowrap;
+
+			span {
+				white-space: pre-wrap;
+			}
+
+			&:first-child {
 				margin-right: 1.2rem;
 			}
 		}
@@ -49,7 +54,7 @@ const PickUpDeliverContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	border-radius: 0.6rem;
-	border: solid 0.2rem hsl(16, 56%, 51%);
+	border: solid 2px hsl(16, 56%, 51%);
 	color: hsl(16, 56%, 51%);
 	padding: 0.9rem 1.55rem;
 	font-weight: 600;
@@ -81,7 +86,7 @@ const PickUpDeliverContainer = styled.div`
 	}
 `
 
-const DetailSection = (props: DetailInterface) => {
+const DetailSection = (props: JobDetails) => {
 	const { details } = props
 
 	return (
@@ -95,17 +100,15 @@ const DetailSection = (props: DetailInterface) => {
 						<span>
 							ขึ้นสินค้า <UpArrowLine />
 						</span>
-						<span>{details.pickup_location}</span>
-						{/* <span>{details.pickup_date}</span> */}
-						<span>30 ต.ค. 63 09:00 น.</span>
+						<span>{details.pickup_location.province}</span>
+						<span>{dateFormatter(details.pickup_date)}</span>
 					</PickUpDeliverContainer>
 					<PickUpDeliverContainer>
 						<span>
 							ลงสินค้า <DownArrowLine />
 						</span>
-						<span>{details.dropoff_location}</span>
-						{/* <span>{details.dropoff_date}</span> */}
-						<span>31 ต.ค. 63 10:00 น.</span>
+						<span>{details.dropoff_location.province}</span>
+						<span>{dateFormatter(details.dropoff_date)}</span>
 					</PickUpDeliverContainer>
 				</DetailRow>
 				<DetailRow>
@@ -116,25 +119,29 @@ const DetailSection = (props: DetailInterface) => {
 						น้ำหนัก <span>{details.weight}</span> <span>ตัน</span>
 					</Detail>
 				</DetailRow>
-				<Detail>
-					ขึ้นลงสินค้า <span>{details.waiting_time}</span> <span>ชั่วโมง</span>
-				</Detail>
-				<Detail>
-					คำอธิบาย <span>{details.description}</span>
-				</Detail>
+				{
+					details.waiting_time && 
+					<Detail>
+						ขึ้นลงสินค้า <span>{details.waiting_time}</span> <span>ชั่วโมง</span>
+					</Detail>
+				}
+				{
+					details.description && 
+					<Detail>
+						คำอธิบาย <span>{details.description}</span>
+					</Detail>
+				}
 			</>
 			<SectionHeader>
 				<div>รายละเอียดรถบรรทุก</div> <Line />
 			</SectionHeader>
 			<>
-				<DetailRow>
-					<Detail>
-						ประเภทรถ <span>รถ {details.carrier_specification.truck.type.wheel} ล้อ {details.carrier_specification.truck.type.options}</span>
-					</Detail>
-					<Detail>
-						อายุไม่เกิน <span>{details.carrier_specification.truck.age}</span> <span>ปี</span>
-					</Detail>
-				</DetailRow>
+				<Detail>
+					ประเภทรถ <span>{details.carrier_specification.truck.property.type} {details.carrier_specification.truck.property.option} {details.carrier_specification.truck.property.chassis}</span>
+				</Detail>
+				<Detail>
+					อายุไม่เกิน <span>{details.carrier_specification.truck.age}</span> <span>ปี</span>
+				</Detail>
 				<Detail>
 					พนักงานขับรถใบขับขี่ <span>{details.carrier_specification.driver.driver_license_type}</span>
 				</Detail>

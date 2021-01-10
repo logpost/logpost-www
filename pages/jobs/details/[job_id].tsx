@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { useRouter } from "next/router"
 import Header from "../../../components/common/Header"
 import {
-	AlertIcon,
+	WarningIcon,
 	CopyIcon,
 	RightArrowLine,
 } from "../../../components/common/Icons"
@@ -22,81 +22,12 @@ import DetailSection from "../../../components/common/DetailSection"
 import Modal from "../../../components/common/Modal"
 import appStore from "../../../store/AppStore"
 import { view } from "@risingstack/react-easy-state"
+import { JOB_STATUS_CODE } from "../../../data/jobs"
+import { MOCKUP_JOB } from "../../../data/job.mock"
 
 interface JobDetailsInterface {
 	role: string
 	status: number
-}
-
-const STATUS_CODE = {
-	100: {
-		status_name: "รอผู้รับงาน",
-		progress: 0,
-		next: 200,
-	},
-	200: {
-		status_name: "เตรียมเริ่มงาน",
-		progress: 1,
-		next: 400,
-	},
-	300: {
-		status_name: "เตรียมเริ่มงาน",
-		progress: 1,
-		next: 400,
-	},
-	400: {
-		status_name: "เดินทางไปรับสินค้า",
-		progress: 2,
-		next: 500,
-	},
-	500: {
-		status_name: "นำสินค้าขึ้น ณ ต้นทาง",
-		progress: 3,
-		next: 600,
-	},
-	600: {
-		status_name: "นำส่งสินค้า",
-		progress: 4,
-		next: 700,
-	},
-	700: {
-		status_name: "นำสินค้าลง ณ ปลายทาง",
-		progress: 5,
-		next: 800,
-	},
-	800: {
-		status_name: "ขนส่งเสร็จสิ้น",
-		progress: 6,
-	},
-}
-
-const JOB_MOCK_DETAILS = {
-	shipper_id: "01",
-	carrier_id: "",
-	driver_name: "",
-	license_number: "",
-	pickup_location: "กรุงเทพ",
-	dropoff_location: "ชลบุรี",
-	pickup_date: "20 ต.ค. 63 09:00 น.",
-	dropoff_date: "20 ต.ค. 63 18:00 น.",
-	weight: 2,
-	product_type: "ไม้อัด",
-	description: "งานด่วน ไม่ต้องรอขึ้นของ",
-	waiting_time: 0,
-	carrier_specification: {
-		truck: {
-			age: 5,
-			type: {
-				wheel: 6,
-				options: "ตู้ทึบ"
-			}
-		},
-		driver: {
-			driver_license_type: "12345555",
-		}
-	},
-	offer_price: 8000,
-	auto_price: 4800,
 }
 
 const PAGE_TEST = [
@@ -161,6 +92,7 @@ const HorizontalLine = styled.div`
 	height: auto;
 	background-color: hsl(212, 28%, 88%);
 	width: 0.2rem;
+	margin: 0 0.4rem;
 `
 
 const JobPrice = styled.div`
@@ -304,8 +236,8 @@ const JobDetailPage = (props: JobDetailsInterface) => {
 	const isJobHasCarrier = status > 100
 	const isJobStarted = status >= 300
 	const isCarrier = (role === "carrier")
-	const isShipperOwnedJob = (user_id === JOB_MOCK_DETAILS.shipper_id)
-	const isCarrierOwnedJob = (user_id === JOB_MOCK_DETAILS.carrier_id)
+	const isShipperOwnedJob = (user_id === MOCKUP_JOB.shipper_id)
+	const isCarrierOwnedJob = (user_id === MOCKUP_JOB.carrier_id)
 	const isShipperCanEditDetails = (isShipperOwnedJob && !isJobHasCarrier)
 	const isCarrierCanEditDetails = (isCarrierOwnedJob && !isJobStarted)
 	const isLinkGenerated = (isJobStarted && isCarrierOwnedJob)
@@ -332,7 +264,7 @@ const JobDetailPage = (props: JobDetailsInterface) => {
 			{isLinkGenerated && (
 				<DriverURLContainer>
 					<div>
-						<AlertIcon />
+						<WarningIcon />
 						คัดลอกลิงก์และส่งให้พนักงานขับรถ
 					</div>
 					<URLContainer>
@@ -354,16 +286,16 @@ const JobDetailPage = (props: JobDetailsInterface) => {
 			<JobDetailsContainer>
 				{isUserCanSeeJobStatus && (
 					<Progress
-						currentStep={STATUS_CODE[status].status_name}
+						currentStep={JOB_STATUS_CODE[status].status_name}
 						nextStep={
-							STATUS_CODE[STATUS_CODE[status].next] &&
-							STATUS_CODE[STATUS_CODE[status].next].status_name
+							JOB_STATUS_CODE[JOB_STATUS_CODE[status].next] &&
+							JOB_STATUS_CODE[JOB_STATUS_CODE[status].next].status_name
 						}
-						percent={STATUS_CODE[status].progress / 6}
+						percent={JOB_STATUS_CODE[status].progress / 6}
 						label="สถานะ"
 					/>
 				)}
-				<DetailSection details={JOB_MOCK_DETAILS} />
+				<DetailSection details={MOCKUP_JOB} />
 				{isJobHasCarrier && (
 					<CarrierDetailsContainer>
 						{!isCarrier && (
@@ -384,14 +316,14 @@ const JobDetailPage = (props: JobDetailsInterface) => {
 						<PriceItem>
 							ราคาเสนอ
 							<div>
-								{JOB_MOCK_DETAILS.offer_price.toLocaleString()} <span>บาท</span>
+								{MOCKUP_JOB.offer_price.toLocaleString()} <span>บาท</span>
 							</div>
 						</PriceItem>
 						<HorizontalLine />
 						<PriceItem>
 							ต้นทุน <span>ประมาณ</span>
 							<div>
-								{JOB_MOCK_DETAILS.auto_price.toLocaleString()} <span>บาท</span>
+								{MOCKUP_JOB.auto_price.toLocaleString()} <span>บาท</span>
 							</div>
 						</PriceItem>
 						<HorizontalLine />
@@ -399,8 +331,8 @@ const JobDetailPage = (props: JobDetailsInterface) => {
 							กำไร
 							<div>
 								{calculateProfit(
-									JOB_MOCK_DETAILS.offer_price,
-									JOB_MOCK_DETAILS.auto_price
+									MOCKUP_JOB.offer_price,
+									MOCKUP_JOB.auto_price
 								)}{" "}
 								<span>บาท</span>
 							</div>
@@ -430,7 +362,7 @@ const JobDetailPage = (props: JobDetailsInterface) => {
 					<>
 						<Modal toggle={toggleModal} setToggle={setToggleModal}>
 							<ModalContent>
-								<AlertIcon />
+								<WarningIcon />
 								<span>เมื่อยืนยันเริ่มงานแล้วจะ<b>ไม่สามารถ</b><br />- แก้ไขพนักงานขับรถ<br />- ยกเลิกงาน<br /></span>
 								<b>ยืนยันเริ่มงานหรือไม่ ?</b>
 								<FormActions>

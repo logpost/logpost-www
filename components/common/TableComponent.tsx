@@ -1,24 +1,9 @@
-import React, { useState, ReactElement } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
+import { TableComponentInterface } from "../../entities/interface/common"
 import { RightArrow, DoubleRightArrow } from "./Icons"
-
-interface TableComponentInterface {
-	columns: {
-		id: string
-		label: string
-		align?: string
-		width?: string
-		format?: (driver_index: number) => ReactElement
-	}[]
-	data: {
-		id?: string
-		driver_name?: string
-		driver_license_type?: string
-		license_number?: string
-		wheel?: string
-		add_on?: string
-	}[]
-}
+import { useRecoilValue } from 'recoil'
+import { filterState } from "../../store/atoms/tableState"
 
 interface CellInterface {
 	width?: string
@@ -26,11 +11,11 @@ interface CellInterface {
 }
 
 interface TableContainerInterface {
-	height: boolean
+	tableHeight: boolean
 }
 
 const TableContainer = styled.div<TableContainerInterface>`
-    height: ${props => props.height ? "auto" : "30rem"};
+    height: ${props => props.tableHeight ? "auto" : "30rem"};
     width: 100%;
 `
 
@@ -57,7 +42,7 @@ const Header = styled.th`
 
 const Cell = styled.td<CellInterface>`
 	font-size: 1.6rem;
-	padding: 0.8rem 0;
+	padding: 0.8rem 0.5rem;
 	text-align: ${(props) => props.cellAlign || "center"};
 	max-width: 4rem;
 	text-overflow: ellipsis;
@@ -72,6 +57,7 @@ const TableCaption = styled.div`
     justify-content: space-between;
 	width: 100%;
     padding: 0 5%;
+	margin-top: 1.4rem;
 `
 
 const Pagination = styled.div`
@@ -114,18 +100,23 @@ const Pagination = styled.div`
 `
 
 const TableComponent = (props: TableComponentInterface) => {
-	const { columns, data } = props
+	const { columns } = props
 	const [currentPage, setCurrentPage] = useState(1)
+	const data = useRecoilValue<Object[]>(filterState)
 	const numberOfRow = data.length
 	const maxRowPerPage = 7
 	const firstRowOfPage = (currentPage - 1)*maxRowPerPage
 	const LastRowOfPage = currentPage*maxRowPerPage
-	const maxPage = Math.ceil(numberOfRow / 7)
+	let maxPage = Math.ceil(numberOfRow / 7)
 	const remainingRow = numberOfRow - firstRowOfPage
+
+	if (maxPage <= 0) {
+		maxPage = 1
+	} 
 
 	return (
 		<>
-			<TableContainer height={numberOfRow < 7}>
+			<TableContainer tableHeight={numberOfRow < 7}>
 				<Table>
 					<tbody>
 						<HeaderRow>
@@ -141,7 +132,7 @@ const TableComponent = (props: TableComponentInterface) => {
 										return (
 											<Cell key={column.id} cellAlign={column.align} width={column.width}>
 												{(column.format &&
-													column.format(index)) ||
+													column.format(index, item[column.id])) ||
 													cellValue}
 											</Cell>
 										)

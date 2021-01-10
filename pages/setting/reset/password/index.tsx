@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { Form, FormActions, PrimaryButton, SecondaryButton, Title } from '../../../../components/styles/GlobalComponents'
-import InputComponent from '../../../../components/common/Input'
+import InputComponent from '../../../../components/common/InputComponent'
 
 const PasswordSettingPage = () => {
 	const router = useRouter()

@@ -39,7 +39,7 @@ const SidebarContent = styled.div`
 	z-index: 1;
 `
 
-const SidebarItem = styled.div`
+const SidebarItem = styled.button`
 	font-size: 2rem;
 	color: hsl(212, 28%, 28%);
 	font-weight: 500;

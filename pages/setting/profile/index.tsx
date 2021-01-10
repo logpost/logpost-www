@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
-import InputComponent from "../../../components/common/Input"
+import InputComponent from "../../../components/common/InputComponent"
 import {
 	Form,
 	PrimaryButton,
@@ -10,18 +10,26 @@ import {
 	Title,
 	FormActions
 } from "../../../components/styles/GlobalComponents"
+import { ACCOUNT_TYPE } from "../../../data/account.mock"
 
-const account_type = "personal" // MOCK
+const TextButtonCustom = styled(TextButton)`
+	margin-top: 3rem;
+`
 
 const ProfileSettingPage = () => {
 	const router = useRouter()
 	const [profile, setProfile] = useState({
 		username: "",
 		tel: "",
-		address: "",
 		name: "",
 		display_name: "",
 		juristic_id: "",
+	})
+	const [address, setAddress] = useState({
+		address: "",
+		province: "",
+		district: "",
+		zipcode: "",
 	})
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,9 +37,15 @@ const ProfileSettingPage = () => {
 		setProfile({ ...profile, [e.target.name]: value })
 	}
 
+	const handleAddressOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value
+		setAddress({ ...address, [e.target.name]: value})
+	}
+
 	const updateProfile = () => {
 		// PUT
-		console.log(profile)
+		const newProfile = {...profile, address: address}
+		console.log(newProfile)
 	}
 
 	const deactivateAccount = () => {
@@ -56,30 +70,56 @@ const ProfileSettingPage = () => {
 				labelEN="Phone Number"
 				handleOnChange={handleInputOnChange}
 			/>
-			<InputComponent
-				name="address"
-				value={profile.address}
-				labelTH="ที่อยู่"
-				labelEN="Address"
-				type="textarea"
-				handleOnChange={handleInputOnChange}
-			/>
+			<div>
+				<InputComponent
+					name="address"
+					value={address.address}
+					labelTH="ที่อยู่"
+					labelEN="Address"
+					handleOnChange={handleAddressOnChange}
+				/>
+				<InputComponent
+					name="district"
+					value={address.district}
+					disableLabel={true}
+					subLabel="อำเภอ"
+					type="short"
+					handleOnChange={handleAddressOnChange}
+				/>
+				<InputComponent
+					name="province"
+					value={address.province}
+					disableLabel={true}
+					subLabel="จังหวัด"
+					type="short"
+					handleOnChange={handleAddressOnChange}
+				/>
+				<InputComponent
+					name="zipcode"
+					value={address.zipcode}
+					disableLabel={true}
+					subLabel="รหัสไปรษณีย์"
+					type="number"
+					handleOnChange={handleAddressOnChange}
+				/>
+			</div>
 			<InputComponent
 				name="name"
 				value={profile.name}
 				labelTH={
-					account_type === "personal" ? "ชื่อจริง - นามสกุล" : "ชื่อบริษัท"
+					ACCOUNT_TYPE === "personal" ? "ชื่อจริง - นามสกุล" : "ชื่อบริษัท"
 				}
-				labelEN={account_type === "personal" ? "Name" : "Company Name"}
+				labelEN={ACCOUNT_TYPE === "personal" ? "Name" : "Company Name"}
 				handleOnChange={handleInputOnChange}
 			/>
-			{account_type === "personal" && (
+			{ACCOUNT_TYPE === "personal" && (
 				<InputComponent
 					name="display_name"
 					value={profile.display_name}
 					labelTH="ชื่อที่แสดง"
 					labelEN="Display Name"
 					handleOnChange={handleInputOnChange}
+					required={false}
 				/>
 			)}
 			<InputComponent
@@ -88,6 +128,7 @@ const ProfileSettingPage = () => {
 				labelTH="เลขทะเบียนนิติบุคคล"
 				labelEN="Juristic ID"
 				handleOnChange={handleInputOnChange}
+				required={false}
 			/>
 			<FormActions>
 				<SecondaryButton
@@ -100,9 +141,9 @@ const ProfileSettingPage = () => {
 					แก้ไขข้อมูล
 				</PrimaryButton>
 			</FormActions>
-			<TextButton type="button" onClick={deactivateAccount}>
+			<TextButtonCustom type="button" onClick={deactivateAccount}>
 				ระงับบัญชี<span> / Deactivate Account</span>
-			</TextButton>
+			</TextButtonCustom>
 		</Form>
 	)
 }

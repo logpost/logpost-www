@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SignUpFormInterface } from '../../entities/interface/common'
-import InputComponent from './Input'
-import { PrimaryButton, Title, Form } from '../styles/GlobalComponents'
-import appStore from '../../store/AppStore'
+import InputComponent from './InputComponent'
+import { PrimaryButton, Title, Form, FormActions, SecondaryButton } from '../styles/GlobalComponents'
 import { useRouter } from 'next/router'
-import { view } from '@risingstack/react-easy-state'
+import { signup } from '../utilities/apis'
 
 const RadioInputContainer = styled.div`
 	display: flex;
@@ -47,8 +46,10 @@ const SignUpForm = (props: SignUpFormInterface) => {
 		display_name: "",
 		email: ""
 	})
-
-	const { signup } = appStore
+	const [validField, setValidField] = useState({
+		password: true,
+		confirm_password: true
+	})
 	const router = useRouter()
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,13 +58,25 @@ const SignUpForm = (props: SignUpFormInterface) => {
 	}
 
 	const handleSignup = () => {
-		signup(role, profile)
-		router.push({
-			pathname: '/alert/confirm/email',
-			query: { email: profile.email },
-		})
+		const {confirm_password, ...signupData} = profile
+		if (profile.account_type === "business") {
+			signupData.display_name = signupData.name
+		}
+		const passwordsAreMatch = (signupData.password === confirm_password)
+		if (passwordsAreMatch) {
+			signup(role, signupData)
+			router.push({
+				pathname: '/alert/confirm/email',
+				query: { email: profile.email },
+			})
+		} else {
+			const invalidPassword = {
+				password: false,
+				confirm_password: false
+			}
+			setValidField(invalidPassword)
+		}
 	}
-
 
 	return (
 		<Form>
@@ -76,14 +89,14 @@ const SignUpForm = (props: SignUpFormInterface) => {
 						name="personal"
 						onClick={() => setProfile({ ...profile, account_type: "personal" })}>
 						บุคคล
-								</RadioInput>
+						</RadioInput>
 					<RadioInput
 						type="button"
 						value={profile.account_type}
 						name="business"
 						onClick={() => setProfile({ ...profile, account_type: "business" })}>
 						นิติบุคคล
-								</RadioInput>
+						</RadioInput>
 				</RadioInputContainer>
 			</InputComponent>
 			<InputComponent
@@ -97,12 +110,14 @@ const SignUpForm = (props: SignUpFormInterface) => {
 				labelTH="รหัสผ่าน"
 				labelEN="Password"
 				value={profile.password}
+				valid={validField.password}
 				description="ความยาวมากกว่า 6 ตัวอักษร ประกอบด้วยตัวพิมพ์ใหญ่ (A-Z) ตัวพิมพ์เล็ก (a-z) และตัวเลข (0-9)"
 				type="password"
 				handleOnChange={handleInputOnChange} />
 			<InputComponent
 				name="confirm_password"
 				value={profile.confirm_password}
+				valid={validField.confirm_password}
 				labelTH="ยืนยันรหัสผ่าน"
 				labelEN="Confirm Password"
 				type="password"
@@ -128,7 +143,15 @@ const SignUpForm = (props: SignUpFormInterface) => {
 				labelTH="อีเมล"
 				labelEN="E-mail"
 				handleOnChange={handleInputOnChange} />
-			<PrimaryButton type="button" onClick={handleSignup/* () => submitForm(profile) */}>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</PrimaryButton>
+			<FormActions>
+				<SecondaryButton
+					type="button"
+					onClick={() => router.back()}
+				>
+					ยกเลิก
+        		</SecondaryButton>
+				<PrimaryButton type="button" onClick={handleSignup/* () => submitForm(profile) */}>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</PrimaryButton>
+			</FormActions>
 		</Form>
 	)
 }

@@ -1,14 +1,15 @@
 import { useEffect } from 'react'
 import '../styles/globals.css'
-import appStore from '../store/AppStore'
-import { view } from '@risingstack/react-easy-state'
+import {
+  RecoilRoot,
+} from 'recoil';
 
 function MyApp({ Component, pageProps }) {
-	const { onLoadPage } = appStore
-	// useEffect( () =>  {
-	//      onLoadPage()
-	//   }, [])
-	return <Component {...pageProps} />
+	return (
+		<RecoilRoot>
+			<Component {...pageProps} />
+		</RecoilRoot>
+	)
 }
 
-export default view(MyApp)
+export default MyApp

@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { EmailConfirmation } from "../../../../components/common/Icons"
 import { useRouter } from "next/router"
 import { SecondaryButton } from "../../../../components/styles/GlobalComponents"
+import { resendEmail } from "../../../../components/utilities/apis"
 
 const DetailContainer = styled.div`
 	display: flex;
@@ -44,6 +45,13 @@ const EmailConfirmationPage = () => {
 	// useEffect(() => {
 	//	 axios.post(`http://localhost:5000/account/email/confirm/consume?token_email=${}`)
 	// })
+
+	const sendEmailAgain = () => {
+		// if token is expired / redirect to login page and attach query login to send email again
+		console.log("send again")
+		resendEmail()
+	}
+
 	return (
 		<EmailConfirmationContainer>
 			<EmailConfirmation />
@@ -52,7 +60,7 @@ const EmailConfirmationPage = () => {
 				<Detail>คลิกลิงก์ที่เราส่งไปทางอีเมล</Detail>
 				<Detail>{router.query.email}</Detail>
 			</DetailContainer>
-			<SecondaryButton>ส่งอีเมลอีกครั้ง</SecondaryButton>
+			<SecondaryButton onClick={sendEmailAgain}>ส่งอีเมลอีกครั้ง</SecondaryButton>
 		</EmailConfirmationContainer>
 	)
 }

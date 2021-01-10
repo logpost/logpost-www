@@ -1,24 +1,27 @@
-import { StringDecoder } from "string_decoder"
+import { ReactElement } from 'react'
+
+export interface AuthInterface {
+	username: string
+	password: string
+}
 
 export interface InputComponentInterface {
 	name?: string
 	value?: string
-	labelTH: string
-	labelEN: string
+	labelTH?: string
+	labelEN?: string
+	subLabel?: string
 	labelSize?: string
 	handleOnChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 	description?: string
 	type?: string
 	classifier?: string
-}
-
-export interface ProfileInterface {
-	account_type: string
-	username: string
-	password: string
-	name: string
-	displayName?: string
-	email: string
+	disableLabel?: boolean
+	required?: boolean
+	id?: string
+	readOnly?: boolean
+	valid?: boolean
+	invalidText?: string
 }
 
 export interface SignUpFormInterface {
@@ -28,11 +31,14 @@ export interface SignUpFormInterface {
 export interface ProfileJobStatusInterface {
 	title: string
 	buttonText: string
+	buttonLink: string
+	type: string
 	items: {
 		name: string
-		icon: JSX.Element
-		status: string
+		icon?: JSX.Element
+		onClickLink?: string
 		noOfJobs?: number
+		metric?: number
 	}[]
 }
 
@@ -41,37 +47,12 @@ export interface ToggleComponentInterface {
 	setToggle: (toggle: boolean) => void
 }
 
- export interface JobDetailsInterface {
-	_id?: string
-	carrier_id?: string
-	pickup_location?: string
-	dropoff_location?: string
-	pickup_date?: string
-	dropoff_date?: string
-	product_type?: string
-	weight?: number
-	waiting_time?: number
-	offer_price?: number
-	auto_price?: number
-	status?: number
-	distance?: number
-	permission?: StringDecoder
-	description?: string
-	carrier_specification?: { 
-		truck?: {
-			age?: number
-			type?: {
-				wheel?: number,
-				options?: string
-			}
-		}
-		driver?: {
-			driver_license_type?: string
-		}
-	}
-}
-
-export interface JobAddInterface {
-	details: JobDetailsInterface
-	setDetails: (details: JobDetailsInterface) => void
+export interface TableComponentInterface {
+	columns: {
+		id: string
+		label: string
+		align?: string
+		width?: string
+		format?: (index: number, value?: string | number) => ReactElement
+	}[]
 }

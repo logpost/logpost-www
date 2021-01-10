@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
 import { SecondaryButton } from "../../../components/styles/GlobalComponents"
@@ -40,6 +40,13 @@ const SuccessContainer = styled.div`
 
 const SuccessPage = () => {
 	const router = useRouter()
+
+	useEffect(() => {
+		if (localStorage.getItem("email_token") !== null) {
+			localStorage.removeItem("email_token")
+		}
+	}, [])
+
 	return (
 		<SuccessContainer>
 			<Success />

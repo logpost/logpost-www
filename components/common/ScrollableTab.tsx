@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useRef, useEffect } from "react"
 import styled from "styled-components"
 
 interface ScrollableInterface {
@@ -68,14 +68,14 @@ const ScrollableTab = (props: ScrollableInterface) => {
 	const { currentTab, setCurrentTab, tabs, scrollAtIndex } = props
 	const ref = useRef(null)
 
-	const changeTab = (nextTab: string, tabIndex: number) => {
-		if (tabIndex >= scrollAtIndex) {
+	useEffect(() => {
+		const tabsName = tabs.map(tab => tab.name)
+		if (tabsName.indexOf(currentTab) >= scrollAtIndex) {
 			ref.current.scrollLeft += 200
 		} else {
 			ref.current.scrollLeft -= 200
 		}
-		setCurrentTab(nextTab)
-	}
+	}, [currentTab])
 
 	const TabItems = () => {
 		const listOfItems = []
@@ -85,7 +85,7 @@ const ScrollableTab = (props: ScrollableInterface) => {
 					key={tabIndex}
 					name={item.name}
 					value={currentTab}
-					onClick={() => changeTab(item.name, tabIndex)}
+					onClick={() => setCurrentTab(item.name)}
 				>
 					<div data-content={item.content}>
 						<Line />

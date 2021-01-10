@@ -3,6 +3,7 @@ import styled from "styled-components"
 import JobCard from "../../../components/common/JobCard"
 import { useRouter } from "next/router"
 import ScrollableTab from "../../../components/common/ScrollableTab"
+import NavigationBar from '../../../components/common/NavigationBar'
 
 const JobContainer = styled.div`
 	padding-top: 6rem;
@@ -32,6 +33,7 @@ const JobStatusPage = () => {
 
 	return (
 		<div>
+			<NavigationBar />
 			<ScrollableTab
 				currentTab={status || "all"}
 				setCurrentTab={changeStatus}
@@ -41,7 +43,7 @@ const JobStatusPage = () => {
 					{ name: "shipping", content: "กำลังขนส่ง" },
 					{ name: "finished", content: "ขนส่งเสร็จสิ้น" },
 				]}
-				scrollAtIndex={3}
+				scrollAtIndex={2}
 			/>
 			<JobContainer>
 				{/* <JobCard /> */}
