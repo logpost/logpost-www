@@ -250,6 +250,7 @@ const GetJobPage = () => {
 
 	const convertDriverToTableFormat = (drivers: DriverDocument[]): DriverTable[] => {
 		const driverTableData = []
+		const validDrivers = []
 		drivers.map((driver) => {
 			const { name, driver_license_type, status } = driver
 			const matchDriverLicenseType = (driver_license_type === jobDetails.carrier_specification.driver.driver_license_type)
@@ -258,26 +259,31 @@ const GetJobPage = () => {
 					name,
 					driver_license_type: driver_license_type.replace("ประเภท", ""),
 				})
+				validDrivers.push(driver)
 			}
 		})
+		setDrivers(validDrivers)
 		return driverTableData
 	}
 
 	const convertTruckToTableFormat = (trucks: TruckDocument[]): TruckTable[] => {
-		const driverTableData = []
+		const truckTableData = []
+		const validTrucks = []
 		trucks.map((truck) => {
 			const { license_number, property, status } = truck
 			const matchType = (property.type === jobDetails.carrier_specification.truck.property.type) 
 			const matchOption = (property.option === jobDetails.carrier_specification.truck.property.option)
 			if (matchType && matchOption && (status === 100)) {
-				driverTableData.push({
+				truckTableData.push({
 					license_number,
 					type: property.type,
 					option: property.option,
 				})
+				validTrucks.push(truck)
 			}
 		})
-		return driverTableData
+		setTrucks(validTrucks)
+		return truckTableData
 	}
 
 	const toggleModal = (target: string) => {

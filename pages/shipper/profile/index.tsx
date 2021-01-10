@@ -8,11 +8,12 @@ import {
 import NavigationBar from "../../../components/common/NavigationBar"
 import Header from "../../../components/common/Header"
 import ProfileStatus from "../../../components/common/ProfileStatus"
-import { useRecoilValue, useRecoilState } from 'recoil'
+import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil'
 import { userInfoState } from "../../../store/atoms/userInfoState"
-import { jobStatusCountState } from "../../../store/atoms/carrierProfileState"
+import { jobStatusCountState, myJobsState } from "../../../store/atoms/carrierProfileState"
 import { resourceStatusCount } from "../../../components/utilities/helper"
-import { getShipperProfile } from "../../../components/utilities/apis"
+import { getMyJob, getShipperProfile } from "../../../components/utilities/apis"
+import { JobDocument } from '../../../entities/interface/job'
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
@@ -21,11 +22,13 @@ const ProfileStatusContainer = styled.div`
 const ShipperProfilePage = () => {
 	const shipperInfo = useRecoilValue(userInfoState)
 	const [jobStatusCount, setJobStatusCount] = useRecoilState<{[key: number]: number}>(jobStatusCountState)
+	const setMyJobs = useSetRecoilState(myJobsState)
 
 	useEffect(() => {
 		if (shipperInfo.username) {
-			getShipperProfile(shipperInfo.username, (shipperProfile) => {
-				resourceStatusCount(shipperProfile.job_history, jobStatusCount, setJobStatusCount)
+			getMyJob((jobs: JobDocument[]) => {
+				resourceStatusCount(jobs, jobStatusCount, setJobStatusCount)
+				setMyJobs(jobs)
 			})
 		}
 	}, [shipperInfo])

@@ -5,7 +5,7 @@ export const authorizationHandler = async (fetcher: any)  => {
 		const response = await fetcher()
 		return response
 	} catch (error) {
-		if (error.response.status === 401) {
+		if (error?.response?.status === 401) {
 			const isNotReLogin = await getToken()
 			if(isNotReLogin){
 				try {

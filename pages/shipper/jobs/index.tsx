@@ -4,6 +4,10 @@ import JobCard from "../../../components/common/JobCard"
 import { useRouter } from "next/router"
 import ScrollableTab from "../../../components/common/ScrollableTab"
 import NavigationBar from '../../../components/common/NavigationBar'
+import { myJobsState } from "../../../store/atoms/carrierProfileState"
+import { useRecoilState } from "recoil"
+import { getMyJob } from "../../../components/utilities/apis"
+import { JobDocument } from "../../../entities/interface/job"
 
 const JobContainer = styled.div`
 	padding-top: 6rem;
@@ -12,9 +16,15 @@ const JobContainer = styled.div`
 const JobStatusPage = () => {
 	const router = useRouter()
 	const [status, setStatus] = useState("all")
+	const [myJobs, setMyJobs] = useRecoilState(myJobsState)
 
 	useEffect(() => {
 		setStatus(router.query.status as string)
+		if (!Boolean(myJobs[0].job_id)) {
+			getMyJob((jobs: JobDocument[]) => {
+				setMyJobs(jobs)
+			})
+		}
 	}, [router.query])
 
 	const changeStatus = (nextStatus: string) => {
@@ -46,8 +56,24 @@ const JobStatusPage = () => {
 				scrollAtIndex={2}
 			/>
 			<JobContainer>
-				{/* <JobCard /> */}
-				{/* <JobCard /> */}
+				{ status === "all" && myJobs.map((job, index) => {
+					return <JobCard key={index} origin="jobs-page" details={job} />
+				})}
+				{ status === "waiting" && myJobs.map((job, index) => {
+					if (job.status === 100) {
+						return <JobCard key={index} origin="jobs-page" details={job} />
+					}
+				})}
+				{ status === "shipping" && myJobs.map((job, index) => {
+					if (job.status > 100 && job.status < 800) {
+						return <JobCard key={index} origin="jobs-page" details={job} />
+					}
+				})}
+				{ status === "finished" && myJobs.map((job, index) => {
+					if (job.status === 800) {
+						return <JobCard key={index} origin="jobs-page" details={job} />
+					}
+				})}
 			</JobContainer>
 		</div>
 	)

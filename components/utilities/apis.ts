@@ -230,7 +230,7 @@ const getMyJob = async (next: (jobs: JobDocument[]) => void) => {
 			)
 			next(res.data)
 		} catch (error) {
-			throw error	
+			throw error
 		}
 	})
 }
