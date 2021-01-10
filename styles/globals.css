@@ -1,52 +1,59 @@
 @import url("https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700;800&display=swap");
 
 html {
-  scroll-behavior: smooth;
-  font-size: 62.5%; /* waiting for change */
+    scroll-behavior: smooth;
+    font-size: 62.5%; /* waiting for change */
+
+    display: flex;
+    justify-content: center;
 }
 
 @media screen and (max-width: 768px) {
-  html {
-    font-size: 55.5%; /* waiting for change */
-  }
+    html {
+        font-size: 55.5%; /* waiting for change */
+    }
 }
 
 @media screen and (max-width: 450px) {
-  html {
-    font-size: 62.5%;
-  }
+    html {
+        font-size: 62.5%;
+    }
 }
 
 body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, "Bai Jamjuree", sans-serif, BlinkMacSystemFont,
-    Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
-    Helvetica Neue, sans-serif;
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, "Bai Jamjuree", sans-serif, BlinkMacSystemFont,
+        Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+        Helvetica Neue, sans-serif;
+
+    width: 375px;
+    border: 1px solid black;
 }
 
 a {
-  color: inherit;
-  text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
 button {
-  font-family: -apple-system, "Bai Jamjuree";
-  background: none;
-  border: 0;
-  font: inherit;
-  padding: 0;
-  cursor: pointer;
+    font-family: -apple-system, "Bai Jamjuree";
+    background: none;
+    border: 0;
+    font: inherit;
+    padding: 0;
+    cursor: pointer;
 }
 
-input, textarea {
-  font-family: -apple-system, "Bai Jamjuree";
+input,
+textarea {
+    font-family: -apple-system, "Bai Jamjuree";
 }
 
 input[type="radio"] {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
