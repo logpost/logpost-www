@@ -23,12 +23,15 @@ import Modal from "../../../components/common/Modal"
 import { JOB_STATUS_CODE } from "../../../data/jobs"
 import { useRecoilValue, useRecoilState } from 'recoil'
 import { userInfoState } from "../../../store/atoms/userInfoState"
-import { getJobDetailsByID } from "../../../components/utilities/apis"
+import { getJobDetailsByID, updateJob } from "../../../components/utilities/apis"
 import { JobDocument } from '../../../entities/interface/job'
 import { jobDetailsState } from '../../../store/atoms/jobDetailsState'
 import { initMap, route } from "../../../components/utilities/googlemaps"
 import { MapInterface } from "../../../entities/interface/googlemaps"
 import { dateFormatter, timeFormatter } from "../../../components/utilities/helper"
+import { resourceCreatedState } from "../../../store/atoms/overviewPageState"
+import Alert from "../../../components/common/Alert"
+import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
 
 const PageContainer = styled.div<{ bottomSpace: boolean }>`
 	margin-bottom: ${(props) => (props.bottomSpace ? 19 : 8)}rem;
@@ -53,6 +56,7 @@ const ModalContent = styled.div`
 	justify-content: center;
 	align-items: center;
 	white-space: nowrap;
+	padding: 0 2rem;
 
 	> *:not(:last-child) {
 		margin-bottom: 1.6rem;
@@ -65,11 +69,11 @@ const ModalContent = styled.div`
 
 	${FormActions} {
 		${SecondaryButton}, ${PrimaryButton}	{
-			font-size: 1.6rem;
+			font-size: 1.8rem;
 			box-shadow: none;
-			margin-top: 0;
 			height: fit-content;
 			font-weight: 500;
+			padding: 0.4rem 2rem;
 		}
 	}
 `
@@ -245,7 +249,8 @@ const JobDetailPage = () => {
 	const driverURLRef = useRef(null)
 	const [isPositive, setIsPositive] = useState(true)
 	const [toggleModal, setToggleModal] = useState(false)
-	console.log(jobDetails)
+	const createdStatus = useRecoilValue(resourceCreatedState)
+	const [alertProperty, setAlertProperty] = useRecoilState(alertPropertyState)
 
 	const isJobHasCarrier = jobDetails.status > 100
 	const isJobStarted = jobDetails.status >= 300
@@ -288,12 +293,38 @@ const JobDetailPage = () => {
 					} 
 					route(pickupLatLng, dropoffLatLng, routeMap)
 				})
+				if (jobDetails.status >= 200) {
+
+				}
 			})
 		}
 	}, [router.query.job_id])
 
+	useEffect(() => {
+		setAlertProperty({
+			type: createdStatus,
+			isShow: Boolean(createdStatus)
+		})
+	}, [createdStatus])
+
+	const startJob = async () => {
+		const response = await updateJob({
+			jobinfo: { 
+				"status": 300
+			},
+			job_id: jobID
+		})
+		setToggleModal(false)
+	}
+
 	return (
 		<PageContainer bottomSpace={isLinkGenerated}>
+			{
+				alertProperty.isShow &&
+				<Alert>
+					{createdStatus === "success" ? "รับงานสำเร็จ" : "รับงานไม่สำเร็จ"}
+				</Alert>
+			}
 			<NavigationBar />
 			{isLinkGenerated && (
 				<DriverURLContainer>
@@ -327,22 +358,20 @@ const JobDetailPage = () => {
 					/>
 				)}
 				<DetailSection />
-				{isJobHasCarrier && (
+				{jobDetails.carrier_id && (
 					<CarrierDetailsContainer>
-						{!isCarrier && (
-							<Detail>
-								ขนส่งโดย <span>ล็อกโพสต์ ขนส่ง จำกัด</span>
-							</Detail>
-						)}
 						<Detail>
-							พนักงานขับรถ <span>คนขับหนึ่ง</span>
+							ขนส่งโดย <span>{jobDetails.carrier_display_name}</span>
+						</Detail>
+						{/* <Detail>
+							พนักงานขับรถ <span>{jobDetails.carrier_display_name}</span>
 						</Detail>
 						<Detail>
 							ทะเบียนรถ <span>89-7280</span>
-						</Detail>
+						</Detail> */}
 					</CarrierDetailsContainer>
 				)}
-				{isCarrier && (
+				{jobDetails.auto_price && (
 					<PriceDetailsContainer>
 						<PriceItem>
 							ราคาเสนอ
@@ -397,7 +426,7 @@ const JobDetailPage = () => {
 								<b>ยืนยันเริ่มงานหรือไม่ ?</b>
 								<FormActions>
 									<SecondaryButton onClick={() => setToggleModal(false)}>ย้อนกลับ</SecondaryButton>
-									<PrimaryButton onClick={() => setToggleModal(false)}>ยืนยันเริ่มงาน</PrimaryButton>
+									<PrimaryButton onClick={startJob}>ยืนยันเริ่มงาน</PrimaryButton>
 								</FormActions>
 							</ModalContent>
 						</Modal>

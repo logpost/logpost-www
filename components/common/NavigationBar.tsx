@@ -17,7 +17,8 @@ const NavBarContainer = styled.div`
 	align-items: center;
 	position: fixed;
 	bottom: 0;
-	width: 100%;
+	/* width: 100%; */
+	width: 375px;
 	height: 6.2rem;
 	box-shadow: 0 -0.2rem 1.4rem 0 hsla(0, 0%, 0%, 0.1);
 	background-color: white;

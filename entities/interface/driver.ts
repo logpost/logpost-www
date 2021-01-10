@@ -14,6 +14,7 @@ export interface DriverDocument extends DriverDetails {
 
 export interface DriverTable {
 	driver_id: string
+	name: string
 	driver_license_type: string
-	status: number
+	status?: number
 }

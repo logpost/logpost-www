@@ -6,6 +6,7 @@ export const jobDetailsState = atom({
 		shipper_id: "",
 		carrier_id: "",
 		shipper_display_name: "",
+		carrier_display_name: "",
 		status: 100,
 		pickup_location: {
 			address: "",
@@ -36,7 +37,7 @@ export const jobDetailsState = atom({
 				}
 			},
 			driver: {
-				driver_license_type: "ประเภท 1"
+				driver_license_type: "ประเภท 1",
 			}
 		},
 		product_type: "ไม้",

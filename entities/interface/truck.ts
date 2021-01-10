@@ -20,7 +20,7 @@ export interface TruckDetails {
 
 export interface TruckDocument extends TruckDetails {
 	truck_id: string
-	status: string
+	status: number
 }
 
 export interface TruckAddInterface {
@@ -29,8 +29,9 @@ export interface TruckAddInterface {
 }
 
 export interface TruckTable {
-	truck_id: string
+	truck_id?: string
 	license_number: string
 	type: string
-	status: number
+	option?: string
+	status?: number
 }

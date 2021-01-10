@@ -140,10 +140,12 @@ export const JobTitle = styled.span`
 	align-items: center;
 	font-size: 2rem;
 	padding: 0.2rem 0;
+	white-space: nowrap;
 
 	> span {
 		overflow: hidden;
 		text-overflow: ellipsis;
+		margin-left: 0.8rem;
 	}
 
 	svg {

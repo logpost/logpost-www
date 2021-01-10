@@ -13,11 +13,14 @@ const ModalContainer = styled.div<ModalContainerProps>`
 const Backdrop = styled.div`
 	background-color: hsla(211, 27%, 15%, 0.8);
 	height: 100vh;
-	width: 100vw;
+	/* width: 100vw; */
+	width: 375px;
 	position: fixed;
 	z-index: 1;
 	top: 0;
-	left: 0;
+	/* left: 0; */
+	left: 50%;
+	transform: translateX(-50%);
 `
 
 const ModalContent = styled.div`
@@ -31,8 +34,9 @@ const ModalContent = styled.div`
 	border-radius: 6px;
 	font-size: 1.8rem;
 	max-width: 70rem;
-	width: 86%;
-	min-height: 34rem;
+	/* width: 86%; */
+	width: 76%;
+	min-height: 24rem;
 `
 
 const Modal: FunctionComponent<ToggleComponentInterface> = (props) => {
