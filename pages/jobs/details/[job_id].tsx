@@ -266,9 +266,6 @@ const JobDetailPage = () => {
 
 	const calculateProfit = (offerPrice: number, autoPrice: number): string => {
 		const profit = offerPrice - autoPrice
-		if (profit < 0) {
-			setIsPositive(false)
-		}
 		return profit.toLocaleString()
 	}
 
@@ -293,9 +290,6 @@ const JobDetailPage = () => {
 					} 
 					route(pickupLatLng, dropoffLatLng, routeMap)
 				})
-				if (jobDetails.status >= 200) {
-
-				}
 			})
 		}
 	}, [router.query.job_id])
@@ -363,12 +357,12 @@ const JobDetailPage = () => {
 						<Detail>
 							ขนส่งโดย <span>{jobDetails.carrier_display_name}</span>
 						</Detail>
-						{/* <Detail>
-							พนักงานขับรถ <span>{jobDetails.carrier_display_name}</span>
+						<Detail>
+							พนักงานขับรถ <span>{jobDetails.driver_name}</span>
 						</Detail>
 						<Detail>
-							ทะเบียนรถ <span>89-7280</span>
-						</Detail> */}
+							ทะเบียนรถ <span>{jobDetails.license_number}</span>
+						</Detail>
 					</CarrierDetailsContainer>
 				)}
 				{jobDetails.auto_price && (
@@ -393,7 +387,7 @@ const JobDetailPage = () => {
 								{calculateProfit(
 									jobDetails.offer_price,
 									jobDetails.auto_price
-								)}{" "}
+								)}
 								<span>บาท</span>
 							</div>
 						</PriceItem>

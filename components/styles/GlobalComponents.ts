@@ -3,7 +3,8 @@ import styled from 'styled-components'
 export const Background = styled.div`
 	background-image: url('/images/main-bg.png');
 	background-size: cover;
-	height: 72vh;
+	/* height: 72vh; */
+	height: 80vh;
 `
 
 export const Title = styled.div`

@@ -11,6 +11,7 @@ import {
 } from "../../../styles/GlobalComponents"
 import { JobAddInterface } from "../../../../entities/interface/job"
 import { useRouter } from "next/router"
+import { costCalculator, offerCalculator } from "../../../utilities/costCalculater"
 
 const JobAddStepTwo = (props: JobAddInterface) => {
 	const router = useRouter()
@@ -24,11 +25,7 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
-		if (e.target.type === "number" || e.target.name === "offer_price") {
-			setStepTwoDetails({ ...stepTwoDetails, [e.target.name]: parseInt(value) })
-		} else {
-			setStepTwoDetails({ ...stepTwoDetails, [e.target.name]: value })
-		}
+		setStepTwoDetails({ ...stepTwoDetails, [e.target.name]: value })
 	}
 
 	const submitDetails = () => {
@@ -36,7 +33,7 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 			...details,
 			product_type: stepTwoDetails.product_type,
 			weight: parseInt(stepTwoDetails.weight),
-			waiting_time: parseInt(stepTwoDetails.waiting_time),
+			waiting_time: parseInt(stepTwoDetails.waiting_time) || undefined,
 			offer_price: parseInt(stepTwoDetails.offer_price),
 			description: stepTwoDetails.description,
 		})
@@ -74,6 +71,7 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 					name="offer_price"
 					labelEN="Offer Price"
 					labelTH="ราคาเสนอ"
+					description={`ราคาที่เหมาะสมของงานนี้คือ ${offerCalculator(parseInt(stepTwoDetails.weight))}`}
 					type="number"
 					classifier="บาท"
 					value={stepTwoDetails.offer_price || ""}
@@ -87,16 +85,6 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 					classifier="ชั่วโมง"
 					required={false}
 					value={stepTwoDetails.waiting_time || ""}
-					handleOnChange={handleInputOnChange}
-				/>
-				<InputComponent
-					name="waiting_time"
-					labelEN="Waiting Time"
-					type="number"
-					labelTH="เวลารอขึ้น - ลงสินค้า"
-					classifier="ชั่วโมง"
-					required={false}
-					value={`${stepTwoDetails.waiting_time}`}
 					handleOnChange={handleInputOnChange}
 				/>
 				<InputComponent

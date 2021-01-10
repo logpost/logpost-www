@@ -12,11 +12,13 @@ import DetailSection from "../../../common/DetailSection"
 import { useRouter } from "next/router"
 import { createJob } from "../../../utilities/apis"
 import { JobDetails } from "../../../../entities/interface/job"
-import { dateFormatter } from "../../../utilities/helper"
+import { dateFormatter, timeFormatter } from "../../../utilities/helper"
 import { useSetRecoilState } from 'recoil'
 import { resourceCreatedState } from '../../../../store/atoms/overviewPageState'
 import { initMap, route } from "../../../utilities/googlemaps"
 import { MapInterface } from '../../../../entities/interface/googlemaps'
+import { jobDetailsState } from '../../../../store/atoms/jobDetailsState'
+import { costCalculator } from '../../../utilities/costCalculater'
 
 const Map = styled.div`
 	height: 45rem;
@@ -62,9 +64,11 @@ const JobAddStepFour = (props: { details: JobDetails }) => {
 	const router = useRouter()
 	const { details } = props
 	const setCreateStatus = useSetRecoilState(resourceCreatedState)
+	const setDetailsState = useSetRecoilState(jobDetailsState)
 
 	const submitDetails = async () => {
 		const {geocoder_result, ...jobDetails} = details
+		jobDetails.auto_price = parseInt(costCalculator(jobDetails.distance))
 		const response = await createJob(jobDetails)
 		if (response !== 200) {
 			setCreateStatus("error")
@@ -81,6 +85,7 @@ const JobAddStepFour = (props: { details: JobDetails }) => {
 			const dropoffLatLng = place.dropoff.geometry.location
 			route(pickupLatLng, dropoffLatLng, routeMap)
 		})
+		setDetailsState(details)
 	}, [])
 
 	return (
@@ -90,14 +95,14 @@ const JobAddStepFour = (props: { details: JobDetails }) => {
 			</FormHeader>
 			<Map id="route-map" />
 			<JobDetailsContainer>
-				<DetailSection details={details} />
+				<DetailSection />
 				<JobPrice>
 					<Price>{details.offer_price} บาท</Price>
 					<span>
 						<Detail>
 							โดย <span>ล็อกค้าไม้</span>
 						</Detail>
-						<span>{dateFormatter(new Date)}</span>
+						<span>{dateFormatter(new Date)} {timeFormatter(new Date)}</span>
 					</span>
 				</JobPrice>
 				<FormActions>

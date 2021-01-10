@@ -321,7 +321,7 @@ const GetJobPage = () => {
 		} else {
 			setCreateStatus("success")
 		}
-		router.push(`/jobs/details/${jobID}`)
+		router.push(`/jobs/details/${jobID}`, undefined, { shallow: true })
 	}
 
 	return (
