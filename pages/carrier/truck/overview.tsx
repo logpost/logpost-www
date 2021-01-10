@@ -114,7 +114,7 @@ const OverviewTruckPage = () => {
 	useEffect(() => {
 		setAlertProperty({
 			type: createdStatus,
-			isShow: true
+			isShow: Boolean(createdStatus)
 		})
 	}, [createdStatus])
 

@@ -7,6 +7,7 @@ export const userInfoState = atom({
 		displayName: "Loading...",
 		isConfirmEmail: true,
 		role: "shipper",
-		username: ""
+		username: "",
+		userID: ""
 	}, 
 });

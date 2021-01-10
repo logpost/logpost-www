@@ -10,7 +10,7 @@ import {
 } from "../../components/styles/GlobalComponents"
 import { login } from "../../components/utilities/apis"
 import Alert from "../../components/common/Alert"
-import { useSetRecoilState } from "recoil"
+import { useRecoilState } from "recoil"
 import { alertPropertyState } from "../../store/atoms/alertPropertyState"
 
 const LoginContainer = styled.div`
@@ -101,7 +101,7 @@ const LoginPage = () => {
 		username: "",
 		password: "",
 	})
-	const setAlertProperty = useSetRecoilState(alertPropertyState)
+	const [alertProperty, setAlertProperty] = useRecoilState(alertPropertyState)
 	const [alertDescriptiton, setAlertDescription] = useState("")
 
 	useEffect(() => {
@@ -155,9 +155,12 @@ const LoginPage = () => {
 
 	return (
 		<Background>
-			<Alert>
-				{alertDescriptiton}
-			</Alert>
+			{
+				alertProperty.isShow &&
+				<Alert>
+					{alertDescriptiton}
+				</Alert>
+			}
 			<TitleContainer>
 				<Title>เข้าสู่ระบบ</Title>
 				{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}

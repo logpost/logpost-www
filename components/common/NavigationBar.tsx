@@ -57,21 +57,23 @@ const NavigationBar = () => {
 		setUserInfo(decodedUserInfo)
 	}, [])
 
-	return (
-		<NavBarContainer>
-			<NavBarItem onClick={() => router.push(`/${userInfo.role}/jobs?status=all`)} isActive={currentPath === `/${userInfo.role}/jobs`}>
-				<JobIcon />
-				งานของฉัน
-			</NavBarItem>
-			<NavBarItem onClick={() => router.push(`/jobs`)} isActive={currentPath === `/jobs`}>
-				<SearchIconLarge />
-				ค้นหางาน
-			</NavBarItem>
-			<NavBarItem onClick={() => router.push(`/${userInfo.role}/profile`)} isActive={currentPath === `/${userInfo.role}/profile` }>
-				<PersonIcon />
-				บัญชีของฉัน
-			</NavBarItem>
-		</NavBarContainer>
+	return ( 
+		<>{userInfo && 
+			<NavBarContainer>
+				<NavBarItem onClick={() => router.push(`/${userInfo.role}/jobs?status=all`)} isActive={currentPath === `/${userInfo.role}/jobs`}>
+					<JobIcon />
+					งานของฉัน
+				</NavBarItem>
+				<NavBarItem onClick={() => router.push(`/jobs`)} isActive={currentPath === `/jobs`}>
+					<SearchIconLarge />
+					ค้นหางาน
+				</NavBarItem>
+				<NavBarItem onClick={() => router.push(`/${userInfo.role}/profile`)} isActive={currentPath === `/${userInfo.role}/profile` }>
+					<PersonIcon />
+					บัญชีของฉัน
+				</NavBarItem>
+			</NavBarContainer>
+		}</>	
 	)
 }
 

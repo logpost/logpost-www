@@ -25,9 +25,14 @@ export const initMap = (targetMap: HTMLElement, setMap:(mapProperty: MapInterfac
 	})
 }
 
+export interface LatLng {
+	latitude: number,
+	longitude: number
+}
+
 export const route = (
-	originPlace: google.maps.LatLng, 
-	destinationPlace:  google.maps.LatLng,
+	originPlace: google.maps.LatLng | LatLng, 
+	destinationPlace:  google.maps.LatLng | LatLng,
 	map: MapInterface,
 	setDistance?: (distance: number) => void
 	): void => {
@@ -40,6 +45,12 @@ export const route = (
 		if (!originPlace || !destinationPlace) {
 			return;
 		}
+
+		if (originPlace.latitude || destinationPlace.latitude) {
+			originPlace = new google.maps.LatLng(originPlace.latitude, originPlace.longitude)
+			destinationPlace = new google.maps.LatLng(destinationPlace.latitude, destinationPlace.longitude)
+		}
+
 		directionsService.route(
 			{
 				origin: originPlace,
@@ -59,11 +70,6 @@ export const route = (
 			}
 		);
 	})
-}
-
-export interface LatLng {
-	lat: number,
-	lng: number
 }
 
 // export const getPlaceDetails = (

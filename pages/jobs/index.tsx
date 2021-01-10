@@ -11,8 +11,18 @@ import { useRecoilValue, useSetRecoilState } from "recoil"
 import { resourceCreatedState } from "../../store/atoms/overviewPageState"
 import { alertPropertyState } from "../../store/atoms/alertPropertyState"
 import Alert from "../../components/common/Alert"
+import { userInfoState } from '../../store/atoms/userInfoState'
 
-const JobsPageContainer = styled.div`
+const Header = styled.div`
+	display: flex;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	justify-content: space-between;
+	background-color: hsl(212, 28%, 28%);
+	padding: 1.6rem 2rem;
+	align-items: center;
+
 	${PrimaryButton} {
 		font-size: 1.2rem;
 		font-weight: 600;
@@ -25,17 +35,6 @@ const JobsPageContainer = styled.div`
 			margin-right: 0.6rem;
 		}
 	}
-`
-
-const Header = styled.div`
-	display: flex;
-	position: fixed;
-	width: 100%;
-	top: 0;
-	justify-content: space-between;
-	background-color: hsl(212, 28%, 28%);
-	padding: 1.6rem 2rem;
-	align-items: center;
 `
 
 const SearchBarContainer = styled.div`
@@ -87,14 +86,15 @@ const AddJob = styled.button`
 	}
 `
 
-const JobCardContainer = styled.div`
+const JobCardContainer = styled.div<{isFloat: boolean}>`
 	margin-top: 6rem;
-	margin-bottom: 6.2rem;
+	margin-bottom: ${(props) => props.isFloat ? "6.2rem" : 0};
 `
 
 const JobsPage = () => {
 	const router = useRouter()
 	const [jobs, setJobs] = useState([])
+	const userInfo = useRecoilValue(userInfoState)
 	const createdStatus = useRecoilValue(resourceCreatedState)
 	const setAlertProperty = useSetRecoilState(alertPropertyState)
 
@@ -105,12 +105,12 @@ const JobsPage = () => {
 	useEffect(() => {
 		setAlertProperty({
 			type: createdStatus,
-			isShow: true
+			isShow: Boolean(createdStatus)
 		})
 	}, [createdStatus])
 
 	return (
-		<JobsPageContainer>
+		<>
 			{
 				createdStatus &&
 				<Alert>
@@ -118,10 +118,13 @@ const JobsPage = () => {
 				</Alert>
 			}
 			<NavigationBar />
-			<AddJob onClick={() => router.push("/jobs/add/1")}>
-				<PlusIcon />
-				สร้างงานใหม่
-			</AddJob>
+			{
+				userInfo?.role === "shipper" && 
+					<AddJob onClick={() => router.push("/jobs/add/1")}>
+						<PlusIcon />
+						สร้างงานใหม่
+					</AddJob>
+			}
 			<Header>
 				<SearchBarContainer>
 					<SearchIcon />
@@ -132,12 +135,12 @@ const JobsPage = () => {
 					ตัวกรอง
 				</PrimaryButton>
 			</Header>
-			<JobCardContainer>
+			<JobCardContainer isFloat={Boolean(userInfo)}>
 				{jobs.map((job, index) => {
 					return <JobCard key={index} origin="jobs-page" details={job} />
 				})}
 			</JobCardContainer>
-		</JobsPageContainer>
+		</>
 	)
 }
 

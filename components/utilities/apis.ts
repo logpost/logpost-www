@@ -71,12 +71,18 @@ const logout = async () => {
 }
 
 const getAllJobs = async (next: (jobs: JobDocument[]) => void) => {
-	try {
-		const res = await axios.get(`${JOB_URL}/all`)
-		next(res.data)
-	} catch (error) {
-		console.log(error)
-	}
+	await authorizationHandler(async () => {
+		try {
+			let header = axios.defaults.headers
+			if (localStorage.getItem('access_token') !== null) {
+				header = { headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }}
+			}
+			const res = await axios.get(`${JOB_URL}/all`, header)
+			next(res.data)
+		} catch (error) {
+			throw error	
+		}
+	})
 }
 
 const createJob = async (data: JobDetails) => {
@@ -86,6 +92,20 @@ const createJob = async (data: JobDetails) => {
 				{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }}
 			)
 			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
+const getJobDetailsByID = async (jobID: string, next: (jobDetails: JobDocument) => void) => {
+	await authorizationHandler(async () => {
+		try {
+			const res = await axios.get(`${JOB_URL}/detail/${jobID}`,
+				{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }}
+			)
+			console.log(res.data)
+			next(res.data)
 		} catch (error) {
 			throw error	
 		}
@@ -174,5 +194,6 @@ export {
 	createTruck,
 	getDriver,
 	createDriver,
-	getShipperProfile
+	getShipperProfile,
+	getJobDetailsByID
 }

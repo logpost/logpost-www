@@ -10,7 +10,8 @@ interface TokenPayload {
 	display_name: string,
 	isConfirmEmail: boolean,
 	role: string,
-	username: string
+	username: string,
+	sub: string
 }
 
 export const getUserInfo = () => {
@@ -24,7 +25,8 @@ export const getUserInfo = () => {
 				displayName: tokenPayload.display_name,
 				isConfirmEmail: tokenPayload.isConfirmEmail,
 				role: tokenPayload.role,
-				username: tokenPayload.username
+				username: tokenPayload.username,
+				userID: tokenPayload.sub
 			}
 		}
 	}

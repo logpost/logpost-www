@@ -23,15 +23,22 @@ export const pad = (num: string, size: number) => {
 	return num;
 }
 
-export const dateFormatter = (fullDate: Date) => {
-	const hour = pad(String(fullDate.getHours()), 2)
-	const minute = pad(String(fullDate.getMinutes()), 2)
+export const dateFormatter = (inputDate: Date) => {
+	const fullDate = new Date(inputDate)
 	const year = fullDate.getFullYear()
 	const month = fullDate.getMonth()
 	const date = fullDate.getDate()
 	const shortThaiYear = String(year + 543).slice(2, 4)
-	const formattedDate = `${date} ${SHORT_MONTHS[month]} ${shortThaiYear} ${hour}:${minute} น.`
+	const formattedDate = `${date} ${SHORT_MONTHS[month]} ${shortThaiYear}`
 	return formattedDate
+}
+
+export const timeFormatter = (inputDate: Date) => {
+	const fullDate = new Date(inputDate)
+	const hour = pad(String(fullDate.getHours()), 2)
+	const minute = pad(String(fullDate.getMinutes()), 2)
+	const formattedTime = `${hour}:${minute} น.`
+	return formattedTime
 }
 
 interface AddressComponentInterface {

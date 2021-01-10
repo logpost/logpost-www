@@ -46,7 +46,7 @@ const AddJobSwitcherPage = () => {
 		offer_price: undefined,
 		auto_price: 4000,
 		distance: undefined,
-		permission: "pubilc",
+		permission: "public",
 	})
 
 	return (
