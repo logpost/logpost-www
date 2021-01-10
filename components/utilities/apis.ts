@@ -111,6 +111,7 @@ const getJobDetailsByID = async (jobID: string, next: (jobDetails: JobDocument) 
 			const res = await axios.get(getDetailsURL, header)
 			next(res.data)
 		} catch (error) {
+			console.log(error.response)
 			throw error	
 		}
 	})
@@ -201,6 +202,17 @@ const updateJob = async (data: any) => {
 	})
 }
 
+const updateStatusByDriver = async (data: any) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.put(`${JOB_URL}/driving/status`, data)
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
 const getShipperProfile = async (username: string, next: (shipperProfile) => void) => {
 	try {
 		const res = await axios.get(`${SHIPPER_URL}/shipper/profile/${username}`)
@@ -208,6 +220,19 @@ const getShipperProfile = async (username: string, next: (shipperProfile) => voi
 	} catch (error) {
 		console.log(error.response)
 	}
+}
+
+const getMyJob = async (next: (jobs: JobDocument[]) => void) => {
+	await authorizationHandler(async () => {
+		try {
+			const res = await axios.get(`${JOB_URL}/owned`,
+				{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }}
+			)
+			next(res.data)
+		} catch (error) {
+			throw error	
+		}
+	})
 }
 
 export {
@@ -226,5 +251,7 @@ export {
 	getShipperProfile,
 	getJobDetailsByID,
 	pickJob,
-	updateJob
+	updateJob,
+	updateStatusByDriver,
+	getMyJob
 }

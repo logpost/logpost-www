@@ -259,7 +259,7 @@ const JobDetailPage = () => {
 	const isCarrierOwnedJob = (userInfo?.userID === jobDetails.carrier_id)
 	const isShipperCanEditDetails = (isShipperOwnedJob && !isJobHasCarrier)
 	const isCarrierCanEditDetails = (isCarrierOwnedJob && !isJobStarted)
-	const isLinkGenerated = (isJobStarted && isCarrierOwnedJob)
+	const isLinkGenerated = (isJobStarted && isCarrierOwnedJob && (jobDetails.status !== 800))
 	const isCarrierCanGetJob = (!isJobHasCarrier && isCarrier && !isCarrierOwnedJob)
 	// const isUserCanSeeJobStatus = (isShipperOwnedJob || isCarrierOwnedJob)
 	const jobID = router.query.job_id as string

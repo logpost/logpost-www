@@ -251,8 +251,9 @@ const GetJobPage = () => {
 	const convertDriverToTableFormat = (drivers: DriverDocument[]): DriverTable[] => {
 		const driverTableData = []
 		drivers.map((driver) => {
-			const { name, driver_license_type } = driver
-			if (driver_license_type === jobDetails.carrier_specification.driver.driver_license_type) {
+			const { name, driver_license_type, status } = driver
+			const matchDriverLicenseType = (driver_license_type === jobDetails.carrier_specification.driver.driver_license_type)
+			if (matchDriverLicenseType && (status === 100)) {
 				driverTableData.push({
 					name,
 					driver_license_type: driver_license_type.replace("ประเภท", ""),
@@ -265,10 +266,10 @@ const GetJobPage = () => {
 	const convertTruckToTableFormat = (trucks: TruckDocument[]): TruckTable[] => {
 		const driverTableData = []
 		trucks.map((truck) => {
-			const { license_number, property } = truck
+			const { license_number, property, status } = truck
 			const matchType = (property.type === jobDetails.carrier_specification.truck.property.type) 
 			const matchOption = (property.option === jobDetails.carrier_specification.truck.property.option)
-			if (matchType && matchOption) {
+			if (matchType && matchOption && (status === 100)) {
 				driverTableData.push({
 					license_number,
 					type: property.type,
