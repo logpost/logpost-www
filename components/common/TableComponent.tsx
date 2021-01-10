@@ -1,7 +1,9 @@
-import React, { useState, ReactElement } from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { TableComponentInterface } from "../../entities/interface/common"
 import { RightArrow, DoubleRightArrow } from "./Icons"
+import { useRecoilValue } from 'recoil'
+import { filterState } from "../../store/atoms/tableState"
 
 interface CellInterface {
 	width?: string
@@ -40,7 +42,7 @@ const Header = styled.th`
 
 const Cell = styled.td<CellInterface>`
 	font-size: 1.6rem;
-	padding: 0.8rem 0;
+	padding: 0.8rem 0.5rem;
 	text-align: ${(props) => props.cellAlign || "center"};
 	max-width: 4rem;
 	text-overflow: ellipsis;
@@ -98,8 +100,9 @@ const Pagination = styled.div`
 `
 
 const TableComponent = (props: TableComponentInterface) => {
-	const { columns, data } = props
+	const { columns } = props
 	const [currentPage, setCurrentPage] = useState(1)
+	const data = useRecoilValue<Object[]>(filterState)
 	const numberOfRow = data.length
 	const maxRowPerPage = 7
 	const firstRowOfPage = (currentPage - 1)*maxRowPerPage
@@ -110,7 +113,6 @@ const TableComponent = (props: TableComponentInterface) => {
 	if (maxPage <= 0) {
 		maxPage = 1
 	} 
-
 
 	return (
 		<>

@@ -7,19 +7,17 @@ const AddTruckSwitcherPage = () => {
 	const router = useRouter()
 	const { step } = router.query
 	const [truckDetails, setTruckDetails] = useState({
-		status: 100,
 		license_number: "",
 		gasoline: "ดีเซล",
-		age: 0,
+		age: undefined,
 		is_insure: false,
 		property: {
 			type: "รถ 4 ล้อ",
 			option: "ตู้ทึบ",
-			chassis: null
 		},
 		weight: {
-			max: null,
-			min: null
+			max: undefined,
+			min: undefined
 		}
 	})
 
@@ -28,7 +26,7 @@ const AddTruckSwitcherPage = () => {
 			{
 				{
 					1: <TruckAddStepOne details={truckDetails} setDetails={setTruckDetails} />,
-					2: <TruckAddStepTwo details={truckDetails} setDetails={setTruckDetails} />,
+					2: <TruckAddStepTwo details={truckDetails} />,
 				}[step as string]
 			}
 		</div>

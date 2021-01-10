@@ -15,7 +15,12 @@ import { useRouter } from "next/router"
 const JobAddStepTwo = (props: JobAddInterface) => {
 	const router = useRouter()
 	const { details, setDetails } = props
-	const [stepTwoDetails, setStepTwoDetails] = useState(details)
+	const [stepTwoDetails, setStepTwoDetails] = useState({
+		...details,
+		weight: String(details.weight),
+		waiting_time: String(details.waiting_time),
+		offer_price: String(details.offer_price)
+	})
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
@@ -30,9 +35,9 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 		setDetails({
 			...details,
 			product_type: stepTwoDetails.product_type,
-			weight: stepTwoDetails.weight,
-			waiting_time: stepTwoDetails.waiting_time,
-			offer_price: stepTwoDetails.offer_price,
+			weight: parseInt(stepTwoDetails.weight),
+			waiting_time: parseInt(stepTwoDetails.waiting_time),
+			offer_price: parseInt(stepTwoDetails.offer_price),
 			description: stepTwoDetails.description,
 		})
 		router.push(`/jobs/add/3`, undefined, { shallow: true })
@@ -62,16 +67,26 @@ const JobAddStepTwo = (props: JobAddInterface) => {
 					type="number"
 					description="1 ตัน = 1,000 กิโลกรัม"
 					classifier="ตัน"
-					value={`${stepTwoDetails.weight}`}
+					value={stepTwoDetails.weight || ""}
 					handleOnChange={handleInputOnChange}
 				/>
 				<InputComponent
 					name="offer_price"
 					labelEN="Offer Price"
 					labelTH="ราคาเสนอ"
-					type="short"
+					type="number"
 					classifier="บาท"
-					value={`${stepTwoDetails.offer_price}`}
+					value={stepTwoDetails.offer_price || ""}
+					handleOnChange={handleInputOnChange}
+				/>
+				<InputComponent
+					name="waiting_time"
+					labelEN="Waiting Time"
+					type="number"
+					labelTH="เวลารอขึ้น - ลงสินค้า"
+					classifier="ชั่วโมง"
+					required={false}
+					value={stepTwoDetails.waiting_time || ""}
 					handleOnChange={handleInputOnChange}
 				/>
 				<InputComponent

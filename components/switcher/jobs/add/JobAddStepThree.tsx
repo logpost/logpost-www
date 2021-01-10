@@ -19,7 +19,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
 	const router = useRouter()
 	const { details, setDetails } = props
 	const [stepThreeDetails, setStepThreeDetails] = useState({
-		age: details.carrier_specification.truck.age,
+		age: String(details.carrier_specification.truck.age),
 		driver_license_type: details.carrier_specification.driver.driver_license_type
 	})
 	const [truckProperty, setTruckProperty] = useState(details.carrier_specification.truck.property)
@@ -37,7 +37,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
 			...details,
 			carrier_specification: {
 				truck: {
-					age: stepThreeDetails.age,
+					age: parseInt(stepThreeDetails.age),
 					property: truckProperty
 				},
 				driver: {
@@ -110,6 +110,7 @@ const JobAddStepThree = (props: JobAddInterface) => {
 					labelEN="Maximum Truck Age"
 					type="number"
 					classifier="ปี"
+					required={false}
 					value={`${stepThreeDetails.age}`}
 					handleOnChange={handleInputOnChange}
 				/>

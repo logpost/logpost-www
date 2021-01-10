@@ -28,6 +28,10 @@ carrier
 - carrier/truck/add/step=2
 - carrier/driver/overview
 - carrier/driver/add
+- carrier/jobs?status=all
+- carrier/jobs?status=waiting
+- carrier/jobs?status=shipping
+- carrier/jobs?status=finished
 
 jobs
 - jobs/detail/:job_id

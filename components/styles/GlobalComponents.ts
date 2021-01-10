@@ -31,6 +31,11 @@ export const SecondaryButton = styled.button`
 	font-weight: 500;
 	padding: 1rem 2.4rem;
 	white-space: nowrap;
+
+	&:disabled {
+		border-color: hsl(0, 0%, 66%);
+		color: hsl(0, 0%, 66%);
+	}
 `
 
 export const TextButton = styled.button`
@@ -135,6 +140,11 @@ export const JobTitle = styled.span`
 	align-items: center;
 	font-size: 2rem;
 	padding: 0.2rem 0;
+
+	> span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
 
 	svg {
 		margin: 0 1.4rem;

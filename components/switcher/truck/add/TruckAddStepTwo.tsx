@@ -5,11 +5,14 @@ import InputComponent from '../../../common/InputComponent'
 import SelectComponent from '../../../common/SelectComponent'
 import { GASOLINE_LIST } from '../../../../data/carrier'
 import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHeader, ButtonGroupContainer, ButtonItem } from '../../../styles/GlobalComponents'
+import { createTruck } from '../../../utilities/apis'
+import { useSetRecoilState } from 'recoil'
+import { resourceCreatedState } from '../../../../store/atoms/overviewPageState'
 
-const TruckAddStepTwo = (props) => {
-	const { details, setDetails } = props
+const TruckAddStepTwo = ({ details }) => {
 	const router = useRouter()
 	const [stepTwoDetails, setStepTwoDetails] = useState(details)
+	const setCreateStatus = useSetRecoilState(resourceCreatedState)
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
@@ -20,8 +23,13 @@ const TruckAddStepTwo = (props) => {
 		}
 	}
 
-	const submitDetails = () => {
-		setDetails(stepTwoDetails)
+	const submitDetails = async () => {
+		const response = await createTruck(stepTwoDetails)
+		if (response !== 200) {
+			setCreateStatus("error")
+		} else {
+			setCreateStatus("success")
+		}
 		router.push(`/carrier/truck/overview`, undefined, { shallow: true })
 	}
 	

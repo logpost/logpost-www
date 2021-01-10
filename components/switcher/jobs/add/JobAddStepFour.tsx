@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import Progress from "../../../common/Progress"
 import styled from "styled-components"
 import {
@@ -11,13 +11,20 @@ import {
 import DetailSection from "../../../common/DetailSection"
 import { useRouter } from "next/router"
 import { createJob } from "../../../utilities/apis"
-import { JobInterface } from "../../../../entities/interface/job"
+import { JobDetails } from "../../../../entities/interface/job"
 import { dateFormatter } from "../../../utilities/helper"
+import { useSetRecoilState } from 'recoil'
+import { resourceCreatedState } from '../../../../store/atoms/overviewPageState'
+import { initMap, route } from "../../../utilities/googlemaps"
+import { MapInterface } from '../../../../entities/interface/googlemaps'
 
-const JobMap = styled.div`
-	background: url(/images/job-map.png) no-repeat;
-	background-size: cover;
-	height: 19rem;
+const Map = styled.div`
+	height: 45rem;
+	width: 100%;
+
+	&#route-map {
+		height: 19rem;
+	}
 `
 
 const JobDetailsContainer = styled.div`
@@ -51,24 +58,37 @@ const Price = styled.div`
 	height: fit-content;
 `
 
-const JobAddStepFour = (props: { details: JobInterface }) => {
+const JobAddStepFour = (props: { details: JobDetails }) => {
 	const router = useRouter()
 	const { details } = props
-	console.log(details)
+	const setCreateStatus = useSetRecoilState(resourceCreatedState)
 
-	const handleNewJob = () => {
+	const submitDetails = async () => {
 		const {geocoder_result, ...jobDetails} = details
-		console.log(jobDetails)
-		createJob(jobDetails)
-		// router.push(`/shipper/profile`)
+		const response = await createJob(jobDetails)
+		if (response !== 200) {
+			setCreateStatus("error")
+		} else {
+			setCreateStatus("success")
+		}
+		router.push(`/jobs`)
 	}
+
+	useEffect(() => {
+		initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
+			const place = details.geocoder_result
+			const pickupLatLng = place.pickup.geometry.location
+			const dropoffLatLng = place.dropoff.geometry.location
+			route(pickupLatLng, dropoffLatLng, routeMap)
+		})
+	}, [])
 
 	return (
 		<div>
 			<FormHeader>
 				<Progress currentStep="ตัวอย่างงาน" percent={4 / 4} />
 			</FormHeader>
-			<JobMap />
+			<Map id="route-map" />
 			<JobDetailsContainer>
 				<DetailSection details={details} />
 				<JobPrice>
@@ -84,7 +104,7 @@ const JobAddStepFour = (props: { details: JobInterface }) => {
 					<SecondaryButton onClick={() => router.push(`/jobs/add/3`)}>
 						ย้อนกลับ
 					</SecondaryButton>
-					<PrimaryButton onClick={handleNewJob}>สร้างงาน</PrimaryButton>
+					<PrimaryButton onClick={submitDetails}>สร้างงาน</PrimaryButton>
 				</FormActions>
 			</JobDetailsContainer>
 		</div>

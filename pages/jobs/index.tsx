@@ -6,9 +6,23 @@ import { FilterIcon, PlusIcon, SearchIcon } from "../../components/common/Icons"
 import { PrimaryButton } from "../../components/styles/GlobalComponents"
 import NavigationBar from "../../components/common/NavigationBar"
 import { getAllJobs } from "../../components/utilities/apis"
-import { JobInterface } from "../../entities/interface/job"
+import { JobDocument } from "../../entities/interface/job"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { resourceCreatedState } from "../../store/atoms/overviewPageState"
+import { alertPropertyState } from "../../store/atoms/alertPropertyState"
+import Alert from "../../components/common/Alert"
+import { userInfoState } from '../../store/atoms/userInfoState'
 
-const JobsPageContainer = styled.div`
+const Header = styled.div`
+	display: flex;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	justify-content: space-between;
+	background-color: hsl(212, 28%, 28%);
+	padding: 1.6rem 2rem;
+	align-items: center;
+
 	${PrimaryButton} {
 		font-size: 1.2rem;
 		font-weight: 600;
@@ -21,14 +35,6 @@ const JobsPageContainer = styled.div`
 			margin-right: 0.6rem;
 		}
 	}
-`
-
-const Header = styled.div`
-	display: flex;
-	justify-content: space-between;
-	background-color: hsl(212, 28%, 28%);
-	padding: 1.6rem 2rem;
-	align-items: center;
 `
 
 const SearchBarContainer = styled.div`
@@ -80,21 +86,45 @@ const AddJob = styled.button`
 	}
 `
 
+const JobCardContainer = styled.div<{isFloat: boolean}>`
+	margin-top: 6rem;
+	margin-bottom: ${(props) => props.isFloat ? "6.2rem" : 0};
+`
+
 const JobsPage = () => {
 	const router = useRouter()
 	const [jobs, setJobs] = useState([])
+	const userInfo = useRecoilValue(userInfoState)
+	const createdStatus = useRecoilValue(resourceCreatedState)
+	const setAlertProperty = useSetRecoilState(alertPropertyState)
 
 	useEffect(() => {
-		getAllJobs((jobs: JobInterface[]) => setJobs(jobs))
+		getAllJobs((jobs: JobDocument[]) => setJobs(jobs))
 	},[])
 
+	useEffect(() => {
+		setAlertProperty({
+			type: createdStatus,
+			isShow: Boolean(createdStatus)
+		})
+	}, [createdStatus])
+
 	return (
-		<JobsPageContainer>
+		<>
+			{
+				createdStatus &&
+				<Alert>
+					{createdStatus === "success" ? "สร้างงานสำเร็จ" : "สร้างงานไม่สำเร็จ"}
+				</Alert>
+			}
 			<NavigationBar />
-			<AddJob onClick={() => router.push("/jobs/add/1")}>
-				<PlusIcon />
-				สร้างงานใหม่
-			</AddJob>
+			{
+				userInfo?.role === "shipper" && 
+					<AddJob onClick={() => router.push("/jobs/add/1")}>
+						<PlusIcon />
+						สร้างงานใหม่
+					</AddJob>
+			}
 			<Header>
 				<SearchBarContainer>
 					<SearchIcon />
@@ -105,12 +135,12 @@ const JobsPage = () => {
 					ตัวกรอง
 				</PrimaryButton>
 			</Header>
-			<div>
+			<JobCardContainer isFloat={Boolean(userInfo)}>
 				{jobs.map((job, index) => {
 					return <JobCard key={index} origin="jobs-page" details={job} />
 				})}
-			</div>
-		</JobsPageContainer>
+			</JobCardContainer>
+		</>
 	)
 }
 

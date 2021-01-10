@@ -5,15 +5,19 @@ import Progress from '../../../common/Progress'
 import SelectComponent from '../../../common/SelectComponent'
 import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHeader, ButtonGroupContainer, ButtonItem } from '../../../styles/GlobalComponents'
 import { useRouter } from 'next/router'
+import { TruckAddInterface } from '../../../../entities/interface/truck'
 
-const TruckAddStepOne = (props) => {
+const TruckAddStepOne = (props: TruckAddInterface) => {
 	const { details, setDetails } = props
 	const router = useRouter()
 	const [truckProperty, setTruckProperty] = useState(details.property)
 	const [truckWeight, setTruckWeight] = useState(details.weight)
 
 	const handleWeightOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value
+		let value = e.target.value
+		if (/^\s/.test(value)) {
+            value = ''
+        }
 		setTruckWeight({ ...truckWeight, [e.target.name]: parseInt(value) })
 	}
 

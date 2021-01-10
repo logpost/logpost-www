@@ -1,9 +1,11 @@
-import React, { FunctionComponent } from "react"
+import React from "react"
 import styled from "styled-components"
 import { DetailRow, Detail } from "../styles/GlobalComponents"
 import { DownArrowLine, UpArrowLine } from "./Icons"
-import { dateFormatter } from "../utilities/helper"
-import { JobInterface } from "../../entities/interface/job"
+import { dateFormatter, timeFormatter } from "../utilities/helper"
+import { JobDetails, JobDocument } from '../../entities/interface/job'
+import { useRecoilValue } from 'recoil'
+import { jobDetailsState } from '../../store/atoms/jobDetailsState'
 
 const DetailSectionContainer = styled.div`
 	> div {
@@ -86,8 +88,8 @@ const PickUpDeliverContainer = styled.div`
 	}
 `
 
-const DetailSection = (props: JobInterface) => {
-	const { details } = props
+const DetailSection = () => {
+	const details = useRecoilValue<JobDetails | JobDocument>(jobDetailsState)
 
 	return (
 		<DetailSectionContainer>
@@ -101,14 +103,14 @@ const DetailSection = (props: JobInterface) => {
 							ขึ้นสินค้า <UpArrowLine />
 						</span>
 						<span>{details.pickup_location.province}</span>
-						<span>{dateFormatter(details.pickup_date)}</span>
+						<span>{dateFormatter(details.pickup_date)} {timeFormatter(details.pickup_date)}</span>
 					</PickUpDeliverContainer>
 					<PickUpDeliverContainer>
 						<span>
 							ลงสินค้า <DownArrowLine />
 						</span>
 						<span>{details.dropoff_location.province}</span>
-						<span>{dateFormatter(details.dropoff_date)}</span>
+						<span>{dateFormatter(details.dropoff_date)} {timeFormatter(details.dropoff_date)}</span>
 					</PickUpDeliverContainer>
 				</DetailRow>
 				<DetailRow>
@@ -119,12 +121,18 @@ const DetailSection = (props: JobInterface) => {
 						น้ำหนัก <span>{details.weight}</span> <span>ตัน</span>
 					</Detail>
 				</DetailRow>
-				<Detail>
-					ขึ้นลงสินค้า <span>{details.waiting_time}</span> <span>ชั่วโมง</span>
-				</Detail>
-				<Detail>
-					คำอธิบาย <span>{details.description}</span>
-				</Detail>
+				{
+					details.waiting_time > 0 && 
+					<Detail>
+						ขึ้นลงสินค้า <span>{details.waiting_time}</span> <span>ชั่วโมง</span>
+					</Detail>
+				}
+				{
+					details.description && 
+					<Detail>
+						คำอธิบาย <span>{details.description}</span>
+					</Detail>
+				}
 			</>
 			<SectionHeader>
 				<div>รายละเอียดรถบรรทุก</div> <Line />

@@ -1,4 +1,6 @@
 import { SHORT_MONTHS } from "../../data/jobs"
+import { DriverDocument } from "../../entities/interface/driver"
+import { TruckDocument } from "../../entities/interface/truck"
 
 export const filterData = (
 	data: Object[],
@@ -21,15 +23,22 @@ export const pad = (num: string, size: number) => {
 	return num;
 }
 
-export const dateFormatter = (fullDate: Date) => {
-	const hour = pad(String(fullDate.getHours()), 2)
-	const minute = pad(String(fullDate.getMinutes()), 2)
+export const dateFormatter = (inputDate: Date) => {
+	const fullDate = new Date(inputDate)
 	const year = fullDate.getFullYear()
 	const month = fullDate.getMonth()
 	const date = fullDate.getDate()
 	const shortThaiYear = String(year + 543).slice(2, 4)
-	const formattedDate = `${date} ${SHORT_MONTHS[month]} ${shortThaiYear} ${hour}:${minute} น.`
+	const formattedDate = `${date} ${SHORT_MONTHS[month]} ${shortThaiYear}`
 	return formattedDate
+}
+
+export const timeFormatter = (inputDate: Date) => {
+	const fullDate = new Date(inputDate)
+	const hour = pad(String(fullDate.getHours()), 2)
+	const minute = pad(String(fullDate.getMinutes()), 2)
+	const formattedTime = `${hour}:${minute} น.`
+	return formattedTime
 }
 
 interface AddressComponentInterface {
@@ -75,4 +84,21 @@ export const getAddressFromPlace = (place: google.maps.places.PlaceResult | goog
 		longitude: place.geometry.location.lng(),
 		...extractedAddress
 	}
+}
+
+export const resourceStatusCount = (
+	resources: (DriverDocument | TruckDocument)[], 
+	initialValue: {[key: number]: number},
+	setValue: (value: {[key: number]: number}) => void) => {
+	const countStatus = initialValue
+	if (resources.length > 0) {
+		resources.map((item) => {
+			if (countStatus[item.status] !== undefined) {
+				countStatus[item.status] += 1
+			} else {
+				countStatus[0] += 1
+			}
+		})
+	}
+	setValue(countStatus)
 }

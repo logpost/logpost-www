@@ -9,7 +9,6 @@ const StatusContainer = styled.div`
 	flex-direction: column;
 	color: hsl(217, 16%, 16%);
 	padding: 0 1.9rem;
-	margin-top: 1.8rem;
 `
 
 const StatusItemContainer = styled.div`
@@ -17,7 +16,7 @@ const StatusItemContainer = styled.div`
 	justify-content: space-between;
 `
 
-const StatusItem = styled.div`
+const StatusItem = styled.div<{type: string}>`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -25,8 +24,19 @@ const StatusItem = styled.div`
 	font-weight: 500;
 	width: 9.9rem;
 	position: relative;
+	cursor: ${(props) => props.type === "button" ? "pointer" : "auto"};
 
-	svg {
+	> span {
+		height: 6rem;
+		width: 6rem;
+		font-weight: 600;
+		font-size: 3.6rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	> svg {
 		margin-bottom: 0.4rem;
 	}
 `
@@ -34,15 +44,23 @@ const StatusItem = styled.div`
 const StatusHeader = styled.div`
 	font-size: 2.4rem;
 	font-weight: 600;
-	margin-bottom: 1.8rem;
+	margin-bottom: 1.4rem;
 	display: flex;
 	justify-content: space-between;
+
+	> span {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-right: 0.6rem;
+	}
 `
 
 const SeeAllButton = styled.button`
 	font-size: 1.8rem;
 	text-decoration: none;
 	font-weight: 500;
+	white-space: nowrap;
 
 	svg {
 		margin-left: 0.8rem;
@@ -65,16 +83,23 @@ const NumberOfJobs = styled.div`
 `
 
 const ProfileStatus = (props: ProfileJobStatusInterface) => {
-	const { title, buttonText, items } = props
+	const { title, buttonText, buttonLink, items, type } = props
 	const router = useRouter()
 
-	const statusItems = () => {
+	const getStatusItems = () => {
 		const listOfItems = []
 		items.map((item, index) => {
 			listOfItems.push(
-				<StatusItem key={index} onClick={() => router.push(`jobs?status=${item.status}`)}>
-					{item.noOfJobs && <NumberOfJobs>{item.noOfJobs}</NumberOfJobs>}
-					{item.icon}
+				<StatusItem type={type} key={index} onClick={type === "button" ? (() => router.push(item.onClickLink)) : undefined}>
+					{
+						type === "button" ? 
+							<>
+								{item.noOfJobs !== 0 && 
+								<NumberOfJobs>{item.noOfJobs}</NumberOfJobs>}
+								{item.icon}
+							</>
+							: <span>{item.metric}</span>
+					}
 					{item.name}
 				</StatusItem>
 			)
@@ -85,13 +110,13 @@ const ProfileStatus = (props: ProfileJobStatusInterface) => {
 	return (
 		<StatusContainer>
 			<StatusHeader>
-				{title}
-				<SeeAllButton onClick={() => router.push(`jobs?status=all`)}>
+				<span>{title}</span>
+				<SeeAllButton onClick={() => router.push(buttonLink)}>
 					{buttonText}
 					<RightArrow />
 				</SeeAllButton >
 			</StatusHeader>
-			<StatusItemContainer>{statusItems()}</StatusItemContainer>
+			<StatusItemContainer>{getStatusItems()}</StatusItemContainer>
 		</StatusContainer>
 	)
 }

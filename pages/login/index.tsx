@@ -10,7 +10,7 @@ import {
 } from "../../components/styles/GlobalComponents"
 import { login } from "../../components/utilities/apis"
 import Alert from "../../components/common/Alert"
-import { useSetRecoilState } from "recoil"
+import { useRecoilState } from "recoil"
 import { alertPropertyState } from "../../store/atoms/alertPropertyState"
 
 const LoginContainer = styled.div`
@@ -27,7 +27,7 @@ const InputContainer = styled.form`
 	flex-direction: column;
 	font-size: 2.4rem;
 	font-weight: 500;
-	padding: 3rem 5.45rem;
+	padding: 3rem 5.45rem 0;
 	background-color: white;
 
 	> div:not(:last-child) {
@@ -101,7 +101,7 @@ const LoginPage = () => {
 		username: "",
 		password: "",
 	})
-	const setAlertProperty = useSetRecoilState(alertPropertyState)
+	const [alertProperty, setAlertProperty] = useRecoilState(alertPropertyState)
 	const [alertDescriptiton, setAlertDescription] = useState("")
 
 	useEffect(() => {
@@ -155,9 +155,12 @@ const LoginPage = () => {
 
 	return (
 		<Background>
-			<Alert>
-				{alertDescriptiton}
-			</Alert>
+			{
+				alertProperty.isShow &&
+				<Alert>
+					{alertDescriptiton}
+				</Alert>
+			}
 			<TitleContainer>
 				<Title>เข้าสู่ระบบ</Title>
 				{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
@@ -202,13 +205,13 @@ const LoginPage = () => {
 						handleOnChange={handleInputOnChange}
 					/>
 					<PrimaryButtonCustom type="submit">เข้าสู่ระบบ</PrimaryButtonCustom>
-					<SignUpContainer>
-						ยังไม่ได้ลงทะเบียน?
-						<TextButton onClick={() => router.push(`/signup/${role}`)}>
-							ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
-						</TextButton>
-					</SignUpContainer>
 				</InputContainer>
+				<SignUpContainer>
+					ยังไม่ได้ลงทะเบียน?
+					<TextButton onClick={() => router.push(`/signup/${role}`)}>
+						ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
+					</TextButton>
+				</SignUpContainer>
 			</LoginContainer>
 		</Background>
 	)

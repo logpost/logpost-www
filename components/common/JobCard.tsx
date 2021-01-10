@@ -1,7 +1,7 @@
-import React from "react"
+import React, { useState } from "react"
 import styled from "styled-components"
 import { useRouter } from "next/router"
-import { DetailRow, PrimaryButton, SecondaryButton } from "../styles/GlobalComponents"
+import { DetailRow, PrimaryButton, SecondaryButton, FormActions, TextButton } from "../styles/GlobalComponents"
 import {
 	DownArrowLine,
 	PersonIcon,
@@ -9,13 +9,18 @@ import {
 	RightArrowLine,
 	TruckIcon,
 	UpArrowLine,
-	NoteIcon
+	NoteIcon,
+	WarningIcon
 } from "./Icons"
-import { JobInterface } from "../../entities/interface/job"
+import { JobDocument } from "../../entities/interface/job"
+import { dateFormatter, timeFormatter } from "../utilities/helper"
+import { useRecoilValue } from 'recoil'
+import { userInfoState } from '../../store/atoms/userInfoState'
+import Modal from "./Modal"
 
 interface JobCardInterface {
 	origin: string
-	details: JobInterface
+	details: JobDocument
 }
 
 const CardContainer = styled.div`
@@ -51,11 +56,21 @@ const BottomDetails = styled.div`
 
 const Locations = styled.div`
 	display: flex;
-	width: 16.5rem;
-	justify-content: space-between;
+	max-width: 40rem;
 	font-size: 1.8rem;
 	font-weight: bold;
 	color: hsl(217, 16%, 16%);
+
+	> span {
+		max-width: 10rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	> svg {
+		min-width: 2.7rem;
+		margin: 0 1.4rem;
+	}
 `
 
 const DateAndTime = styled.div`
@@ -126,25 +141,67 @@ const Detail = styled.div`
 	}
 `
 
+const ModalContent = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-size: 2.3rem;
+	padding: 0 2rem;
+
+	> *:not(:last-child) {
+		margin-bottom: 1.6rem;
+	}
+
+	span:not(:last-child) {
+		line-height: 3.24rem;
+		padding: 0 1.2rem;
+	}
+
+	${TextButton} {
+		font-size: 1.8rem;
+	}
+
+	${FormActions} {
+		> ${SecondaryButton}, ${PrimaryButton} {
+			font-size: 1.8rem;
+			box-shadow: none;
+			font-weight: 500;
+			padding: 0.4rem 2rem;
+		}
+	}
+`
+
 const JobCard = (props: JobCardInterface) => {
 	const { origin, details } = props
+	const userInfo = useRecoilValue(userInfoState)
+	const [toggleModal, setToggleModal] = useState(false)
 	const router = useRouter()
+
+	const seeMoreDetails = () => {
+		if (Boolean(userInfo)) { 
+			router.push(`/jobs/details/${details.job_id}`)
+		} else {
+			setToggleModal(true)
+		}
+	}
 
 	return (
 		<CardContainer>
 			<Locations>
-				{details.pickup_location.province}
+				<span>{details.pickup_location.province}</span>
 				<RightArrowLine />
-				{details.dropoff_location.province}
+				<span>{details.dropoff_location.province}</span>
 			</Locations>
 			<DetailRow>
 				<DateAndTime>
 					<UpArrowLine />
-					20 ต.ค. 63 <span>|</span> 09:00 น.
+					{dateFormatter(details.pickup_date)} <span>|</span> {timeFormatter(details.pickup_date)}
 				</DateAndTime>
 				<DateAndTime>
 					<DownArrowLine />
-					20 ต.ค. 63 <span>|</span> 18:00 น.
+					{dateFormatter(details.dropoff_date)} <span>|</span> {timeFormatter(details.dropoff_date)}
 				</DateAndTime>
 			</DetailRow>
 			<BottomDetails>
@@ -162,16 +219,28 @@ const JobCard = (props: JobCardInterface) => {
 					<Detail>
 						{
 							origin === "jobs-page" ?
-								<><NoteIcon /><span>{details.description}</span></>
+								details.description && <><NoteIcon /><span>{details.description}</span></>
 								: <PersonIcon />
 						}
-						{/* นายคนขับ ขนส่ง */}
 					</Detail>
 				</DetailColumn>
 				<CardActions>
-					<span>{details.offer_price} บาท</span>
-					<SecondaryButtonCustom onClick={() => router.push(`/jobs/details/${details.job_id}`)}>รายละเอียด</SecondaryButtonCustom>
+					{ details.offer_price && 
+						<span>{details.offer_price.toLocaleString()} บาท</span>
+					}
+					<SecondaryButtonCustom onClick={seeMoreDetails}>รายละเอียด</SecondaryButtonCustom>
 				</CardActions>
+				<Modal toggle={toggleModal} setToggle={setToggleModal}>
+					<ModalContent>
+						<WarningIcon />
+						<span>ลงทะเบียน LOGPOST<br/>เพื่ออ่านรายละเอียด</span>
+						<FormActions>
+							<SecondaryButton onClick={() => setToggleModal(false)}>ย้อนกลับ</SecondaryButton>
+							<PrimaryButton onClick={() => router.push("/")}>ลงทะเบียน</PrimaryButton>
+						</FormActions>
+						<TextButton onClick={() => router.push("/login")}>เข้าสู่ระบบ</TextButton>
+					</ModalContent>
+				</Modal>
 			</BottomDetails>
 		</CardContainer>
 	)

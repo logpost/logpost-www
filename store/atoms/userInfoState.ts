@@ -6,6 +6,8 @@ export const userInfoState = atom({
 		accountType: "personal",
 		displayName: "Loading...",
 		isConfirmEmail: true,
-		role: "shipper"
+		role: "shipper",
+		username: "",
+		userID: ""
 	}, 
 });

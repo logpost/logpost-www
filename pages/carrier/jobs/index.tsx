@@ -21,7 +21,7 @@ const JobStatusPage = () => {
 		setStatus(nextStatus)
 		router.push(
 			{
-				pathname: `/shipper/jobs/`,
+				pathname: `/carrier/jobs/`,
 				query: {
 					status: nextStatus,
 				},
@@ -39,7 +39,7 @@ const JobStatusPage = () => {
 				setCurrentTab={changeStatus}
 				tabs={[
 					{ name: "all", content: "ทั้งหมด" },
-					{ name: "waiting", content: "รอผู้รับงาน" },
+					{ name: "waiting", content: "รอการขนส่ง" },
 					{ name: "shipping", content: "กำลังขนส่ง" },
 					{ name: "finished", content: "ขนส่งเสร็จสิ้น" },
 				]}

@@ -8,6 +8,14 @@ import Modal from '../../../components/common/Modal'
 import { TRUCK_STATUS_LIST } from '../../../data/carrier'
 import { MOCKUP_TRUCK } from '../../../data/carrier.mock'
 import ResourceOverview from '../../../components/common/ResourceOverview'
+import { useEffect } from 'react'
+import { getTruck } from '../../../components/utilities/apis'
+import { TruckDocument, TruckTable } from '../../../entities/interface/truck'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { tableDataState } from '../../../store/atoms/tableState'
+import Alert from '../../../components/common/Alert'
+import { resourceCreatedState } from '../../../store/atoms/overviewPageState'
+import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
 
 const ModalContent = styled.div`
 	display: flex;
@@ -38,6 +46,10 @@ const ModalContent = styled.div`
 const OverviewTruckPage = () => {
 	const [deleteTruckIndex, setDeleteTruckIndex] = useState(0)
 	const [toggleModal, setToggleModal] = useState(false)
+	const [trucks, setTrucks] = useState<TruckDocument[]>([])
+	const createdStatus = useRecoilValue(resourceCreatedState)
+	const setTruckTableData = useSetRecoilState(tableDataState)
+	const setAlertProperty = useSetRecoilState(alertPropertyState)
 	const router = useRouter()
 
 	const toggleDeleteModal = (index: number) => {
@@ -55,7 +67,7 @@ const OverviewTruckPage = () => {
 			label: "ทะเบียน",
 		},
 		{
-			id: "wheel",
+			id: "type",
 			label: "ประเภท",
 		},
 		{
@@ -78,8 +90,42 @@ const OverviewTruckPage = () => {
 		},
 	]
 
+	const convertToTableFormat = (trucks: TruckDocument[]): TruckTable[] => {
+		const truckTableData = []
+		trucks.map((truck) => {
+			const { truck_id, license_number, property, status } = truck
+			truckTableData.push({
+				truck_id,
+				license_number,
+				type: property.type,
+				status
+			})
+		})
+		return truckTableData
+	}
+
+	useEffect(() => {
+		getTruck((trucks: TruckDocument[]) => {
+			setTrucks(trucks)
+			setTruckTableData(convertToTableFormat(trucks))
+		})
+	}, [])
+
+	useEffect(() => {
+		setAlertProperty({
+			type: createdStatus,
+			isShow: Boolean(createdStatus)
+		})
+	}, [createdStatus])
+
 	return (
 		<>
+			{
+				createdStatus &&
+				<Alert>
+					{createdStatus === "success" ? "เพิ่มรถบรรทุกสำเร็จ" : "เพิ่มรถบรรทุกไม่สำเร็จ"}
+				</Alert>
+			}
 			<NavigationBar />
 			<ResourceOverview 
 				headerTitle={"รถบรรทุก"}
@@ -88,7 +134,6 @@ const OverviewTruckPage = () => {
 				defaultSelect={"ทุกสถานะ"}
 				statusList={TRUCK_STATUS_LIST}
 				columns={truckColumns}
-				data={MOCKUP_TRUCK}
 			>
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>

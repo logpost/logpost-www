@@ -8,6 +8,14 @@ import Modal from '../../../components/common/Modal'
 import { DRIVER_STATUS_LIST } from '../../../data/carrier'
 import { MOCKUP_DRIVER } from '../../../data/carrier.mock'
 import ResourceOverview from '../../../components/common/ResourceOverview'
+import { useEffect } from 'react'
+import { getDriver } from '../../../components/utilities/apis'
+import { DriverDocument, DriverTable } from '../../../entities/interface/driver'
+import { resourceCreatedState } from '../../../store/atoms/overviewPageState'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { tableDataState } from '../../../store/atoms/tableState'
+import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
+import Alert from '../../../components/common/Alert'
 
 const ModalContent = styled.div`
 	display: flex;
@@ -38,6 +46,10 @@ const ModalContent = styled.div`
 const OverviewDriverPage = () => {
 	const [deleteDriverIndex, setDeleteDriverIndex] = useState(0)
 	const [toggleModal, setToggleModal] = useState(false)
+	const [drivers, setDrivers] = useState<DriverDocument[]>([])
+	const createdStatus = useRecoilValue(resourceCreatedState)
+	const setDriverTableData = useSetRecoilState(tableDataState)
+	const setAlertProperty = useSetRecoilState(alertPropertyState)
 	const router = useRouter()
 
 	const toggleDeleteModal = (index: number) => {
@@ -51,19 +63,14 @@ const OverviewDriverPage = () => {
 
 	const driverColumns = [
 		{
-			id: "driver_id",
-			label: "รหัส",
-		},
-		{
 			id: "name",
 			label: "ชื่อ - นามสกุล",
 			align: "left",
-			width: "30%"
 		},
 		{
 			id: "driver_license_type",
 			label: "ใบขับขี่",
-			width: "15%"
+			width: "25%"
 		},
 		{
 			id: "status",
@@ -85,8 +92,41 @@ const OverviewDriverPage = () => {
 		},
 	]
 
+	const convertToTableFormat = (drivers: DriverDocument[]): DriverTable[] => {
+		const driverTableData = []
+		drivers.map((driver) => {
+			const { name, driver_license_type, status } = driver
+			driverTableData.push({
+				name,
+				driver_license_type: driver_license_type.replace("ประเภท", ""),
+				status
+			})
+		})
+		return driverTableData
+	}
+
+	useEffect(() => {
+		getDriver((drivers: DriverDocument[]) => {
+			setDrivers(drivers)
+			setDriverTableData(convertToTableFormat(drivers))
+		})
+	}, [])
+
+	useEffect(() => {
+		setAlertProperty({
+			type: createdStatus,
+			isShow: Boolean(createdStatus)
+		})
+	}, [createdStatus])
+
 	return (
 		<>
+			{
+				createdStatus &&
+				<Alert>
+					{createdStatus === "success" ? "เพิ่มพนักงานขับรถสำเร็จ" : "เพิ่มพนักงานขับรถไม่สำเร็จ"}
+				</Alert>
+			}
 			<NavigationBar />
 			<ResourceOverview 
 				headerTitle={"พนักงานขับรถ"}
@@ -95,7 +135,6 @@ const OverviewDriverPage = () => {
 				defaultSelect={"ทุกสถานะ"}
 				statusList={DRIVER_STATUS_LIST}
 				columns={driverColumns}
-				data={MOCKUP_DRIVER}
 			>
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>

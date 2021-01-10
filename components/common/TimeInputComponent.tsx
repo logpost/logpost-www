@@ -168,17 +168,17 @@ const TimeInputComponent = (props: TimeInputComponentInterface) => {
 				<span>:</span>
 				<TimeInputContainer>
 					<button
-						onClick={() => setTime({...time, minute: String(parseInt(time.minute) + 15)})}
+						onClick={() => setTime({...time, minute: pad(String(parseInt(time.minute) + 15), 2)})}
 					>
 						<RightArrow />
 					</button>
 					<TimeInput
-						value={`${time.minute}`}
+						value={time.minute}
 						type="number"
 						onChange={(e) => setTime({...time, minute: e.target.value})}
 					/>
 					<button
-						onClick={() => setTime({...time, minute: String(parseInt(time.minute) - 15)})}
+						onClick={() => setTime({...time, minute: pad(String(parseInt(time.minute) - 15), 2)})}
 					>
 						<RightArrow />
 					</button>

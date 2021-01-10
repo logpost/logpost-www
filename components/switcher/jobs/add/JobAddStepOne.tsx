@@ -80,7 +80,6 @@ const JobAddStepOne = (props: JobAddInterface) => {
 		pickup: (details.geocoder_result && details.geocoder_result.pickup) || null,
 		dropoff: (details.geocoder_result && details.geocoder_result.dropoff) || null
 	})
-	console.log(place)
 
 	const submitDetails = () => {
 		setDetails({
@@ -216,12 +215,12 @@ const JobAddStepOne = (props: JobAddInterface) => {
 				>
 					<DateAndTimePicker
 						minDate={stepOneDetails.pickup_date}
-						dateAndTime={stepOneDetails.dropoff_date || stepOneDetails.pickup_date || new Date()}
+						dateAndTime={stepOneDetails.dropoff_date < stepOneDetails.pickup_date ? stepOneDetails.pickup_date : stepOneDetails.dropoff_date}
 						setDateAndTime={(value: Date) => setStepOneDetails({ ...stepOneDetails, dropoff_date: value })}
 					/>
 				</InputComponent>
 				<FormActions>
-					<SecondaryButton onClick={() => router.back()}>ยกเลิก</SecondaryButton>
+					<SecondaryButton onClick={() => router.push("/jobs")}>ยกเลิก</SecondaryButton>
 					<PrimaryButton onClick={submitDetails}>ส่วนถัดไป</PrimaryButton>
 				</FormActions>
 			</FormInputContainer>

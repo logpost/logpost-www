@@ -69,7 +69,8 @@ const ScrollableTab = (props: ScrollableInterface) => {
 	const ref = useRef(null)
 
 	useEffect(() => {
-		if (currentTab >= tabs[scrollAtIndex].name) {
+		const tabsName = tabs.map(tab => tab.name)
+		if (tabsName.indexOf(currentTab) >= scrollAtIndex) {
 			ref.current.scrollLeft += 200
 		} else {
 			ref.current.scrollLeft -= 200

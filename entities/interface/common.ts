@@ -1,7 +1,9 @@
-import { StringDecoder } from "string_decoder"
 import { ReactElement } from 'react'
-import { JobInterface } from "./job"
-import { PlaceInterface } from "./googlemaps"
+
+export interface AuthInterface {
+	username: string
+	password: string
+}
 
 export interface AuthInterface {
 	username: string
@@ -23,15 +25,7 @@ export interface InputComponentInterface {
 	id?: string
 	readOnly?: boolean
 	valid?: boolean
-}
-
-export interface ProfileInterface {
-	account_type: string
-	username: string
-	password: string
-	name: string
-	displayName?: string
-	email: string
+	invalidText?: string
 }
 
 export interface SignUpFormInterface {
@@ -41,11 +35,14 @@ export interface SignUpFormInterface {
 export interface ProfileJobStatusInterface {
 	title: string
 	buttonText: string
+	buttonLink: string
+	type: string
 	items: {
 		name: string
-		icon: JSX.Element
-		status: string
+		icon?: JSX.Element
+		onClickLink?: string
 		noOfJobs?: number
+		metric?: number
 	}[]
 }
 
@@ -61,13 +58,5 @@ export interface TableComponentInterface {
 		align?: string
 		width?: string
 		format?: (index: number, value?: string | number) => ReactElement
-	}[]
-	data: {
-		id?: string
-		driver_name?: string
-		driver_license_type?: string
-		license_number?: string
-		wheel?: string
-		add_on?: string
 	}[]
 }

@@ -11,7 +11,7 @@ interface Input {
 }
 
 const Input = styled.input<Input>`
-	width: ${(props) => (props.type === "short" ? "15rem" : props.type === "number" ? "7.2rem" : "100%")};
+	width: ${(props) => (props.type === "short" ? "15rem" : props.type === "number" ? "8rem" : "100%")};
 	height: 3.4rem;
 	border-radius: 0.6rem;
 	border: solid 0.1rem ${(props) => (props.valid ? "hsl(0, 0%, 66%)" : "hsl(16, 56%, 51%)")};
@@ -94,6 +94,10 @@ const RequiredDot = styled.div`
     margin: 0.2rem;
 `
 
+const InvalidDescription = styled(Description)`
+	color: hsl(16, 56%, 51%);	
+`
+
 const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 	const {
 		disableLabel = false,
@@ -108,6 +112,7 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 		required = true,
 		type,
 		valid = true,
+		invalidText,
 		...inputProps
 	} = props
 
@@ -124,6 +129,7 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 				</LabelsContainer>
 			}
 			{description && <Description>{description}</Description>}
+			{(!valid && invalidText) && <InvalidDescription>{invalidText}</InvalidDescription>}
 			{type === "other" ? (
 				children
 			) : type === "textarea" ? (

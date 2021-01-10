@@ -59,6 +59,9 @@ const SignUpForm = (props: SignUpFormInterface) => {
 
 	const handleSignup = () => {
 		const {confirm_password, ...signupData} = profile
+		if (profile.account_type === "business") {
+			signupData.display_name = signupData.name
+		}
 		const passwordsAreMatch = (signupData.password === confirm_password)
 		if (passwordsAreMatch) {
 			signup(role, signupData)

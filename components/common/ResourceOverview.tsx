@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { useRouter } from "next/router"
 import styled from "styled-components"
 import SearchBar from './SearchBar'
 import SelectComponent from './SelectComponent'
 import TableComponent from './TableComponent'
 import { SecondaryButton } from '../styles/GlobalComponents'
-import { filterData } from '../utilities/helper'
 import { TableComponentInterface } from '../../entities/interface/common'
 import { FunctionComponent } from 'react'
+import { filterWordState, filterStatusState } from '../../store/atoms/tableState'
+import { useSetRecoilState } from 'recoil'
 
 const ResourceOverviewContainer = styled.div`
 	margin-top: 3.6rem;
@@ -74,32 +74,14 @@ interface ResourceOverviewInterface extends TableComponentInterface {
 }
 
 const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) => {
-	const { headerTitle, headerButton, statusList, defaultSelect, columns, data, buttonOnClick, children } = props
-	const router = useRouter()
-	const [filter, setFilter] = useState("")
+	const { headerTitle, headerButton, statusList, defaultSelect, columns, buttonOnClick, children } = props
+	const setFilterWord = useSetRecoilState(filterWordState)
+	const setFilterStatus = useSetRecoilState(filterStatusState)
 	const [statusFilter, setStatusFilter] = useState(defaultSelect)
-	const [filteredData, setFilteredData] = useState([])
 
 	useEffect(() => {
 		const statusCode = Object.keys(statusList)[Object.values(statusList).indexOf(statusFilter)]
-		if (statusFilter === "ทุกสถานะ") {
-			const filteredResult = filterData(data, filter)
-			setFilteredData(filteredResult)
-		} else {
-			const filteredByStatusCode = filterData(data, statusCode)
-			const filteredBySearch = filterData(filteredByStatusCode, filter)
-			setFilteredData(filteredBySearch)
-		}
-	}, [filter])
-
-	useEffect(() => {
-		const statusCode = Object.keys(statusList)[Object.values(statusList).indexOf(statusFilter)]
-		if (statusFilter !== "ทุกสถานะ") {
-			const filteredResult = filterData(data, statusCode)
-			setFilteredData(filteredResult)
-		} else {
-			setFilteredData(data)
-		}
+		setFilterStatus(statusCode)
 	}, [statusFilter])
 
 	return (
@@ -111,7 +93,7 @@ const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) =
 			<TableHeader>
 				<SearchBar
 					placeholder="ค้นหา"
-					setValue={setFilter}
+					setValue={setFilterWord}
 				/>
 				<SelectComponent
 					menuList={Object.values(statusList)}
@@ -121,7 +103,6 @@ const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) =
 			</TableHeader>
 			<TableComponent
 				columns={columns}
-				data={filteredData}
 			/>
 			{children}
 		</ResourceOverviewContainer>
