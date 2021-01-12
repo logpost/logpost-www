@@ -172,7 +172,7 @@ const RadioButton = styled.div`
 const GetJobPage = () => {
 	const router = useRouter()
 	const jobID = router.query.job_id as string
-	const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
+	const [jobDetails, setJobDetails] = useRecoilState<JobDocument>(jobDetailsState)
 	const [trucks, setTrucks] = useRecoilState(trucksState)
 	const [drivers, setDrivers] = useRecoilState(driversState)
 	const [toggleDriverModal, setToggleDriverModal] = useState(false)

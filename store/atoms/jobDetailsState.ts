@@ -3,26 +3,21 @@ import { atom } from 'recoil';
 export const jobDetailsState = atom({
 	key: 'jobDetails',
 	default: {
-		shipper_id: "",
-		carrier_id: "",
-		shipper_display_name: "",
-		carrier_display_name: "",
-		status: 100,
 		pickup_location: {
 			address: "",
 			district: "",
 			province: "",
 			zipcode: "",
-			latitude: null,
-			longitude: null
+			latitude: 0,
+			longitude: 0
 		},
 		dropoff_location: {
 			address: "",
 			district: "",
 			province: "",
 			zipcode: "",
-			latitude: null,
-			longitude: null
+			latitude: 0,
+			longitude: 0
 		},
 		pickup_date: new Date,
 		dropoff_date: new Date,
@@ -33,7 +28,6 @@ export const jobDetailsState = atom({
 				property: {
 					type: "รถ 4 ล้อ",
 					option: "ตู้ทึบ",
-					chassis: null
 				}
 			},
 			driver: {
@@ -44,6 +38,6 @@ export const jobDetailsState = atom({
 		offer_price: 8000,
 		auto_price: 4000,
 		distance: 0,
-		permission: "public"
+		permission: "public",
 	}, 
 });

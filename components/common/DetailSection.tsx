@@ -89,7 +89,7 @@ const PickUpDeliverContainer = styled.div`
 `
 
 const DetailSection = () => {
-	const details = useRecoilValue<JobDetails | JobDocument>(jobDetailsState)
+	const details = useRecoilValue<JobDetails>(jobDetailsState)
 
 	return (
 		<DetailSectionContainer>

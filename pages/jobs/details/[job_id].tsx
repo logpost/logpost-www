@@ -165,12 +165,6 @@ const PriceItem = styled.div`
 		color: hsl(0, 0%, 66%);
 	}
 
-	&:last-child {
-		div {
-			color: ${(props) => (props["data-price"] ? "green" : "red")};
-		}
-	}
-
 	div {
 		margin-top: 1.1rem;
 
@@ -244,10 +238,9 @@ const Map = styled.div`
 
 const JobDetailPage = () => {
 	const userInfo = useRecoilValue(userInfoState)
-	const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
+	const [jobDetails, setJobDetails] = useRecoilState<JobDocument>(jobDetailsState)
 	const router = useRouter()
 	const driverURLRef = useRef(null)
-	const [isPositive, setIsPositive] = useState(true)
 	const [toggleModal, setToggleModal] = useState(false)
 	const createdStatus = useRecoilValue(resourceCreatedState)
 	const [alertProperty, setAlertProperty] = useRecoilState(alertPropertyState)
@@ -261,7 +254,6 @@ const JobDetailPage = () => {
 	const isCarrierCanEditDetails = (isCarrierOwnedJob && !isJobStarted)
 	const isLinkGenerated = (isJobStarted && isCarrierOwnedJob && (jobDetails.status !== 800))
 	const isCarrierCanGetJob = (!isJobHasCarrier && isCarrier && !isCarrierOwnedJob)
-	// const isUserCanSeeJobStatus = (isShipperOwnedJob || isCarrierOwnedJob)
 	const jobID = router.query.job_id as string
 
 	const calculateProfit = (offerPrice: number, autoPrice: number): string => {
@@ -269,10 +261,9 @@ const JobDetailPage = () => {
 		return profit.toLocaleString()
 	}
 
-	const copyToClipboard = (e) => {
+	const copyToClipboard = () => {
 		driverURLRef.current.select()
 		document.execCommand("copy")
-		e.target.focus()
 	}
 
 	useEffect(() => {
@@ -381,7 +372,7 @@ const JobDetailPage = () => {
 							</div>
 						</PriceItem>
 						<HorizontalLine />
-						<PriceItem data-price={isPositive}>
+						<PriceItem>
 							กำไร
 							<div>
 								{calculateProfit(

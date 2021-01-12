@@ -13,17 +13,13 @@ interface ScrollableInterface {
 
 const StatusTab = styled.div`
 	position: fixed;
-	/* left: 0; */
+	left: 0;
 	right: 0;
 	overflow-x: auto;
 	white-space: nowrap;
 	background-color: hsl(212, 28%, 28%);
 	padding: 1.75rem 1rem;
 	display: flex;
-
-	width: 375px;
-	left: 50%;
-	transform: translate(-50%)
 `
 
 const Line = styled.div`

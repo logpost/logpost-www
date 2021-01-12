@@ -20,7 +20,7 @@ const JobStatusPage = () => {
 
 	useEffect(() => {
 		setStatus(router.query.status as string)
-		if (!Boolean(myJobs[0].job_id)) {
+		if (!Boolean(myJobs[0].pickup_date)) {
 			getMyJob((jobs: JobDocument[]) => {
 				setMyJobs(jobs)
 			})
@@ -56,20 +56,20 @@ const JobStatusPage = () => {
 				scrollAtIndex={2}
 			/>
 			<JobContainer>
-				{ status === "all" && myJobs.map((job, index) => {
+				{ status === "all" && myJobs.map((job: JobDocument, index) => {
 					return <JobCard key={index} origin="jobs-page" details={job} />
 				})}
-				{ status === "waiting" && myJobs.map((job, index) => {
+				{ status === "waiting" && myJobs.map((job: JobDocument, index) => {
 					if (job.status === 100) {
 						return <JobCard key={index} origin="jobs-page" details={job} />
 					}
 				})}
-				{ status === "shipping" && myJobs.map((job, index) => {
+				{ status === "shipping" && myJobs.map((job: JobDocument, index) => {
 					if (job.status > 100 && job.status < 800) {
 						return <JobCard key={index} origin="jobs-page" details={job} />
 					}
 				})}
-				{ status === "finished" && myJobs.map((job, index) => {
+				{ status === "finished" && myJobs.map((job: JobDocument, index) => {
 					if (job.status === 800) {
 						return <JobCard key={index} origin="jobs-page" details={job} />
 					}

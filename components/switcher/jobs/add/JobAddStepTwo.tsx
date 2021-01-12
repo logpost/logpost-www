@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import Progress from "../../../common/Progress"
-import styled from "styled-components"
 import InputComponent from "../../../common/InputComponent"
 import {
 	FormActions,
@@ -11,7 +10,7 @@ import {
 } from "../../../styles/GlobalComponents"
 import { JobAddInterface } from "../../../../entities/interface/job"
 import { useRouter } from "next/router"
-import { costCalculator, offerCalculator } from "../../../utilities/costCalculater"
+import { offerCalculator } from "../../../utilities/costCalculater"
 
 const JobAddStepTwo = (props: JobAddInterface) => {
 	const router = useRouter()

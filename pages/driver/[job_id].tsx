@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { CarrierDetailsContainer, JobTitle, PrimaryButton, Detail, SecondaryButton } from '../../components/styles/GlobalComponents'
 import { useRouter } from 'next/router'
 import { useRecoilState } from 'recoil'
-import { jobDetailsState } from '../../store/atoms/jobDetailsState'
 import { getJobDetailsByID, updateStatusByDriver } from '../../components/utilities/apis'
 import { JobDocument } from '../../entities/interface/job'
 import { initMap, route } from "../../components/utilities/googlemaps"
@@ -15,8 +14,9 @@ import { JOB_STATUS_CODE } from '../../data/jobs'
 import DetailSection from '../../components/common/DetailSection'
 import Modal from '../../components/common/Modal'
 import InputComponent from '../../components/common/InputComponent'
+import { jobDocumentState } from '../../store/atoms/jobDocumentState'
 
-const JobDetailsContainer = styled.div`
+const JobDocumentContainer = styled.div`
 	margin: 1.8rem 2rem;
 `
 
@@ -82,13 +82,11 @@ const DriverPage = () => {
 	const router = useRouter()
 	const jobID = router.query.job_id as string
 	const [driverTel, setDriverTel] = useState("")
-	const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
+	const [jobDocument, setJobDocument] = useRecoilState(jobDocumentState)
 	const [toggleModal, setToggleModal] = useState(true)
-	console.log(driverTel)
 
 	const changeStatus = async () => {
-		const newStatus = JOB_STATUS_CODE[jobDetails.status]?.next
-		console.log(newStatus)
+		const newStatus = JOB_STATUS_CODE[jobDocument.status]?.next
 		const response = await updateStatusByDriver({
 			driver_tel: driverTel,
 			jobinfo: { 
@@ -96,24 +94,24 @@ const DriverPage = () => {
 			},
 			job_id: jobID
 		})
-		setJobDetails({
-			...jobDetails,
+		setJobDocument({
+			...jobDocument,
 			status: newStatus
 		})
 	}
 
 	const confirmDriverTel = () => {
-		getJobDetailsByID(jobID, (jobDetails: JobDocument) => {
-			setJobDetails(jobDetails)
+		getJobDetailsByID(jobID, (JobDocument: JobDocument) => {
+			setJobDocument(jobDocument)
 			setToggleModal(false)
 			initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
 				const pickupLatLng = {
-					latitude: jobDetails.pickup_location.latitude,
-					longitude: jobDetails.pickup_location.longitude
+					latitude: JobDocument.pickup_location.latitude,
+					longitude: JobDocument.pickup_location.longitude
 				}
 				const dropoffLatLng = {
-					latitude: jobDetails.dropoff_location.latitude,
-					longitude: jobDetails.dropoff_location.longitude
+					latitude: JobDocument.dropoff_location.latitude,
+					longitude: JobDocument.dropoff_location.longitude
 				} 
 				route(pickupLatLng, dropoffLatLng, routeMap)
 			})
@@ -124,45 +122,45 @@ const DriverPage = () => {
 		<div>
 			<Header>
 				<JobTitle>
-					งาน <span>{jobDetails.pickup_location.province}</span>
+					งาน <span>{jobDocument.pickup_location.province}</span>
 					<RightArrowLine />
-					<span>{jobDetails.dropoff_location.province}</span>
+					<span>{jobDocument.dropoff_location.province}</span>
 				</JobTitle>
 			</Header>
 			<Map id="route-map" />
-			<JobDetailsContainer>
-				{jobDetails.status && (
+			<JobDocumentContainer>
+				{jobDocument.status && (
 					<Progress
-						currentStep={JOB_STATUS_CODE[jobDetails.status]?.status_name}
-						nextStep={JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}
-						percent={JOB_STATUS_CODE[jobDetails.status]?.progress / 6}
+						currentStep={JOB_STATUS_CODE[jobDocument.status]?.status_name}
+						nextStep={JOB_STATUS_CODE[JOB_STATUS_CODE[jobDocument.status]?.next]?.status_name}
+						percent={JOB_STATUS_CODE[jobDocument.status]?.progress / 6}
 						label="สถานะ"
 					/>
 				)}
 				{
-				jobDetails.status !== 800 && 
+				jobDocument.status !== 800 && 
 					<ChangeStatusContainer>
 						กดปุ่มเพื่อเปลี่ยนสถานะ
-						<PrimaryButton onClick={changeStatus}>{JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}</PrimaryButton>
+						<PrimaryButton onClick={changeStatus}>{JOB_STATUS_CODE[JOB_STATUS_CODE[jobDocument.status]?.next]?.status_name}</PrimaryButton>
 					</ChangeStatusContainer>
 				}
 				<DetailSection />
 				<CarrierDetailsContainer>
 					<Detail>
-						ขนส่งโดย <span>{jobDetails.carrier_display_name}</span>
-					</Detail>
-					{/* <Detail>
-						พนักงานขับรถ <span>{jobDetails.carrier_display_name}</span>
+						ขนส่งโดย <span>{jobDocument.carrier_display_name}</span>
 					</Detail>
 					<Detail>
-						ทะเบียนรถ <span>89-7280</span>
-					</Detail> */}
+						พนักงานขับรถ <span>{jobDocument.driver_name}</span>
+					</Detail>
+					<Detail>
+						ทะเบียนรถ <span>{jobDocument.license_number}</span>
+					</Detail>
 				</CarrierDetailsContainer>
 				<ButtonContainer>
 					<SecondaryButtonCustom>แจ้งปัญหา</SecondaryButtonCustom>
 					<SecondaryButtonCustom>ติดต่อผู้ส่ง</SecondaryButtonCustom>
 				</ButtonContainer>
-			</JobDetailsContainer>
+			</JobDocumentContainer>
 			<Modal toggle={toggleModal} setToggle={setToggleModal}>
 				<ModalContent>
 					<span>กรุณากรอกเบอร์โทรศัพท์</span>

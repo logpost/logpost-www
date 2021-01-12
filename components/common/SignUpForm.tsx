@@ -150,7 +150,7 @@ const SignUpForm = (props: SignUpFormInterface) => {
 				>
 					ยกเลิก
         		</SecondaryButton>
-				<PrimaryButton type="button" onClick={handleSignup/* () => submitForm(profile) */}>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</PrimaryButton>
+				<PrimaryButton type="button" onClick={handleSignup}>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</PrimaryButton>
 			</FormActions>
 		</Form>
 	)

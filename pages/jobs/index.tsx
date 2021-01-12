@@ -16,8 +16,7 @@ import { userInfoState } from '../../store/atoms/userInfoState'
 const Header = styled.div`
 	display: flex;
 	position: fixed;
-	/* width: 100%; */
-	width: 375px;
+	width: 100%;
 	top: 0;
 	justify-content: space-between;
 	background-color: hsl(212, 28%, 28%);

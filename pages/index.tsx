@@ -12,8 +12,7 @@ const LogoContainer = styled.div`
 	flex-direction: column;
 	position: absolute;
 	top: 5.5%;
-	/* left: 7.5%; */
-	left: 200px;
+	left: 7.5%;
 
 	svg {
 		margin-bottom: 0.2rem;
@@ -32,8 +31,7 @@ const SignUpContainer = styled.div`
 	position: absolute;
 	bottom: 0;
 	background-color: white;
-	/* width: 100%; */
-	width: 375px;
+	width: 100%;
 `
 
 const PrimaryButtonCustom = styled(PrimaryButton)`

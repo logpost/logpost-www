@@ -46,5 +46,6 @@ export const costCalculator = (distance: number) => {
 }
 
 export const offerCalculator = (weight: number) => {
-	return (weight * 350) || 0
+	const autoPrice = (weight * 350)
+	return (autoPrice * 0.1) + autoPrice || 0
 }

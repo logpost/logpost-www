@@ -13,14 +13,11 @@ const ModalContainer = styled.div<ModalContainerProps>`
 const Backdrop = styled.div`
 	background-color: hsla(211, 27%, 15%, 0.8);
 	height: 100vh;
-	/* width: 100vw; */
-	width: 375px;
+	width: 100vw;
 	position: fixed;
 	z-index: 1;
 	top: 0;
-	/* left: 0; */
-	left: 50%;
-	transform: translateX(-50%);
+	left: 0;
 `
 
 const ModalContent = styled.div`
@@ -34,8 +31,7 @@ const ModalContent = styled.div`
 	border-radius: 6px;
 	font-size: 1.8rem;
 	max-width: 70rem;
-	/* width: 86%; */
-	width: 300px;
+	width: 86%;
 	min-height: 24rem;
 `
 

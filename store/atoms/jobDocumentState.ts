@@ -1,50 +1,30 @@
 import { atom } from 'recoil';
 
-export const truckStatusCountState = atom({
-	key: 'truckStatus',
+export const jobDocumentState = atom({
+	key: 'jobDocument',
 	default: {
-		100: 0,
-		200: 0,
-		300: 0
-	}, 
-});
-
-export const driverStatusCountState = atom({
-	key: 'driverStatus',
-	default: {
-		100: 0,
-		200: 0,
-		300: 0,
-	}, 
-});
-
-export const jobStatusCountState = atom({
-	key: 'jobStatus',
-	default: {
-		0: 0,
-		100: 0,
-		800: 0
-	}, 
-});
-
-export const myJobsState = atom({
-	key: 'myJobs',
-	default: [{
+		shipper_id: "",
+		carrier_id: "",
+		shipper_display_name: "",
+		carrier_display_name: "",
+		driver_name: "",
+		license_number: "",
+		status: 100,
 		pickup_location: {
 			address: "",
 			district: "",
 			province: "",
 			zipcode: "",
-			latitude: 0,
-			longitude: 0
+			latitude: null,
+			longitude: null
 		},
 		dropoff_location: {
 			address: "",
 			district: "",
 			province: "",
 			zipcode: "",
-			latitude: 0,
-			longitude: 0
+			latitude: null,
+			longitude: null
 		},
 		pickup_date: new Date,
 		dropoff_date: new Date,
@@ -66,5 +46,5 @@ export const myJobsState = atom({
 		auto_price: 4000,
 		distance: 0,
 		permission: "public"
-	}], 
-})
+	}, 
+});

@@ -46,15 +46,24 @@ export const route = (
 			return;
 		}
 
-		if (originPlace.latitude || destinationPlace.latitude) {
-			originPlace = new google.maps.LatLng(originPlace.latitude, originPlace.longitude)
-			destinationPlace = new google.maps.LatLng(destinationPlace.latitude, destinationPlace.longitude)
-		}
+		if (
+            (originPlace as LatLng).latitude ||
+            (destinationPlace as LatLng).latitude
+        ) {
+            originPlace = new google.maps.LatLng(
+                (originPlace as LatLng).latitude,
+                (originPlace as LatLng).longitude
+            );
+            destinationPlace = new google.maps.LatLng(
+                (destinationPlace as LatLng).latitude,
+                (destinationPlace as LatLng).longitude
+            );
+        }
 
 		directionsService.route(
 			{
-				origin: originPlace,
-				destination: destinationPlace,
+				origin: originPlace as google.maps.LatLng,
+				destination: destinationPlace as google.maps.LatLng,
 				travelMode: travelMode,
 			},
 			(response, status) => {
