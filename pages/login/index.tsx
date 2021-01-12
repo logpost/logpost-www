@@ -53,8 +53,6 @@ const SignUpContainer = styled.div`
     > button {
         margin-top: 0.6rem;
     }
-
-    width: 375px;
 `;
 
 const RadioInput = styled.button`

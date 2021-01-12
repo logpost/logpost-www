@@ -35,8 +35,7 @@ const SignUpContainer = styled.div`
     position: absolute;
     bottom: 0;
     background-color: white;
-    /* width: 100%; */
-    width: 375px;
+    width: 100%;
 `;
 
 const PrimaryButtonCustom = styled(PrimaryButton)`

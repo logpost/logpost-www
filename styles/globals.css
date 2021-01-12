@@ -3,9 +3,6 @@
 html {
     scroll-behavior: smooth;
     font-size: 62.5%; /* waiting for change */
-
-    display: flex;
-    justify-content: center;
 }
 
 @media screen and (max-width: 768px) {
@@ -26,9 +23,6 @@ body {
     font-family: -apple-system, "Bai Jamjuree", sans-serif, BlinkMacSystemFont,
         Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
         Helvetica Neue, sans-serif;
-
-    width: 375px;
-    border: 1px solid black;
 }
 
 a {
