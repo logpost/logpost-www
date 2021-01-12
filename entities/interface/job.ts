@@ -28,16 +28,18 @@ export interface JobDetails {
 }
 
 export interface JobDocument extends JobDetails {
-	job_id: string 
-	shipper_id: string 
-	carrier_id: string
-	driver_id: string
-	truck_id: string
-	shipper_display_name: string
-	carrier_display_name: string
-	status: number
-	created_at: Date
-	updated_at: Date
+	job_id?: string 
+	shipper_id?: string 
+	carrier_id?: string
+	driver_id?: string
+	truck_id?: string
+	shipper_display_name?: string
+	carrier_display_name?: string
+	driver_name?: string,
+	license_number?: string,
+	status?: number
+	created_at?: Date
+	updated_at?: Date
 }
 
 export interface JobAddInterface {

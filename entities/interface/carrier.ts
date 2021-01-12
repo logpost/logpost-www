@@ -3,14 +3,21 @@ import { DriverDocument } from "./driver"
 import { TruckDocument, TruckPropertyInterface } from "./truck"
 
 export interface CarrierSpecificationInterface { 
-    truck:  {
-		age: number
-    	property: TruckPropertyInterface
-	}
-    driver: {
-		driver_license_type: string
-	}
+  truck: {
+    age: number
+    property: TruckPropertyInterface
+  }
+  driver: {
+    driver_license_type: string
+  }
 }
+
+export interface JobPickerInterface {
+  job_id: string,
+  driver_id: string,
+  truck_id: string
+}
+
 export interface CarrierDocument extends AccountInterface {
     carrier_id: string
     tel: string

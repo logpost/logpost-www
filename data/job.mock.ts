@@ -36,7 +36,7 @@ const MOCKUP_JOB = {
 	offer_price: 8000,
 	auto_price: 4000,
 	distance: 250,
-	permission: "pubilc",
+	permission: "public",
 	waiting_time: 5
 }
 

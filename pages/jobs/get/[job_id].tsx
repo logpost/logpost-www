@@ -8,21 +8,29 @@ import {
     JobSuccessIcon,
 } from "../../../components/common/Icons";
 import {
-    CarrierDetailsContainer,
-    Detail,
-    JobTitle,
-    SecondaryButton,
-    FormActions,
-    PrimaryButton,
-} from "../../../components/styles/GlobalComponents";
-import DetailSection from "../../../components/common/DetailSection";
-import Modal from "../../../components/common/Modal";
-import TableComponent from "../../../components/common/TableComponent";
-import NavigationBar from "../../../components/common/NavigationBar";
-import SearchBar from "../../../components/common/SearchBar";
-import { filterData } from "../../../components/utilities/helper";
-import { MOCKUP_JOB } from "../../../data/job.mock";
-import { MOCKUP_TRUCK, MOCKUP_DRIVER } from "../../../data/carrier.mock";
+	CarrierDetailsContainer,
+	Detail,
+	JobTitle,
+	SecondaryButton,
+	FormActions,
+	PrimaryButton,
+} from "../../../components/styles/GlobalComponents"
+import DetailSection from "../../../components/common/DetailSection"
+import Modal from "../../../components/common/Modal"
+import TableComponent from "../../../components/common/TableComponent"
+import NavigationBar from "../../../components/common/NavigationBar"
+import SearchBar from "../../../components/common/SearchBar"
+import { useSetRecoilState } from 'recoil'
+import { jobDetailsState } from '../../../store/atoms/jobDetailsState'
+import { useRecoilState } from 'recoil'
+import { getDriver, getJobDetailsByID, getTruck, pickJob } from "../../../components/utilities/apis"
+import { JobDocument } from "../../../entities/interface/job"
+import { filterWordState, tableDataState } from "../../../store/atoms/tableState"
+import { DriverDocument, DriverTable } from "../../../entities/interface/driver"
+import { TruckDocument, TruckTable } from '../../../entities/interface/truck'
+import { trucksState } from '../../../store/atoms/trucksState'
+import { driversState } from '../../../store/atoms/driversState'
+import { resourceCreatedState } from "../../../store/atoms/overviewPageState"
 
 const FormActionsCustom = styled(FormActions)`
     ${PrimaryButton}, ${SecondaryButton} {
@@ -79,11 +87,12 @@ const Warning = styled.div`
 `;
 
 const ModalContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	white-space: nowrap;
+	min-height: 50rem;
 
     > *:not(:last-child) {
         margin-bottom: 1.6rem;
@@ -161,69 +170,69 @@ const RadioButton = styled.div`
 `;
 
 const GetJobPage = () => {
-    const router = useRouter();
-    const { job_id } = router.query;
-    const [toggleDriverModal, setToggleDriverModal] = useState(false);
-    const [toggleTruckModal, setToggleTruckModal] = useState(false);
-    const [filteredData, setFilteredData] = useState([]);
-    const [filter, setFilter] = useState("");
-    const [isRadioSelected, setIsRadioSelected] = useState(true);
-    const [carrierDetails, setCarrierDetails] = useState({
-        truck: null,
-        driver: null,
-    });
+	const router = useRouter()
+	const jobID = router.query.job_id as string
+	const [jobDetails, setJobDetails] = useRecoilState<JobDocument>(jobDetailsState)
+	const [trucks, setTrucks] = useRecoilState(trucksState)
+	const [drivers, setDrivers] = useRecoilState(driversState)
+	const [toggleDriverModal, setToggleDriverModal] = useState(false)
+	const [toggleTruckModal, setToggleTruckModal] = useState(false)
+	const setTableData = useSetRecoilState(tableDataState)
+	const setFilterWord = useSetRecoilState(filterWordState)
+	const [isRadioSelected, setIsRadioSelected] = useState(true)
+	const setCreateStatus = useSetRecoilState(resourceCreatedState)
+	const [carrierDetails, setCarrierDetails] = useState({
+		truck: null,
+		driver: null,
+	})
 
-    const driverColumns = [
-        {
-            id: "id",
-            label: "รหัส",
-        },
-        {
-            id: "driver_name",
-            label: "ชื่อ - นามสกุล",
-            align: "left",
-            width: "35%",
-        },
-        {
-            id: "driver_license_type",
-            label: "ใบขับขี่",
-        },
-        {
-            id: "actions",
-            label: "เลือก",
-            format: (driver_index: number): ReactElement => (
-                <RadioButton>
-                    <input type="radio" value={driver_index} name="driver" />
-                    <JobSuccessIcon />
-                </RadioButton>
-            ),
-        },
-    ];
+	const driverColumns = [
+		{
+			id: "name",
+			label: "ชื่อ - นามสกุล",
+			align: "left",
+		},
+		{
+			id: "driver_license_type",
+			label: "ใบขับขี่",
+			width: "25%"
+		},
+		{
+			id: "actions",
+			label: "เลือก",
+			format: (driver_index: number): ReactElement => (
+				<RadioButton>
+					<input type="radio" value={driver_index} name="driver" />
+					<JobSuccessIcon />
+				</RadioButton>
+			),
+		},
+	]
 
-    const truckColumns = [
-        {
-            id: "license_number",
-            label: "ทะเบียน",
-        },
-        {
-            id: "wheel",
-            label: "ประเภท",
-        },
-        {
-            id: "add_on",
-            label: "เพิ่มเติม",
-        },
-        {
-            id: "actions",
-            label: "เลือก",
-            format: (truck_index: number): ReactElement => (
-                <RadioButton>
-                    <input type="radio" value={truck_index} name="truck" />
-                    <JobSuccessIcon />
-                </RadioButton>
-            ),
-        },
-    ];
+	const truckColumns = [
+		{
+			id: "license_number",
+			label: "ทะเบียน",
+		},
+		{
+			id: "type",
+			label: "ประเภท",
+		},
+		{
+			id: "option",
+			label: "เพิ่มเติม",
+		},
+		{
+			id: "actions",
+			label: "เลือก",
+			format: (truck_index: number): ReactElement => (
+				<RadioButton>
+					<input type="radio" value={truck_index} name="truck" />
+					<JobSuccessIcon />
+				</RadioButton>
+			),
+		},
+	]
 
     const selectRow = (type: string) => {
         const element = document.querySelector(
@@ -239,125 +248,186 @@ const GetJobPage = () => {
         }
     };
 
-    const toggleModal = (target: string) => {
-        if (target === "driver") {
-            setToggleDriverModal(true);
-            setFilteredData(MOCKUP_DRIVER);
-        } else if (target === "truck") {
-            setToggleTruckModal(true);
-            setFilteredData(MOCKUP_TRUCK);
-        }
-    };
+	const convertDriverToTableFormat = (drivers: DriverDocument[]): DriverTable[] => {
+		const driverTableData = []
+		const validDrivers = []
+		drivers.map((driver) => {
+			const { name, driver_license_type, status } = driver
+			const matchDriverLicenseType = (driver_license_type === jobDetails.carrier_specification.driver.driver_license_type)
+			if (matchDriverLicenseType && (status === 100)) {
+				driverTableData.push({
+					name,
+					driver_license_type: driver_license_type.replace("ประเภท", ""),
+				})
+				validDrivers.push(driver)
+			}
+		})
+		setDrivers(validDrivers)
+		return driverTableData
+	}
 
-    useEffect(() => {
-        if (toggleDriverModal) {
-            const filteredResult = filterData(MOCKUP_DRIVER, filter);
-            setFilteredData(filteredResult);
-        } else if (toggleTruckModal) {
-            const filteredResult = filterData(MOCKUP_DRIVER, filter);
-            setFilteredData(filteredResult);
-        }
-    }, [filter]);
+	const convertTruckToTableFormat = (trucks: TruckDocument[]): TruckTable[] => {
+		const truckTableData = []
+		const validTrucks = []
+		trucks.map((truck) => {
+			const { license_number, property, status } = truck
+			const matchType = (property.type === jobDetails.carrier_specification.truck.property.type) 
+			const matchOption = (property.option === jobDetails.carrier_specification.truck.property.option)
+			if (matchType && matchOption && (status === 100)) {
+				truckTableData.push({
+					license_number,
+					type: property.type,
+					option: property.option,
+				})
+				validTrucks.push(truck)
+			}
+		})
+		setTrucks(validTrucks)
+		return truckTableData
+	}
 
-    return (
-        <div>
-            <NavigationBar />
-            <Modal toggle={toggleDriverModal} setToggle={setToggleDriverModal}>
-                <ModalContent>
-                    <ModalTitle>เลือกพนักงานขับรถ</ModalTitle>
-                    <SearchBar
-                        placeholder="ค้นหารหัส, ชื่อหรือประเภทใบขับขี่"
-                        setValue={setFilter}
-                    />
-                    <TableComponent columns={driverColumns} />
-                    {!isRadioSelected && (
-                        <Warning>กรุณาเลือกพนักงานขับรถ</Warning>
-                    )}
-                    <FormActionsCustom>
-                        <SecondaryButton
-                            onClick={() => setToggleDriverModal(false)}
-                        >
-                            ย้อนกลับ
-                        </SecondaryButton>
-                        <PrimaryButton onClick={() => selectRow("driver")}>
-                            ยืนยันเลือก
-                        </PrimaryButton>
-                    </FormActionsCustom>
-                </ModalContent>
-            </Modal>
-            <Modal toggle={toggleTruckModal} setToggle={setToggleTruckModal}>
-                <ModalContent>
-                    <ModalTitle>เลือกรถบรรทุก</ModalTitle>
-                    <SearchBar
-                        placeholder="ค้นหาทะเบียนหรือประเภทรถ"
-                        setValue={setFilter}
-                    />
-                    <TableComponent columns={truckColumns} />
-                    {!isRadioSelected && <Warning>กรุณาเลือกรถบรรทุก</Warning>}
-                    <FormActionsCustom>
-                        <SecondaryButton
-                            onClick={() => setToggleTruckModal(false)}
-                        >
-                            ย้อนกลับ
-                        </SecondaryButton>
-                        <PrimaryButton onClick={() => selectRow("truck")}>
-                            ยืนยันเลือก
-                        </PrimaryButton>
-                    </FormActionsCustom>
-                </ModalContent>
-            </Modal>
-            <Header>
-                <JobTitle>
-                    รับงาน กรุงเทพ
-                    <RightArrowLine />
-                    ชลบุรี
-                </JobTitle>
-            </Header>
-            <JobDetails>
-                <DetailSection />
-                <Warning>เลือกพนักงานและรถที่ใช้รับงาน</Warning>
-                <CarrierDetailsContainer>
-                    <Detail>
-                        พนักงานขับรถ
-                        {carrierDetails.driver && (
-                            <span>
-                                {MOCKUP_DRIVER[carrierDetails.driver].name}
-                            </span>
-                        )}
-                        <button onClick={() => toggleModal("driver")}>
-                            {carrierDetails.driver
-                                ? "แก้ไข"
-                                : "เลือกพนักงานขับรถ"}
-                            <RightArrow />
-                        </button>
-                    </Detail>
-                    <Detail>
-                        รถบรรทุก
-                        {carrierDetails.truck && (
-                            <span>
-                                {
-                                    MOCKUP_TRUCK[carrierDetails.truck]
-                                        .license_number
-                                }
-                            </span>
-                        )}
-                        <button onClick={() => toggleModal("truck")}>
-                            {carrierDetails.truck ? "แก้ไข" : "เลือกรถบรรทุก"}
-                            <RightArrow />
-                        </button>
-                    </Detail>
-                </CarrierDetailsContainer>
-                <FormActionsCustom>
-                    <SecondaryButton>ย้อนกลับ</SecondaryButton>
-                    <PrimaryButton
-                        onClick={() => router.push(`/jobs/details/${job_id}`)}
-                    >
-                        ยืนยันรับงาน
-                    </PrimaryButton>
-                </FormActionsCustom>
-            </JobDetails>
-        </div>
-    );
-};
+	const toggleModal = (target: string) => {
+		if (target === "driver") {
+			setToggleDriverModal(true)
+			setTableData(convertDriverToTableFormat(drivers))
+		} else if (target === "truck") {
+			setToggleTruckModal(true)
+			setTableData(convertTruckToTableFormat(trucks))
+		}
+	}
+
+	useEffect(() => {
+		if (jobID && !Boolean(jobDetails.shipper_id)) {
+			getJobDetailsByID(jobID, (jobDetails: JobDocument) => {
+				setJobDetails(jobDetails)
+			})
+		}
+		getDriver((drivers: DriverDocument[]) => {
+			setDrivers(drivers)
+		})
+		getTruck((trucks: TruckDocument[]) => {
+			setTrucks(trucks)
+		})
+	}, [router.query.job_id])
+
+	const confirmGetJob = async () => {
+		const response = await pickJob({
+			job_id: jobID,
+			truck_id: trucks[parseInt(carrierDetails.truck)].truck_id,
+			driver_id: drivers[parseInt(carrierDetails.driver)].driver_id
+		})
+		if (response !== 200) {
+			setCreateStatus("error")
+		} else {
+			setCreateStatus("success")
+		}
+		router.push(`/jobs/details/${jobID}`, undefined, { shallow: true })
+	}
+
+	return (
+		<div>
+			<NavigationBar />
+			<Header>
+				<JobTitle>
+					รับงาน <span>{jobDetails.pickup_location.province}</span>
+					<RightArrowLine />
+					<span>{jobDetails.dropoff_location.province}</span>
+				</JobTitle>
+			</Header>
+			<JobDetails>
+				<DetailSection />
+				<Warning>เลือกพนักงานและรถที่ใช้รับงาน</Warning>
+				<CarrierDetailsContainer>
+					<Detail>
+						พนักงานขับรถ
+						{carrierDetails.driver && (
+							<span>
+								{
+									drivers[carrierDetails.driver].name
+								}
+							</span>
+						)}
+						<button onClick={() => toggleModal("driver")}>
+							{carrierDetails.driver
+								? "แก้ไข"
+								: "เลือกพนักงานขับรถ"}
+							<RightArrow />
+						</button>
+					</Detail>
+					<Detail>
+						รถบรรทุก
+						{carrierDetails.truck && (
+							<span>
+								{
+									trucks[carrierDetails.truck].license_number
+								}
+							</span>
+						)}
+						<button onClick={() => toggleModal("truck")}>
+							{carrierDetails.truck ? "แก้ไข" : "เลือกรถบรรทุก"}
+							<RightArrow />
+						</button>
+					</Detail>
+				</CarrierDetailsContainer>
+				<FormActionsCustom>
+					<SecondaryButton>ย้อนกลับ</SecondaryButton>
+					<PrimaryButton
+						onClick={confirmGetJob}
+					>
+						ยืนยันรับงาน
+					</PrimaryButton>
+				</FormActionsCustom>
+			</JobDetails>
+			<Modal toggle={toggleDriverModal} setToggle={setToggleDriverModal}>
+				<ModalContent>
+					<ModalTitle>เลือกพนักงานขับรถ</ModalTitle>
+					<SearchBar
+						placeholder="ค้นหารหัส, ชื่อหรือประเภทใบขับขี่"
+						setValue={setFilterWord}
+					/>
+					<TableComponent
+						columns={driverColumns}
+					/>
+					{!isRadioSelected && (
+						<Warning>กรุณาเลือกพนักงานขับรถ</Warning>
+					)}
+					<FormActionsCustom>
+						<SecondaryButton
+							onClick={() => setToggleDriverModal(false)}
+						>
+							ย้อนกลับ
+						</SecondaryButton>
+						<PrimaryButton onClick={() => selectRow("driver")}>
+							ยืนยันเลือก
+						</PrimaryButton>
+					</FormActionsCustom>
+				</ModalContent>
+			</Modal>
+			<Modal toggle={toggleTruckModal} setToggle={setToggleTruckModal}>
+				<ModalContent>
+					<ModalTitle>เลือกรถบรรทุก</ModalTitle>
+					<SearchBar
+						placeholder="ค้นหาทะเบียนหรือประเภทรถ"
+						setValue={setFilterWord}
+					/>
+					<TableComponent
+						columns={truckColumns}
+					/>
+					{!isRadioSelected && <Warning>กรุณาเลือกรถบรรทุก</Warning>}
+					<FormActionsCustom>
+						<SecondaryButton
+							onClick={() => setToggleTruckModal(false)}
+						>
+							ย้อนกลับ
+						</SecondaryButton>
+						<PrimaryButton onClick={() => selectRow("truck")}>
+							ยืนยันเลือก
+						</PrimaryButton>
+					</FormActionsCustom>
+				</ModalContent>
+			</Modal>
+		</div>
+	)
+}
 
 export default GetJobPage;

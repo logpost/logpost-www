@@ -2,21 +2,23 @@ import React, { useEffect } from "react";
 import Progress from "../../../common/Progress";
 import styled from "styled-components";
 import {
-    FormActions,
-    PrimaryButton,
-    SecondaryButton,
-    Detail,
-    FormHeader,
-} from "../../../styles/GlobalComponents";
-import DetailSection from "../../../common/DetailSection";
-import { useRouter } from "next/router";
-import { createJob } from "../../../utilities/apis";
-import { JobDetails } from "../../../../entities/interface/job";
-import { dateFormatter } from "../../../utilities/helper";
-import { useSetRecoilState } from "recoil";
-import { resourceCreatedState } from "../../../../store/atoms/overviewPageState";
-import { initMap, route } from "../../../utilities/googlemaps";
-import { MapInterface } from "../../../../entities/interface/googlemaps";
+	FormActions,
+	PrimaryButton,
+	SecondaryButton,
+	Detail,
+	FormHeader
+} from "../../../styles/GlobalComponents"
+import DetailSection from "../../../common/DetailSection"
+import { useRouter } from "next/router"
+import { createJob } from "../../../utilities/apis"
+import { JobDetails } from "../../../../entities/interface/job"
+import { dateFormatter, timeFormatter } from "../../../utilities/helper"
+import { useSetRecoilState } from 'recoil'
+import { resourceCreatedState } from '../../../../store/atoms/overviewPageState'
+import { initMap, route } from "../../../utilities/googlemaps"
+import { MapInterface } from '../../../../entities/interface/googlemaps'
+import { jobDetailsState } from '../../../../store/atoms/jobDetailsState'
+import { costCalculator } from '../../../utilities/costCalculater'
 
 const Map = styled.div`
     height: 45rem;
@@ -59,62 +61,59 @@ const Price = styled.div`
 `;
 
 const JobAddStepFour = (props: { details: JobDetails }) => {
-    // const JobAddStepFour = (props: any) => {
-    const router = useRouter();
-    const { details } = props;
-    const setCreateStatus = useSetRecoilState(resourceCreatedState);
+	const router = useRouter()
+	const { details } = props
+	const setCreateStatus = useSetRecoilState(resourceCreatedState)
+	const setDetailsState = useSetRecoilState(jobDetailsState)
 
-    const submitDetails = async () => {
-        const { geocoder_result, ...jobDetails } = details;
-        const response = await createJob(jobDetails);
-        if (response !== 200) {
-            setCreateStatus("error");
-        } else {
-            setCreateStatus("success");
-        }
-        router.push(`/jobs`);
-    };
+	const submitDetails = async () => {
+		const {geocoder_result, ...jobDetails} = details
+		jobDetails.auto_price = parseInt(costCalculator(jobDetails.distance))
+		const response = await createJob(jobDetails)
+		if (response !== 200) {
+			setCreateStatus("error")
+		} else {
+			setCreateStatus("success")
+		}
+		router.push(`/jobs`)
+	}
 
-    useEffect(() => {
-        initMap(
-            document.getElementById("route-map") as HTMLElement,
-            (routeMap: MapInterface) => {
-                const place = details.geocoder_result;
-                const pickupLatLng = place.pickup.geometry.location;
-                const dropoffLatLng = place.dropoff.geometry.location;
-                route(pickupLatLng, dropoffLatLng, routeMap);
-            }
-        );
-    }, []);
+	useEffect(() => {
+		initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
+			const place = details.geocoder_result
+			const pickupLatLng = place.pickup.geometry.location
+			const dropoffLatLng = place.dropoff.geometry.location
+			route(pickupLatLng, dropoffLatLng, routeMap)
+		})
+		setDetailsState(details)
+	}, [])
 
-    return (
-        <div>
-            <FormHeader>
-                <Progress currentStep="ตัวอย่างงาน" percent={4 / 4} />
-            </FormHeader>
-            <Map id="route-map" />
-            <JobDetailsContainer>
-                <DetailSection />
-                <JobPrice>
-                    <Price>{details.offer_price} บาท</Price>
-                    <span>
-                        <Detail>
-                            โดย <span>ล็อกค้าไม้</span>
-                        </Detail>
-                        <span>{dateFormatter(new Date())}</span>
-                    </span>
-                </JobPrice>
-                <FormActions>
-                    <SecondaryButton onClick={() => router.push(`/jobs/add/3`)}>
-                        ย้อนกลับ
-                    </SecondaryButton>
-                    <PrimaryButton onClick={submitDetails}>
-                        สร้างงาน
-                    </PrimaryButton>
-                </FormActions>
-            </JobDetailsContainer>
-        </div>
-    );
-};
+	return (
+		<div>
+			<FormHeader>
+				<Progress currentStep="ตัวอย่างงาน" percent={4 / 4} />
+			</FormHeader>
+			<Map id="route-map" />
+			<JobDetailsContainer>
+				<DetailSection />
+				<JobPrice>
+					<Price>{details.offer_price} บาท</Price>
+					<span>
+						<Detail>
+							โดย <span>ล็อกค้าไม้</span>
+						</Detail>
+						<span>{dateFormatter(new Date)} {timeFormatter(new Date)}</span>
+					</span>
+				</JobPrice>
+				<FormActions>
+					<SecondaryButton onClick={() => router.push(`/jobs/add/3`)}>
+						ย้อนกลับ
+					</SecondaryButton>
+					<PrimaryButton onClick={submitDetails}>สร้างงาน</PrimaryButton>
+				</FormActions>
+			</JobDetailsContainer>
+		</div>
+	)
+}
 
 export default JobAddStepFour;

@@ -1,6 +1,7 @@
 import { SHORT_MONTHS } from "../../data/jobs"
 import { DriverDocument } from "../../entities/interface/driver"
 import { TruckDocument } from "../../entities/interface/truck"
+import { JobDocument } from '../../entities/interface/job'
 
 export const filterData = (
 	data: Object[],
@@ -87,7 +88,7 @@ export const getAddressFromPlace = (place: google.maps.places.PlaceResult | goog
 }
 
 export const resourceStatusCount = (
-	resources: (DriverDocument | TruckDocument)[], 
+	resources: (DriverDocument | TruckDocument | JobDocument)[], 
 	initialValue: {[key: number]: number},
 	setValue: (value: {[key: number]: number}) => void) => {
 	const countStatus = initialValue

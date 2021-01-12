@@ -8,11 +8,12 @@ import {
 import NavigationBar from "../../../components/common/NavigationBar"
 import Header from "../../../components/common/Header"
 import ProfileStatus from "../../../components/common/ProfileStatus"
-import { useRecoilValue, useRecoilState } from 'recoil'
+import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil'
 import { userInfoState } from "../../../store/atoms/userInfoState"
-import { getCarrierProfile } from "../../../components/utilities/apis"
+import { getCarrierProfile, getMyJob } from "../../../components/utilities/apis"
 import { resourceStatusCount } from "../../../components/utilities/helper"
-import { driverStatusCountState, truckStatusCountState, jobStatusCountState } from "../../../store/atoms/carrierProfileState"
+import { driverStatusCountState, truckStatusCountState, jobStatusCountState, myJobsState } from "../../../store/atoms/carrierProfileState"
+import { JobDocument } from '../../../entities/interface/job'
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
@@ -30,13 +31,17 @@ const CarrierProfilePage = () => {
 	const [driverStatusCount, setDriverStatusCount] = useRecoilState<{[key: number]: number}>(driverStatusCountState)
 	const [truckStatusCount, setTruckStatusCount] = useRecoilState<{[key: number]: number}>(truckStatusCountState)
 	const [jobStatusCount, setJobStatusCount] = useRecoilState<{[key: number]: number}>(jobStatusCountState)
+	const setMyJobs = useSetRecoilState(myJobsState)
 
 	useEffect(() => {
 		if (carrierInfo.username) {
 			getCarrierProfile(carrierInfo.username, (carrierProfile) => {
 				resourceStatusCount(carrierProfile.drivers, driverStatusCount, setDriverStatusCount)
 				resourceStatusCount(carrierProfile.trucks, truckStatusCount, setTruckStatusCount)
-				resourceStatusCount(carrierProfile.job_history, jobStatusCount, setJobStatusCount)
+			})
+			getMyJob((jobs: JobDocument[]) => {
+				resourceStatusCount(jobs, jobStatusCount, setJobStatusCount)
+				setMyJobs(jobs)
 			})
 		}
 	}, [carrierInfo])

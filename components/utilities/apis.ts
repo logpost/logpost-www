@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { AccountInterface } from '../../entities/interface/account'
+import { JobPickerInterface } from '../../entities/interface/carrier'
 import { AuthInterface } from '../../entities/interface/common'
 import { DriverDocument, DriverDetails } from '../../entities/interface/driver'
 import { JobDetails, JobDocument } from '../../entities/interface/job'
@@ -12,10 +13,6 @@ const JOB_URL = "https://jobs-management-service-logpost-stag-qjrfn6j7kq-as.a.ru
 const CARRIER_URL = "https://carrier-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app"
 const SHIPPER_URL = "https://shipper-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app"
 
-const accessToken = typeof window != "undefined" && localStorage.getItem('access_token')
-const authAPIs = axios.create({
-	headers: {'Authorization': `Bearer ${accessToken}`}
-});
 const credentialsAPIs = axios.create({
 	'withCredentials': true
 });
@@ -98,16 +95,33 @@ const createJob = async (data: JobDetails) => {
 	})
 }
 
-const getJobDetailsByID = async (jobID: string, next: (jobDetails: JobDocument) => void) => {
+const getJobDetailsByID = async (jobID: string, next: (jobDetails: JobDocument) => void, driverTel?: string) => {
 	await authorizationHandler(async () => {
 		try {
-			const res = await axios.get(`${JOB_URL}/detail/${jobID}`,
-				{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }}
-			)
-			console.log(res.data)
+			let getDetailsURL = `${JOB_URL}/detail/${jobID}`
+			let header = { headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }}
+			if (driverTel) {
+				getDetailsURL = `${JOB_URL}/detail/${jobID}?driver_tel=${driverTel}`
+				header = axios.defaults.headers
+			}
+			const res = await axios.get(getDetailsURL, header)
 			next(res.data)
 		} catch (error) {
+			console.log(error.response)
 			throw error	
+		}
+	})
+}
+
+const pickJob = async (jobPicker: JobPickerInterface) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.post(`${JOB_URL}/pick`, jobPicker,
+				{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }}
+			)
+			return res.status
+		} catch (error) {
+			throw error
 		}
 	})
 }
@@ -172,6 +186,29 @@ const createDriver = async (data: DriverDetails):Promise<number|void> => {
 	})
 }
 
+const updateJob = async (data) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.put(`${JOB_URL}/update`, data,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
+const updateStatusByDriver = async (data) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.put(`${JOB_URL}/driving/status`, data)
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
 const getShipperProfile = async (username: string, next: (shipperProfile) => void) => {
 	try {
 		const res = await axios.get(`${SHIPPER_URL}/shipper/profile/${username}`)
@@ -179,6 +216,19 @@ const getShipperProfile = async (username: string, next: (shipperProfile) => voi
 	} catch (error) {
 		console.log(error.response)
 	}
+}
+
+const getMyJob = async (next: (jobs: JobDocument[]) => void) => {
+	await authorizationHandler(async () => {
+		try {
+			const res = await axios.get(`${JOB_URL}/owned`,
+				{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }}
+			)
+			next(res.data)
+		} catch (error) {
+			throw error
+		}
+	})
 }
 
 export {
@@ -195,5 +245,9 @@ export {
 	getDriver,
 	createDriver,
 	getShipperProfile,
-	getJobDetailsByID
+	getJobDetailsByID,
+	pickJob,
+	updateJob,
+	updateStatusByDriver,
+	getMyJob
 }

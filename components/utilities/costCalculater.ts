@@ -34,8 +34,18 @@ const getOilPrice = async () => {
 	}
 }
 
-export const costCalculator = () => {
+export const costCalculator = (distance: number) => {
+	const tonPrice = 350
 	const tax = 0.01
-	getOilPrice()
+	const oilPrice = 8
+	const depreciation = 800
+	const driver = 400
+	const fixedCost = 0.05
+	const cost = (distance*oilPrice) + (distance*(oilPrice/2)) + ((driver+depreciation)* 1)
+	return (cost + (cost * fixedCost) + (cost * tax)).toFixed(0)
+}
 
+export const offerCalculator = (weight: number) => {
+	const autoPrice = (weight * 350)
+	return (autoPrice * 0.1) + autoPrice || 0
 }

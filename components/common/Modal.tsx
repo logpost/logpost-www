@@ -32,7 +32,7 @@ const ModalContent = styled.div`
 	font-size: 1.8rem;
 	max-width: 70rem;
 	width: 86%;
-	min-height: 34rem;
+	min-height: 24rem;
 `
 
 const Modal: FunctionComponent<ToggleComponentInterface> = (props) => {

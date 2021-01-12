@@ -17,6 +17,7 @@ interface TableContainerInterface {
 const TableContainer = styled.div<TableContainerInterface>`
     height: ${props => props.tableHeight ? "auto" : "30rem"};
     width: 100%;
+	min-height: 30rem;
 `
 
 const Table = styled.table`
@@ -48,6 +49,10 @@ const Cell = styled.td<CellInterface>`
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
+
+	&:first-child {
+		padding: 0.8rem 0.5rem 0.8rem 1.8rem;
+	}
 `
 
 const TableCaption = styled.div`
