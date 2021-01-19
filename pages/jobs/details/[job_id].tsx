@@ -1,37 +1,37 @@
-import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
-import { useRouter } from "next/router";
-import Header from "../../../components/common/Header";
+import Alert from '../../../components/common/Alert';
+import Header from '../../../components/common/Header';
+import JobDetailsSection from '../../../components/common/JobDetailsSection';
+import Modal from '../../../components/common/Modal';
+import NavigationBar from '../../../components/common/NavigationBar';
+import Progress from '../../../components/common/Progress';
+import React, { useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import { alertPropertyState } from '../../../store/atoms/alertPropertyState';
+import {
+	CarrierDetailsContainer,
+	Detail,
+	DetailRow,
+	FormActions,
+	JobTitle,
+	PrimaryButton,
+	SecondaryButton
+	} from '../../../components/styles/GlobalComponents';
+import { dateFormatter, timeFormatter } from '../../../components/utilities/helper';
+import { getJobDetailsByID, updateJob } from '../../../components/utilities/apis';
+import { initMap, route } from '../../../components/utilities/googlemaps';
+import { JOB_STATUS_CODE } from '../../../data/jobs';
+import { jobDetailsState } from '../../../store/atoms/jobDetailsState';
+import { JobDocument } from '../../../entities/interface/job';
+import { MapInterface } from '../../../entities/interface/googlemaps';
+import { resourceCreatedState } from '../../../store/atoms/overviewPageState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userInfoState } from '../../../store/atoms/userInfoState';
+import { useRouter } from 'next/router';
 import {
     WarningIcon,
     CopyIcon,
     RightArrowLine,
 } from "../../../components/common/Icons";
-import Progress from "../../../components/common/Progress";
-import {
-	DetailRow,
-	Detail,
-	SecondaryButton,
-	PrimaryButton,
-	JobTitle,
-	CarrierDetailsContainer,
-	FormActions
-} from "../../../components/styles/GlobalComponents"
-import NavigationBar from "../../../components/common/NavigationBar"
-import DetailSection from "../../../components/common/DetailSection"
-import Modal from "../../../components/common/Modal"
-import { JOB_STATUS_CODE } from "../../../data/jobs"
-import { useRecoilValue, useRecoilState } from 'recoil'
-import { userInfoState } from "../../../store/atoms/userInfoState"
-import { getJobDetailsByID, updateJob } from "../../../components/utilities/apis"
-import { JobDocument } from '../../../entities/interface/job'
-import { jobDetailsState } from '../../../store/atoms/jobDetailsState'
-import { initMap, route } from "../../../components/utilities/googlemaps"
-import { MapInterface } from "../../../entities/interface/googlemaps"
-import { dateFormatter, timeFormatter } from "../../../components/utilities/helper"
-import { resourceCreatedState } from "../../../store/atoms/overviewPageState"
-import Alert from "../../../components/common/Alert"
-import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
 
 const PageContainer = styled.div<{ bottomSpace: boolean }>`
     margin-bottom: ${(props) => (props.bottomSpace ? 19 : 8)}rem;
@@ -257,11 +257,6 @@ const JobDetailPage = () => {
 	const isCarrierCanGetJob = (!isJobHasCarrier && isCarrier && !isCarrierOwnedJob)
 	const jobID = router.query.job_id as string
 
-	const calculateProfit = (offerPrice: number, autoPrice: number): string => {
-		const profit = offerPrice - autoPrice
-		return profit.toLocaleString()
-	}
-
 	const copyToClipboard = () => {
 		driverURLRef.current.select()
 		document.execCommand("copy")
@@ -271,17 +266,17 @@ const JobDetailPage = () => {
 		if (jobID) {
 			getJobDetailsByID(jobID, (jobDetails: JobDocument) => {
 				setJobDetails(jobDetails)
-				initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
-					const pickupLatLng = {
-						latitude: jobDetails.pickup_location.latitude,
-						longitude: jobDetails.pickup_location.longitude
-					}
-					const dropoffLatLng = {
-						latitude: jobDetails.dropoff_location.latitude,
-						longitude: jobDetails.dropoff_location.longitude
-					} 
-					route(pickupLatLng, dropoffLatLng, routeMap)
-				})
+				// initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
+				// 	const pickupLatLng = {
+				// 		latitude: jobDetails.pickup_location.latitude,
+				// 		longitude: jobDetails.pickup_location.longitude
+				// 	}
+				// 	const dropoffLatLng = {
+				// 		latitude: jobDetails.dropoff_location.latitude,
+				// 		longitude: jobDetails.dropoff_location.longitude
+				// 	} 
+				// 	route(pickupLatLng, dropoffLatLng, routeMap)
+				// })
 			})
 		}
 	}, [router.query.job_id])
@@ -343,60 +338,10 @@ const JobDetailPage = () => {
 						label="สถานะ"
 					/>
 				)}
-				<DetailSection />
-				{jobDetails.carrier_id && (
-					<CarrierDetailsContainer>
-						<Detail>
-							ขนส่งโดย <span>{jobDetails.carrier_display_name}</span>
-						</Detail>
-						<Detail>
-							พนักงานขับรถ <span>{jobDetails.driver_name}</span>
-						</Detail>
-						<Detail>
-							ทะเบียนรถ <span>{jobDetails.license_number}</span>
-						</Detail>
-					</CarrierDetailsContainer>
-				)}
-				{jobDetails.auto_price && (
-					<PriceDetailsContainer>
-						<PriceItem>
-							ราคาเสนอ
-							<div>
-								{jobDetails.offer_price?.toLocaleString()} <span>บาท</span>
-							</div>
-						</PriceItem>
-						<HorizontalLine />
-						<PriceItem>
-							ต้นทุน <span>ประมาณ</span>
-							<div>
-								{jobDetails.auto_price?.toLocaleString()} <span>บาท</span>
-							</div>
-						</PriceItem>
-						<HorizontalLine />
-						<PriceItem>
-							กำไร
-							<div>
-								{calculateProfit(
-									jobDetails.offer_price,
-									jobDetails.auto_price
-								)}
-								<span>บาท</span>
-							</div>
-						</PriceItem>
-					</PriceDetailsContainer>
-				)}
-				<JobPrice rowLayout={isCarrier}>
-					{
-						!isCarrier &&
-						<Price>{jobDetails.offer_price.toLocaleString()} บาท</Price>
-					}
-					<span>
-						<Detail>
-							โดย <DisplayName>{jobDetails.shipper_display_name}</DisplayName>
-						</Detail>
-						<span>{dateFormatter(jobDetails.dropoff_date)} {timeFormatter(jobDetails.dropoff_date)}</span>
-					</span>
-				</JobPrice>
+				<JobDetailsSection 
+					isShowCarrierDetails={jobDetails.status > 100}
+					isShowAutoPrice={userInfo?.role === "carrier"}
+				/>
 				{isShipperCanEditDetails && (
 					<ButtonContainer>
 						<SecondaryButtonCustom>ลบงาน</SecondaryButtonCustom>

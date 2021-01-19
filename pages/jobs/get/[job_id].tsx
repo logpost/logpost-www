@@ -15,7 +15,7 @@ import {
 	FormActions,
 	PrimaryButton,
 } from "../../../components/styles/GlobalComponents"
-import DetailSection from "../../../components/common/DetailSection"
+import JobDetailsSection from "../../../components/common/JobDetailsSection"
 import Modal from "../../../components/common/Modal"
 import TableComponent from "../../../components/common/TableComponent"
 import NavigationBar from "../../../components/common/NavigationBar"
@@ -335,7 +335,11 @@ const GetJobPage = () => {
 				</JobTitle>
 			</Header>
 			<JobDetails>
-				<DetailSection />
+				<JobDetailsSection
+					isShowCarrierDetails={false}
+					isShowAutoPrice={false}
+					isShowFooterDetails={false}
+				/>
 				<Warning>เลือกพนักงานและรถที่ใช้รับงาน</Warning>
 				<CarrierDetailsContainer>
 					<Detail>
@@ -370,7 +374,7 @@ const GetJobPage = () => {
 					</Detail>
 				</CarrierDetailsContainer>
 				<FormActionsCustom>
-					<SecondaryButton>ย้อนกลับ</SecondaryButton>
+					<SecondaryButton onClick={() => router.back()}>ย้อนกลับ</SecondaryButton>
 					<PrimaryButton
 						onClick={confirmGetJob}
 					>

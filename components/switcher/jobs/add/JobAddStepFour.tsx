@@ -8,7 +8,7 @@ import {
 	Detail,
 	FormHeader
 } from "../../../styles/GlobalComponents"
-import DetailSection from "../../../common/DetailSection"
+import JobDetailsSection from "../../../common/JobDetailsSection"
 import { useRouter } from "next/router"
 import { createJob } from "../../../utilities/apis"
 import { JobDetails } from "../../../../entities/interface/job"
@@ -95,16 +95,10 @@ const JobAddStepFour = (props: { details: JobDetails }) => {
 			</FormHeader>
 			<Map id="route-map" />
 			<JobDetailsContainer>
-				<DetailSection />
-				<JobPrice>
-					<Price>{details.offer_price} บาท</Price>
-					<span>
-						<Detail>
-							โดย <span>ล็อกค้าไม้</span>
-						</Detail>
-						<span>{dateFormatter(new Date)} {timeFormatter(new Date)}</span>
-					</span>
-				</JobPrice>
+				<JobDetailsSection 
+					isShowCarrierDetails={false}
+					isShowAutoPrice={false}
+				/>
 				<FormActions>
 					<SecondaryButton onClick={() => router.push(`/jobs/add/3`)}>
 						ย้อนกลับ
