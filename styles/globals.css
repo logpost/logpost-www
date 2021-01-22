@@ -51,3 +51,12 @@ input[type="radio"] {
 * {
     box-sizing: border-box;
 }
+
+input,
+textarea,
+button,
+select,
+a {
+    outline: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
