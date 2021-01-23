@@ -35,8 +35,8 @@ export const jobDetailsState = atom({
 			}
 		},
 		product_type: "ไม้",
-		offer_price: 8000,
-		auto_price: 4000,
+		offer_price: 0,
+		auto_price: 0,
 		distance: 0,
 		permission: "public",
 	}, 

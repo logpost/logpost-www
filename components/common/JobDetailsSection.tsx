@@ -186,7 +186,7 @@ const JobDetailsSection = (props) => {
 		isShowAutoPrice = true,
 		isShowFooterDetails = true
 	} = props
-	const details = useRecoilValue<JobDetails | JobDocument>(jobDetailsState)
+	const details = useRecoilValue<JobDocument>(jobDetailsState)
 
 	return (
 		<>

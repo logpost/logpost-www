@@ -8,7 +8,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { alertPropertyState } from '../../../store/atoms/alertPropertyState';
 import {
-	CarrierDetailsContainer,
 	Detail,
 	DetailRow,
 	FormActions,
@@ -16,7 +15,6 @@ import {
 	PrimaryButton,
 	SecondaryButton
 	} from '../../../components/styles/GlobalComponents';
-import { dateFormatter, timeFormatter } from '../../../components/utilities/helper';
 import { getJobDetailsByID, updateJob } from '../../../components/utilities/apis';
 import { initMap, route } from '../../../components/utilities/googlemaps';
 import { JOB_STATUS_CODE } from '../../../data/jobs';
