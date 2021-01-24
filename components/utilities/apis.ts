@@ -231,6 +231,36 @@ const updateCarrierProfile = async (data: Object) => {
 	})
 }
 
+const deleteShipperUser = async (
+	data: {
+		password: string
+	}) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.put(`${SHIPPER_URL}/shipper/delete`, data,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
+const deleteCarrierUser = async (
+	data: {
+		password: string
+	}) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.put(`${CARRIER_URL}/carrier/delete`, data,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
 const updateStatusByDriver = async (data:{
 	driver_tel: string,
 	jobinfo: { 
@@ -310,5 +340,7 @@ export {
 	changeEmail,
 	changePassword,
 	updateShipperProfile,
-	updateCarrierProfile
+	updateCarrierProfile,
+	deleteCarrierUser,
+	deleteShipperUser
 }

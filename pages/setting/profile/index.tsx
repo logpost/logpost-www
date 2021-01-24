@@ -12,14 +12,43 @@ import {
 } from "../../../components/styles/GlobalComponents"
 import { useRecoilState } from "recoil"
 import { userInfoState } from "../../../store/atoms/userInfoState"
-import { getCarrierProfile, getShipperProfile, updateCarrierProfile, updateShipperProfile } from "../../../components/utilities/apis"
+import { deleteCarrierUser, deleteShipperUser, getCarrierProfile, getShipperProfile, logout, updateCarrierProfile, updateShipperProfile } from "../../../components/utilities/apis"
 import { getUserInfo } from "../../../components/utilities/tokenHelper"
 import { ProfileInterface } from "../../../entities/interface/account"
 import useAlert from "../../../hooks/useAlert"
 import Alert from "../../../components/common/Alert"
+import Modal from "../../../components/common/Modal"
+import { WarningIcon } from "../../../components/common/Icons"
 
 const TextButtonCustom = styled(TextButton)`
 	margin-top: 3rem;
+`
+
+const ModalContent = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-size: 2rem;
+	padding: 0 2rem;
+
+	> *:not(:last-child) {
+		margin-bottom: 1.6rem;
+	}
+
+	span:not(:last-child) {
+		line-height: 3.24rem;
+		padding: 0 1.2rem;
+	}
+
+	${FormActions} {
+		> ${SecondaryButton}, ${PrimaryButton} {
+			font-size: 1.8rem;
+			box-shadow: none;
+			font-weight: 500;
+		}
+	}
 `
 
 const ProfileSettingPage = () => {
@@ -38,6 +67,9 @@ const ProfileSettingPage = () => {
 		district: null,
 		zipcode: null,
 	})
+	const [password, setPassword] = useState("")
+	const [validPassword, setValidPassword] = useState(true)
+	const [toggleModal, setToggleModal] = useState(false)
 	const { alertStatus, setAlert } = useAlert()
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,27 +118,36 @@ const ProfileSettingPage = () => {
 		let response: number
 		if (userInfo.role === "shipper") {
 			response = await updateShipperProfile(newProfile)
-			if (response !== 200) {
-				setAlert(true, "error")
-			} else {
-				setAlert(true, "success")
-			}
 		} else {
 			response = await updateCarrierProfile(newProfile)
 		}
+		if (response !== 200) {
+			setAlert(true, "error")
+		} else {
+			setAlert(true, "success")
+		}
 	}
 
-	const deactivateAccount = () => {
-		// DELETE
-		console.log("delete")
+	const deactivateAccount = async () => {
+		let response: number
+		if (userInfo.role === "shipper") {
+			response = await deleteShipperUser({ password })
+		} else {
+			response = await deleteCarrierUser({ password })
+		}
+		if (response !== 200) {
+			setValidPassword(false)
+		} else {
+			logout()
+		}
 	}
 
 	return (
 		<Form>
+			<Title>ข้อมูลส่วนตัว</Title>
 			<Alert>
 				{alertStatus.type === "success" ? "แก้ไขข้อมูลส่วนตัวสำเร็จ" : "แก้ไขข้อมูลส่วนตัวไม่สำเร็จ"}
 			</Alert>
-			<Title>ข้อมูลส่วนตัว</Title>
 			<InputComponent
 				name="tel"
 				value={profile.tel || ""}
@@ -195,9 +236,28 @@ const ProfileSettingPage = () => {
 					แก้ไขข้อมูล
 				</PrimaryButton>
 			</FormActions>
-			<TextButtonCustom type="button" onClick={deactivateAccount}>
+			<TextButtonCustom type="button" onClick={() => setToggleModal(true)}>
 				ระงับบัญชี<span> / Deactivate Account</span>
 			</TextButtonCustom>
+			<Modal toggle={toggleModal} setToggle={setToggleModal}>
+				<ModalContent>
+					<WarningIcon />
+					<span>เมื่อระงับบัญชีแล้วจะ<b>ไม่สามารถ</b>ยกเลิกการระงับหรือเข้าใช้งานบัญชีนี้ได้อีก</span>
+					<b>กรอกรหัสผ่านเพื่อระงับบัญชี</b>
+					<InputComponent
+						value={password}
+						disableLabel={true}
+						handleOnChange={(e) => setPassword(e.target.value)}
+						type="password"
+						valid={validPassword}
+						invalidText="รหัสผ่านไม่ถูกต้อง"
+					/>
+					<FormActions>
+						<SecondaryButton type="button" onClick={() => setToggleModal(false)}>ย้อนกลับ</SecondaryButton>
+						<PrimaryButton type="button" onClick={deactivateAccount}>ระงับบัญชี</PrimaryButton>
+					</FormActions>
+				</ModalContent>
+			</Modal>
 		</Form>
 	)
 }
