@@ -61,7 +61,7 @@ const Home = () => {
     //     }
     // }, []);
 
-    const handleClick = (e: React.ChangeEvent<HTMLButtonElement>, path: string) => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>, path: string) => {
         e.preventDefault();
         router.push(`/signup/${path}`);
     };
@@ -73,10 +73,10 @@ const Home = () => {
                 แหล่งรวมงานขนส่ง
             </LogoContainer>
             <SignUpContainer>
-                <PrimaryButtonCustom onClick={(e) => handleClick(e, "shipper")}>
+                <PrimaryButtonCustom onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "shipper")}>
                     ลงทะเบียนผู้ส่ง
                 </PrimaryButtonCustom>
-                <PrimaryButtonCustom onClick={(e) => handleClick(e, "carrier")}>
+                <PrimaryButtonCustom onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "carrier")}>
                     ลงทะเบียนขนส่ง
                 </PrimaryButtonCustom>
                 <TextButtonCustom onClick={() => router.push("/login")}>
