@@ -1,3 +1,6 @@
+import { DriverDocument } from "./driver";
+import { TruckDocument } from "./truck";
+
 export interface AccountInterface {
 	username: string
     password: string
@@ -20,4 +23,6 @@ export interface ProfileInterface {
         zipcode: string
     }
     account_description: string
+    trucks?: TruckDocument[]
+    drivers?: DriverDocument[]
 }
