@@ -35,7 +35,7 @@ const ShipperProfilePage = () => {
 
 	return (
 		<>
-			<NavigationBar />
+			<NavigationBar activeIndex={2} />
 			<Header enabledSetting={true}>
 				{shipperInfo.displayName}
       		</Header>

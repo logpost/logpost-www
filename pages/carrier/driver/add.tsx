@@ -6,8 +6,7 @@ import SelectComponent from '../../../components/common/SelectComponent'
 import { DRIVER_LICENSE_TYPE } from '../../../data/carrier'
 import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHeader } from '../../../components/styles/GlobalComponents'
 import { createDriver } from '../../../components/utilities/apis'
-import { useSetRecoilState } from 'recoil'
-import { resourceCreatedState } from '../../../store/atoms/overviewPageState'
+import useAlert from '../../../hooks/useAlert'
 
 const FormHeaderCustom = styled(FormHeader)`
 	padding: 3.4rem 0 3.4rem 3.7rem;
@@ -34,7 +33,7 @@ const AddDriverPage = () => {
 		tel: true
 	}
 	const [validField, setValidField] = useState(initialValidField)
-	const setCreateStatus = useSetRecoilState(resourceCreatedState)
+	const setAlert = useAlert()
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let value = e.target.value
@@ -73,9 +72,9 @@ const AddDriverPage = () => {
 		if (validateInput()) {
 			const response = await createDriver(driverDetails)
 			if (response !== 200) {
-				setCreateStatus("error")
+				setAlert(true, "error")
 			} else {
-				setCreateStatus("success")
+				setAlert(true, "success")
 			}
 			router.push(`/carrier/driver/overview`, undefined, { shallow: true })
 		}

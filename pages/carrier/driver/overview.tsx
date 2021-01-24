@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import styled from "styled-components"
 import NavigationBar from '../../../components/common/NavigationBar'
 import { FormActions, PrimaryButton, SecondaryButton, TableRowActions } from '../../../components/styles/GlobalComponents'
@@ -6,12 +6,9 @@ import { useRouter } from "next/router"
 import { WarningIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
 import Modal from '../../../components/common/Modal'
 import { DRIVER_STATUS_LIST } from '../../../data/carrier'
-import { MOCKUP_DRIVER } from '../../../data/carrier.mock'
 import ResourceOverview from '../../../components/common/ResourceOverview'
-import { useEffect } from 'react'
 import { getDriver } from '../../../components/utilities/apis'
-import { DriverDocument, DriverTable } from '../../../entities/interface/driver'
-import { resourceCreatedState } from '../../../store/atoms/overviewPageState'
+import { DriverDocument } from '../../../entities/interface/driver'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { tableDataState } from '../../../store/atoms/tableState'
 import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
@@ -47,7 +44,7 @@ const OverviewDriverPage = () => {
 	const [deleteDriverIndex, setDeleteDriverIndex] = useState(0)
 	const [toggleModal, setToggleModal] = useState(false)
 	const [drivers, setDrivers] = useState<DriverDocument[]>([])
-	const createdStatus = useRecoilValue(resourceCreatedState)
+	const alertStatus = useRecoilValue(alertPropertyState)
 	const setDriverTableData = useSetRecoilState(tableDataState)
 	const setAlertProperty = useSetRecoilState(alertPropertyState)
 	const router = useRouter()
@@ -92,42 +89,19 @@ const OverviewDriverPage = () => {
 		},
 	]
 
-	const convertToTableFormat = (drivers: DriverDocument[]): DriverTable[] => {
-		const driverTableData = []
-		drivers.map((driver) => {
-			const { name, driver_license_type, status } = driver
-			driverTableData.push({
-				name,
-				driver_license_type: driver_license_type.replace("ประเภท", ""),
-				status
-			})
-		})
-		return driverTableData
-	}
-
 	useEffect(() => {
 		getDriver((drivers: DriverDocument[]) => {
 			setDrivers(drivers)
-			setDriverTableData(convertToTableFormat(drivers))
+			setDriverTableData(drivers)
 		})
 	}, [])
 
-	useEffect(() => {
-		setAlertProperty({
-			type: createdStatus,
-			isShow: Boolean(createdStatus)
-		})
-	}, [createdStatus])
-
 	return (
 		<>
-			{
-				createdStatus &&
-				<Alert>
-					{createdStatus === "success" ? "เพิ่มพนักงานขับรถสำเร็จ" : "เพิ่มพนักงานขับรถไม่สำเร็จ"}
-				</Alert>
-			}
-			<NavigationBar />
+			<Alert>
+				{alertStatus.type === "success" ? "เพิ่มพนักงานขับรถสำเร็จ" : "เพิ่มพนักงานขับรถไม่สำเร็จ"}
+			</Alert>
+			<NavigationBar activeIndex={2} />
 			<ResourceOverview 
 				headerTitle={"พนักงานขับรถ"}
 				headerButton={"เพิ่มพนักงาน"}
@@ -139,7 +113,7 @@ const OverviewDriverPage = () => {
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>
 						<WarningIcon />
-						<span>ยืนยันลบข้อมูลพนักงานขับรถ <br /> ชื่อ {MOCKUP_DRIVER[deleteDriverIndex].name} หรือไม่ ?</span>
+						<span>ยืนยันลบข้อมูลพนักงานขับรถ <br /> ชื่อ {drivers[deleteDriverIndex]?.name} หรือไม่ ?</span>
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleModal(false)}>ยกเลิก</SecondaryButton>
 							<PrimaryButton onClick={() => setToggleModal(false)}>ยืนยันลบข้อมูล</PrimaryButton>

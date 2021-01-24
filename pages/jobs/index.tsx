@@ -7,8 +7,7 @@ import { PrimaryButton } from "../../components/styles/GlobalComponents"
 import NavigationBar from "../../components/common/NavigationBar"
 import { getAllJobs } from "../../components/utilities/apis"
 import { JobDocument } from "../../entities/interface/job"
-import { useRecoilValue, useSetRecoilState } from "recoil"
-import { resourceCreatedState } from "../../store/atoms/overviewPageState"
+import { useRecoilValue } from "recoil"
 import { alertPropertyState } from "../../store/atoms/alertPropertyState"
 import Alert from "../../components/common/Alert"
 import { userInfoState } from '../../store/atoms/userInfoState'
@@ -95,29 +94,18 @@ const JobsPage = () => {
 	const router = useRouter()
 	const [jobs, setJobs] = useState([])
 	const userInfo = useRecoilValue(userInfoState)
-	const createdStatus = useRecoilValue(resourceCreatedState)
-	const setAlertProperty = useSetRecoilState(alertPropertyState)
+	const alertStatus = useRecoilValue(alertPropertyState)
 
 	useEffect(() => {
 		getAllJobs((jobs: JobDocument[]) => setJobs(jobs))
 	},[])
 
-	useEffect(() => {
-		setAlertProperty({
-			type: createdStatus,
-			isShow: Boolean(createdStatus)
-		})
-	}, [createdStatus])
-
 	return (
 		<>
-			{
-				createdStatus &&
-				<Alert>
-					{createdStatus === "success" ? "สร้างงานสำเร็จ" : "สร้างงานไม่สำเร็จ"}
-				</Alert>
-			}
-			<NavigationBar />
+			<Alert>
+				{alertStatus.type === "success" ? "เพิ่มงานสำเร็จ" : "เพิ่มงานสำเร็จ"}
+			</Alert>
+			<NavigationBar activeIndex={1} />
 			{
 				userInfo?.role === "shipper" && 
 					<AddJob onClick={() => router.push("/jobs/add/1")}>

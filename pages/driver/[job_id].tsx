@@ -11,10 +11,11 @@ import { MapInterface } from "../../entities/interface/googlemaps"
 import { RightArrowLine } from '../../components/common/Icons'
 import Progress from '../../components/common/Progress'
 import { JOB_STATUS_CODE } from '../../data/jobs'
-import DetailSection from '../../components/common/DetailSection'
+import JobDetailsSection from '../../components/common/JobDetailsSection'
 import Modal from '../../components/common/Modal'
 import InputComponent from '../../components/common/InputComponent'
 import { jobDocumentState } from '../../store/atoms/jobDocumentState'
+import { jobDetailsState } from '../../store/atoms/jobDetailsState'
 
 const JobDocumentContainer = styled.div`
 	margin: 1.8rem 2rem;
@@ -82,11 +83,11 @@ const DriverPage = () => {
 	const router = useRouter()
 	const jobID = router.query.job_id as string
 	const [driverTel, setDriverTel] = useState("")
-	const [jobDocument, setJobDocument] = useRecoilState(jobDocumentState)
+	const [jobDetails, setJobDetails] = useRecoilState<JobDocument>(jobDetailsState)
 	const [toggleModal, setToggleModal] = useState(true)
 
 	const changeStatus = async () => {
-		const newStatus = JOB_STATUS_CODE[jobDocument.status]?.next
+		const newStatus = JOB_STATUS_CODE[jobDetails.status]?.next
 		const response = await updateStatusByDriver({
 			driver_tel: driverTel,
 			jobinfo: { 
@@ -94,24 +95,24 @@ const DriverPage = () => {
 			},
 			job_id: jobID
 		})
-		setJobDocument({
-			...jobDocument,
+		setJobDetails({
+			...jobDetails,
 			status: newStatus
 		})
 	}
 
 	const confirmDriverTel = () => {
-		getJobDetailsByID(jobID, (JobDocument: JobDocument) => {
-			setJobDocument(jobDocument)
+		getJobDetailsByID(jobID, (jobDocument: JobDocument) => {
+			setJobDetails(jobDocument)
 			setToggleModal(false)
 			initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
 				const pickupLatLng = {
-					latitude: JobDocument.pickup_location.latitude,
-					longitude: JobDocument.pickup_location.longitude
+					latitude: jobDocument.pickup_location.latitude,
+					longitude: jobDocument.pickup_location.longitude
 				}
 				const dropoffLatLng = {
-					latitude: JobDocument.dropoff_location.latitude,
-					longitude: JobDocument.dropoff_location.longitude
+					latitude: jobDocument.dropoff_location.latitude,
+					longitude: jobDocument.dropoff_location.longitude
 				} 
 				route(pickupLatLng, dropoffLatLng, routeMap)
 			})
@@ -122,40 +123,32 @@ const DriverPage = () => {
 		<div>
 			<Header>
 				<JobTitle>
-					งาน <span>{jobDocument.pickup_location.province}</span>
+					งาน <span>{jobDetails.pickup_location.province}</span>
 					<RightArrowLine />
-					<span>{jobDocument.dropoff_location.province}</span>
+					<span>{jobDetails.dropoff_location.province}</span>
 				</JobTitle>
 			</Header>
 			<Map id="route-map" />
 			<JobDocumentContainer>
-				{jobDocument.status && (
+				{jobDetails.status && (
 					<Progress
-						currentStep={JOB_STATUS_CODE[jobDocument.status]?.status_name}
-						nextStep={JOB_STATUS_CODE[JOB_STATUS_CODE[jobDocument.status]?.next]?.status_name}
-						percent={JOB_STATUS_CODE[jobDocument.status]?.progress / 6}
+						currentStep={JOB_STATUS_CODE[jobDetails.status]?.status_name}
+						nextStep={JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}
+						percent={JOB_STATUS_CODE[jobDetails.status]?.progress / 6}
 						label="สถานะ"
 					/>
 				)}
 				{
-				jobDocument.status !== 800 && 
+				jobDetails.status !== 800 && 
 					<ChangeStatusContainer>
 						กดปุ่มเพื่อเปลี่ยนสถานะ
-						<PrimaryButton onClick={changeStatus}>{JOB_STATUS_CODE[JOB_STATUS_CODE[jobDocument.status]?.next]?.status_name}</PrimaryButton>
+						<PrimaryButton onClick={changeStatus}>{JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}</PrimaryButton>
 					</ChangeStatusContainer>
 				}
-				<DetailSection />
-				<CarrierDetailsContainer>
-					<Detail>
-						ขนส่งโดย <span>{jobDocument.carrier_display_name}</span>
-					</Detail>
-					<Detail>
-						พนักงานขับรถ <span>{jobDocument.driver_name}</span>
-					</Detail>
-					<Detail>
-						ทะเบียนรถ <span>{jobDocument.license_number}</span>
-					</Detail>
-				</CarrierDetailsContainer>
+				<JobDetailsSection 
+					isShowAutoPrice={false}
+					isShowFooterDetails={false}
+				/>
 				<ButtonContainer>
 					<SecondaryButtonCustom>แจ้งปัญหา</SecondaryButtonCustom>
 					<SecondaryButtonCustom>ติดต่อผู้ส่ง</SecondaryButtonCustom>

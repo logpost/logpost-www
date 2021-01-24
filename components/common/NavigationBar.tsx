@@ -6,6 +6,11 @@ import { userInfoState } from "../../store/atoms/userInfoState";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { getUserInfo } from "../utilities/tokenHelper";
+import useAlert from "../../hooks/useAlert";
+
+interface NavBarInterface {
+    activeIndex: number
+}
 
 interface NavBarItemInterface {
     isActive: boolean;
@@ -47,15 +52,21 @@ const NavBarItem = styled.button<NavBarItemInterface>`
     }
 `;
 
-const NavigationBar = () => {
+const NavigationBar = (props: NavBarInterface) => {
+    const { activeIndex } = props
     const router = useRouter();
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-    const currentPath = router.pathname;
+    const setAlert = useAlert()
 
     useEffect(() => {
         const decodedUserInfo = getUserInfo();
         setUserInfo(decodedUserInfo);
     }, []);
+
+    const changePage = (route: string) => {
+        setAlert(false, "")
+        router.push(route)
+    }
 
     return (
         <>
@@ -63,23 +74,23 @@ const NavigationBar = () => {
                 <NavBarContainer>
                     <NavBarItem
                         onClick={() =>
-                            router.push(`/${userInfo.role}/jobs?status=all`)
+                           changePage(`/${userInfo.role}/jobs?status=all`)
                         }
-                        isActive={currentPath === `/${userInfo.role}/jobs`}
+                        isActive={activeIndex === 0}
                     >
                         <JobIcon />
                         งานของฉัน
                     </NavBarItem>
                     <NavBarItem
-                        onClick={() => router.push(`/jobs`)}
-                        isActive={currentPath === `/jobs`}
+                        onClick={() => changePage(`/jobs`)}
+                        isActive={activeIndex === 1}
                     >
                         <SearchIconLarge />
                         ค้นหางาน
                     </NavBarItem>
                     <NavBarItem
-                        onClick={() => router.push(`/${userInfo.role}/profile`)}
-                        isActive={currentPath === `/${userInfo.role}/profile`}
+                        onClick={() => changePage(`/${userInfo.role}/profile`)}
+                        isActive={activeIndex === 2}
                     >
                         <PersonIcon />
                         บัญชีของฉัน

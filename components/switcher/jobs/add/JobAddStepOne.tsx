@@ -88,6 +88,7 @@ const JobAddStepOne = (props: JobAddInterface) => {
 			dropoff_location: getAddressFromPlace(place.dropoff),
 			pickup_date: stepOneDetails.pickup_date,
 			dropoff_date: stepOneDetails.dropoff_date,
+			duration: stepOneDetails.duration,
 			distance: stepOneDetails.distance,
 			geocoder_result: place
 		})
@@ -99,11 +100,11 @@ const JobAddStepOne = (props: JobAddInterface) => {
 	}, [])
 
 	useEffect(() => {
-		const setRouteDistance = (value: number) => setStepOneDetails({...stepOneDetails, distance: value})
+		const setRouteDetails = (distance: number, duration: number) => setStepOneDetails({...stepOneDetails, distance, duration})
 		if (place.pickup && place.dropoff && routeMap.map) {
 			const pickupLatLng = place.pickup.geometry.location
 			const dropoffLatLng = place.dropoff.geometry.location
-			route(pickupLatLng, dropoffLatLng, routeMap, setRouteDistance)
+			route(pickupLatLng, dropoffLatLng, routeMap, setRouteDetails)
 		}
 	}, [place, routeMap])
 
