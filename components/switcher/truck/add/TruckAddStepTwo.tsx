@@ -6,8 +6,6 @@ import SelectComponent from '../../../common/SelectComponent'
 import { GASOLINE_LIST } from '../../../../data/carrier'
 import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHeader, ButtonGroupContainer, ButtonItem } from '../../../styles/GlobalComponents'
 import { createTruck } from '../../../utilities/apis'
-import { useSetRecoilState } from 'recoil'
-import { resourceCreatedState } from '../../../../store/atoms/overviewPageState'
 import useAlert from '../../../../hooks/useAlert'
 
 const TruckAddStepTwo = ({ details }) => {

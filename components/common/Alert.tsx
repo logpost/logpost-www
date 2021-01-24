@@ -1,9 +1,8 @@
-import React, { useState, FunctionComponent, useEffect } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
 import { useRecoilValue, useResetRecoilState } from 'recoil'
 import styled from "styled-components"
 import { CancelIcon, ErrorIcon, SuccessIcon, WarningIcon } from './Icons'
 import { alertPropertyState } from '../../store/atoms/alertPropertyState'
-import { useRecoilState } from 'recoil'
 
 const ALERT_ICON = {
 	"success": <SuccessIcon />,

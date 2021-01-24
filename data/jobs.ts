@@ -70,8 +70,49 @@ const JOB_STATUS_CODE = {
 	},
 }
 
+const DEFAULT_JOB = {
+	pickup_location: {
+		address: "",
+		district: "",
+		province: "",
+		zipcode: "",
+		latitude: null,
+		longitude: null
+	},
+	dropoff_location: {
+		address: "",
+		district: "",
+		province: "",
+		zipcode: "",
+		latitude: null,
+		longitude: null
+	},
+	pickup_date: new Date,
+	dropoff_date: new Date,
+	weight: undefined,
+	carrier_specification: { 
+		truck: {
+			age: undefined,
+			property: {
+				type: "รถ 4 ล้อ",
+				option: "ตู้ทึบ",
+			}
+		},
+		driver: {
+			driver_license_type: "ประเภท 1"
+		}
+	},
+	product_type: "",
+	offer_price: undefined,
+	auto_price: undefined,
+	distance: undefined,
+	duration: undefined,
+	permission: "public",
+}
+
 export {
 	MONTHS,
 	JOB_STATUS_CODE,
-	SHORT_MONTHS
+	SHORT_MONTHS,
+	DEFAULT_JOB
 }

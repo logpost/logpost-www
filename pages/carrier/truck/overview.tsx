@@ -13,7 +13,6 @@ import { TruckDocument, TruckTable } from '../../../entities/interface/truck'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { tableDataState } from '../../../store/atoms/tableState'
 import Alert from '../../../components/common/Alert'
-import { resourceCreatedState } from '../../../store/atoms/overviewPageState'
 import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
 
 const ModalContent = styled.div`

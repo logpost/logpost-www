@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { DEFAULT_JOB } from '../../data/jobs';
 
 export const jobDocumentState = atom({
 	key: 'jobDocument',
@@ -10,41 +11,6 @@ export const jobDocumentState = atom({
 		driver_name: "",
 		license_number: "",
 		status: 100,
-		pickup_location: {
-			address: "",
-			district: "",
-			province: "",
-			zipcode: "",
-			latitude: null,
-			longitude: null
-		},
-		dropoff_location: {
-			address: "",
-			district: "",
-			province: "",
-			zipcode: "",
-			latitude: null,
-			longitude: null
-		},
-		pickup_date: new Date,
-		dropoff_date: new Date,
-		weight: 0,
-		carrier_specification: { 
-			truck: {
-				age: 5,
-				property: {
-					type: "รถ 4 ล้อ",
-					option: "ตู้ทึบ",
-				}
-			},
-			driver: {
-				driver_license_type: "ประเภท 1",
-			}
-		},
-		product_type: "ไม้",
-		offer_price: 8000,
-		auto_price: 4000,
-		distance: 0,
-		permission: "public"
+		...DEFAULT_JOB
 	}, 
 });

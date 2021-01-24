@@ -6,8 +6,6 @@ import SelectComponent from '../../../components/common/SelectComponent'
 import { DRIVER_LICENSE_TYPE } from '../../../data/carrier'
 import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHeader } from '../../../components/styles/GlobalComponents'
 import { createDriver } from '../../../components/utilities/apis'
-import { useSetRecoilState } from 'recoil'
-import { resourceCreatedState } from '../../../store/atoms/overviewPageState'
 import useAlert from '../../../hooks/useAlert'
 
 const FormHeaderCustom = styled(FormHeader)`

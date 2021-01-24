@@ -40,7 +40,7 @@ export const route = (
     originPlace: google.maps.LatLng | LatLng,
     destinationPlace: google.maps.LatLng | LatLng,
     map: MapInterface,
-    setDistance?: (distance: number) => void
+    setRouteDetails?: (distance: number, duration: number) => void
 ): void => {
     loader.load().then(() => {
         const travelMode = google.maps.TravelMode.DRIVING;
@@ -75,10 +75,11 @@ export const route = (
             (response, status) => {
                 if (status === "OK") {
                     directionsRenderer.setDirections(response);
-                    if (setDistance !== undefined) {
+                    if (setRouteDetails !== undefined) {
                         const distance =
                             response.routes[0].legs[0].distance.value / 1000;
-                        setDistance(distance);
+                        const duration = response.routes[0].legs[0].duration.value; // seconds
+                        setRouteDetails(distance, duration);
                     }
                 } else {
                     window.alert("Directions request failed due to " + status);

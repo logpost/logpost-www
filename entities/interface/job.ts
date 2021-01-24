@@ -22,6 +22,7 @@ export interface JobDetails {
 	auto_price: number
 	description?: string
 	distance: number
+	duration: number
 	permission: string
 	waiting_time?: number
 	geocoder_result?: PlaceInterface

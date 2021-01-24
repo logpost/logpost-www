@@ -20,7 +20,6 @@ import { JOB_STATUS_CODE } from '../../../data/jobs';
 import { jobDetailsState } from '../../../store/atoms/jobDetailsState';
 import { JobDocument } from '../../../entities/interface/job';
 import { MapInterface } from '../../../entities/interface/googlemaps';
-import { resourceCreatedState } from '../../../store/atoms/overviewPageState';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userInfoState } from '../../../store/atoms/userInfoState';
 import { useRouter } from 'next/router';
