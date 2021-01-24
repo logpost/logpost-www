@@ -186,7 +186,7 @@ const createDriver = async (data: DriverDetails):Promise<number|void> => {
 	})
 }
 
-const updateJob = async (data) => {
+const updateJob = async (data: Object) => {
 	return await authorizationHandler(async () => {
 		try {
 			const res = await axios.put(`${JOB_URL}/update`, data,
@@ -198,7 +198,12 @@ const updateJob = async (data) => {
 	})
 }
 
-const updateStatusByDriver = async (data) => {
+const updateStatusByDriver = async (data:{
+	driver_tel: string,
+	jobinfo: { 
+		status: number
+	},
+	job_id: string}) => {
 	return await authorizationHandler(async () => {
 		try {
 			const res = await axios.put(`${JOB_URL}/driving/status`, data)
@@ -231,6 +236,18 @@ const getMyJob = async (next: (jobs: JobDocument[]) => void) => {
 	})
 }
 
+const changeEmail = async (data: { email: string }) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.put(`${ACCOUNT_URL}/change/email`, data,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
 export {
 	signup,
 	login,
@@ -249,5 +266,6 @@ export {
 	pickJob,
 	updateJob,
 	updateStatusByDriver,
-	getMyJob
+	getMyJob,
+	changeEmail
 }

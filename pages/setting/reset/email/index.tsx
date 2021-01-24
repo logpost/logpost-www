@@ -8,6 +8,7 @@ import {
 } from "../../../../components/styles/GlobalComponents"
 import InputComponent from "../../../../components/common/InputComponent"
 import { useRouter } from "next/router"
+import { changeEmail } from "../../../../components/utilities/apis"
 
 const EmailSettingPage = () => {
 	const router = useRouter()
@@ -19,18 +20,11 @@ const EmailSettingPage = () => {
 	}
 
 	const resetEmail = () => {
-		console.log(email)
+		changeEmail({ email })
 		router.push({
 			pathname: '/alert/confirm/email',
-			query: { email: protectEmail(email) },
+			query: { email: email },
 		})
-	}
-
-	const protectEmail = (email: string) => {
-		const splitted = email.split("@")
-		const head = splitted[0].substring(0, 4)
-		const tail = splitted[1]
-		return head + "•••@" + tail
 	}
 
 	return (
