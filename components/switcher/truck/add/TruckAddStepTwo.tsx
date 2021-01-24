@@ -11,7 +11,7 @@ import useAlert from '../../../../hooks/useAlert'
 const TruckAddStepTwo = ({ details }) => {
 	const router = useRouter()
 	const [stepTwoDetails, setStepTwoDetails] = useState(details)
-	const setAlert = useAlert()
+	const { setAlert } = useAlert()
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value

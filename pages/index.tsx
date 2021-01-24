@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { LogpostIcon } from "../components/common/Icons";
@@ -55,7 +55,13 @@ const TextButtonCustom = styled(TextButton)`
 const Home = () => {
     const router = useRouter();
 
-    const handleClick = (e, path: string) => {
+    // useEffect(() => {
+    //     if (localStorage.getItem("access_token") !== null) {
+    //         router.push("/jobs");
+    //     }
+    // }, []);
+
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>, path: string) => {
         e.preventDefault();
         router.push(`/signup/${path}`);
     };
@@ -67,10 +73,10 @@ const Home = () => {
                 แหล่งรวมงานขนส่ง
             </LogoContainer>
             <SignUpContainer>
-                <PrimaryButtonCustom onClick={(e) => handleClick(e, "shipper")}>
+                <PrimaryButtonCustom onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "shipper")}>
                     ลงทะเบียนผู้ส่ง
                 </PrimaryButtonCustom>
-                <PrimaryButtonCustom onClick={(e) => handleClick(e, "carrier")}>
+                <PrimaryButtonCustom onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "carrier")}>
                     ลงทะเบียนขนส่ง
                 </PrimaryButtonCustom>
                 <TextButtonCustom onClick={() => router.push("/login")}>

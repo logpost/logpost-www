@@ -1,8 +1,8 @@
-import { useSetRecoilState } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { alertPropertyState } from '../store/atoms/alertPropertyState'
 
 const useAlert = () => {
-    const setAlertStatus = useSetRecoilState(alertPropertyState)
+    const [alertStatus, setAlertStatus] = useRecoilState(alertPropertyState)
 
     const setAlert = (isAlert: boolean, alertType: string) => {
         setAlertStatus({
@@ -11,7 +11,7 @@ const useAlert = () => {
         })
     }
 
-    return setAlert
+    return { alertStatus, setAlert }
 }
 
 export default useAlert

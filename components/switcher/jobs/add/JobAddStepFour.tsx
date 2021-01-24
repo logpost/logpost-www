@@ -35,7 +35,7 @@ const JobAddStepFour = (props: { details: JobDetails }) => {
 	const router = useRouter()
 	const { details } = props
 	const setDetailsState = useSetRecoilState(jobDetailsState)
-	const setAlert = useAlert()
+	const { setAlert } = useAlert()
 
 	const submitDetails = async () => {
 		const {geocoder_result, ...jobDetails} = details
