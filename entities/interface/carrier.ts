@@ -19,13 +19,13 @@ export interface JobPickerInterface {
 }
 
 export interface CarrierDocument extends AccountInterface {
-    carrier_id: string
-    tel: string
-    address: string
-    role: string 
-    account_description: string
-    juristic_id: string
-    verified: boolean
-    trucks: TruckDocument[]
+  carrier_id: string
+  tel: string
+  address: string
+  role: string 
+  account_description: string
+  juristic_id: string
+  verified: boolean
+  trucks: TruckDocument[]
 	drivers:  DriverDocument[]
 }

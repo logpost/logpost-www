@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { AccountInterface } from '../../entities/interface/account'
+import { AccountInterface, ProfileInterface } from '../../entities/interface/account'
 import { JobPickerInterface } from '../../entities/interface/carrier'
 import { AuthInterface } from '../../entities/interface/common'
 import { DriverDocument, DriverDetails } from '../../entities/interface/driver'
@@ -126,9 +126,18 @@ const pickJob = async (jobPicker: JobPickerInterface) => {
 	})
 }
 
-const getCarrierProfile = async (username: string, next: (carrierProfile) => void) => {
+const getCarrierProfile = async (username: string, next: (carrierProfile: ProfileInterface) => void) => {
 	try {
 		const res = await axios.get(`${CARRIER_URL}/carrier/profile/${username}`)
+		next(res.data)
+	} catch (error) {
+		console.log(error.response)
+	}
+}
+
+const getShipperProfile = async (username: string, next: (shipperProfile: ProfileInterface) => void) => {
+	try {
+		const res = await axios.get(`${SHIPPER_URL}/shipper/profile/${username}`)
 		next(res.data)
 	} catch (error) {
 		console.log(error.response)
@@ -198,6 +207,30 @@ const updateJob = async (data: Object) => {
 	})
 }
 
+const updateShipperProfile = async (data: Object) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.put(`${SHIPPER_URL}/shipper/profile/update`, data,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
+const updateCarrierProfile = async (data: Object) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.put(`${CARRIER_URL}/carrier/profile/update`, data,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
 const updateStatusByDriver = async (data:{
 	driver_tel: string,
 	jobinfo: { 
@@ -212,15 +245,6 @@ const updateStatusByDriver = async (data:{
 			throw error	
 		}
 	})
-}
-
-const getShipperProfile = async (username: string, next: (shipperProfile) => void) => {
-	try {
-		const res = await axios.get(`${SHIPPER_URL}/shipper/profile/${username}`)
-		next(res.data)
-	} catch (error) {
-		console.log(error.response)
-	}
 }
 
 const getMyJob = async (next: (jobs: JobDocument[]) => void) => {
@@ -284,5 +308,7 @@ export {
 	updateStatusByDriver,
 	getMyJob,
 	changeEmail,
-	changePassword
+	changePassword,
+	updateShipperProfile,
+	updateCarrierProfile
 }

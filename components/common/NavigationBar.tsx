@@ -56,7 +56,7 @@ const NavigationBar = (props: NavBarInterface) => {
     const { activeIndex } = props
     const router = useRouter();
     const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-    const setAlert = useAlert()
+    const { setAlert } = useAlert()
 
     useEffect(() => {
         const decodedUserInfo = getUserInfo();

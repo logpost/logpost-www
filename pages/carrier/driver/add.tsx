@@ -33,7 +33,7 @@ const AddDriverPage = () => {
 		tel: true
 	}
 	const [validField, setValidField] = useState(initialValidField)
-	const setAlert = useAlert()
+	const { setAlert } = useAlert()
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let value = e.target.value

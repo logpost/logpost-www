@@ -184,7 +184,7 @@ const GetJobPage = () => {
 		truck: null,
 		driver: null,
 	})
-	const setAlert = useAlert()
+	const { setAlert } = useAlert()
 
 	const driverColumns = [
 		{
