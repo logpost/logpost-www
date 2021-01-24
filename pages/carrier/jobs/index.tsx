@@ -43,7 +43,7 @@ const JobStatusPage = () => {
 
 	return (
 		<div>
-			<NavigationBar />
+			<NavigationBar activeIndex={0} />
 			<ScrollableTab
 				currentTab={status || "all"}
 				setCurrentTab={changeStatus}

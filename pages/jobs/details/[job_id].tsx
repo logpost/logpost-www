@@ -8,7 +8,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { alertPropertyState } from '../../../store/atoms/alertPropertyState';
 import {
-	Detail,
 	DetailRow,
 	FormActions,
 	JobTitle,
@@ -76,53 +75,6 @@ const ModalContent = styled.div`
 	}
 `
 
-const HorizontalLine = styled.div`
-    height: auto;
-    background-color: hsl(212, 28%, 88%);
-    width: 0.2rem;
-    margin: 0 0.4rem;
-`;
-
-const JobPrice = styled.div<{ rowLayout: boolean }>`
-    margin-top: 2rem;
-    display: flex;
-    justify-content: space-between;
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: hsl(0, 0%, 66%);
-
-    ${Detail} {
-        justify-content: flex-end;
-    }
-
-    > span {
-        display: flex;
-        flex-direction: ${(props) => (props.rowLayout ? "row" : "column")};
-        justify-content: ${(props) =>
-            props.rowLayout ? "space-between" : "flex-end"};
-        align-items: flex-end;
-        margin-left: ${(props) => (props.rowLayout ? 0 : "1rem")};
-        width: ${(props) => (props.rowLayout ? "100%" : "auto")};
-
-        > span {
-            white-space: nowrap;
-        }
-    }
-`;
-
-const Price = styled.div`
-    font-size: 2rem;
-    color: white;
-    padding: 0.4rem 1.6rem;
-    font-weight: 500;
-    border-radius: 6px;
-    background-color: hsl(212, 28%, 28%);
-    height: fit-content;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-`;
-
 const SecondaryButtonCustom = styled(SecondaryButton)`
     padding: 0.6rem 0;
     width: 38%;
@@ -146,32 +98,6 @@ const ButtonContainer = styled.div`
         margin-right: 1.6rem;
     }
 `;
-
-const PriceDetailsContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-`;
-
-const PriceItem = styled.div`
-	font-size: 1.6rem;
-	color: hsl(218, 9%, 25%);
-	font-weight: 500;
-
-	> span {
-		font-weight: 500;
-		font-size: 1.2rem;
-		color: hsl(0, 0%, 66%);
-	}
-
-	div {
-		margin-top: 1.1rem;
-
-		span {
-			color: hsl(0, 0%, 51%);
-		}
-	}
-`
 
 const DriverURLContainer = styled.div`
     position: fixed;
@@ -219,13 +145,6 @@ const URLContainer = styled.div`
     }
 `;
 
-const DisplayName = styled.span`
-    max-width: 10rem;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-`;
-
 const Map = styled.div`
     height: 45rem;
     width: 100%;
@@ -241,8 +160,7 @@ const JobDetailPage = () => {
 	const router = useRouter()
 	const driverURLRef = useRef(null)
 	const [toggleModal, setToggleModal] = useState(false)
-	const createdStatus = useRecoilValue(resourceCreatedState)
-	const [alertProperty, setAlertProperty] = useRecoilState(alertPropertyState)
+	const alertStatus = useRecoilValue(alertPropertyState)
 
 	const isJobHasCarrier = jobDetails.status > 100
 	const isJobStarted = jobDetails.status >= 300
@@ -279,13 +197,6 @@ const JobDetailPage = () => {
 		}
 	}, [router.query.job_id])
 
-	useEffect(() => {
-		setAlertProperty({
-			type: createdStatus,
-			isShow: Boolean(createdStatus)
-		})
-	}, [createdStatus])
-
 	const startJob = async () => {
 		const response = await updateJob({
 			jobinfo: { 
@@ -298,13 +209,10 @@ const JobDetailPage = () => {
 
 	return (
 		<PageContainer bottomSpace={isLinkGenerated}>
-			{
-				alertProperty.isShow &&
-				<Alert>
-					{createdStatus === "success" ? "รับงานสำเร็จ" : "รับงานไม่สำเร็จ"}
-				</Alert>
-			}
-			<NavigationBar />
+			<Alert>
+				{alertStatus.type === "success" ? "เลือกงานสำเร็จ" : "เลือกงานไม่สำเร็จ"}
+			</Alert>
+			<NavigationBar activeIndex={1} />
 			{isLinkGenerated && (
 				<DriverURLContainer>
 					<div>

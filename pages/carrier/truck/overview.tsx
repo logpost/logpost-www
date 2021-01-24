@@ -6,7 +6,6 @@ import { useRouter } from "next/router"
 import { WarningIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
 import Modal from '../../../components/common/Modal'
 import { TRUCK_STATUS_LIST } from '../../../data/carrier'
-import { MOCKUP_TRUCK } from '../../../data/carrier.mock'
 import ResourceOverview from '../../../components/common/ResourceOverview'
 import { useEffect } from 'react'
 import { getTruck } from '../../../components/utilities/apis'
@@ -47,9 +46,8 @@ const OverviewTruckPage = () => {
 	const [deleteTruckIndex, setDeleteTruckIndex] = useState(0)
 	const [toggleModal, setToggleModal] = useState(false)
 	const [trucks, setTrucks] = useState<TruckDocument[]>([])
-	const createdStatus = useRecoilValue(resourceCreatedState)
+	const alertStatus = useRecoilValue(alertPropertyState)
 	const setTruckTableData = useSetRecoilState(tableDataState)
-	const setAlertProperty = useSetRecoilState(alertPropertyState)
 	const router = useRouter()
 
 	const toggleDeleteModal = (index: number) => {
@@ -111,22 +109,12 @@ const OverviewTruckPage = () => {
 		})
 	}, [])
 
-	useEffect(() => {
-		setAlertProperty({
-			type: createdStatus,
-			isShow: Boolean(createdStatus)
-		})
-	}, [createdStatus])
-
 	return (
 		<>
-			{
-				createdStatus &&
-				<Alert>
-					{createdStatus === "success" ? "เพิ่มรถบรรทุกสำเร็จ" : "เพิ่มรถบรรทุกไม่สำเร็จ"}
-				</Alert>
-			}
-			<NavigationBar />
+			<Alert>
+				{alertStatus.type === "success" ? "เพิ่มรถบรรทุกสำเร็จ" : "เพิ่มรถบรรทุกไม่สำเร็จ"}
+			</Alert>
+			<NavigationBar activeIndex={2} />
 			<ResourceOverview 
 				headerTitle={"รถบรรทุก"}
 				headerButton={"เพิ่มรถ"}
@@ -138,7 +126,7 @@ const OverviewTruckPage = () => {
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>
 						<WarningIcon />
-						<span>ยืนยันลบข้อมูลรถ <br /> ทะเบียน {MOCKUP_TRUCK[deleteTruckIndex].license_number} หรือไม่ ?</span>
+						<span>ยืนยันลบข้อมูลรถ <br /> ทะเบียน {trucks[deleteTruckIndex]?.license_number} หรือไม่ ?</span>
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleModal(false)}>ยกเลิก</SecondaryButton>
 							<PrimaryButton onClick={() => setToggleModal(false)}>ยืนยันลบข้อมูล</PrimaryButton>

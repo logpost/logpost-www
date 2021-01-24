@@ -48,7 +48,7 @@ const CarrierProfilePage = () => {
 
 	return (
 		<>
-			<NavigationBar />
+			<NavigationBar activeIndex={2} />
 			<Header enabledSetting={true}>
 				{carrierInfo.displayName}
       		</Header>

@@ -8,11 +8,12 @@ import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHe
 import { createTruck } from '../../../utilities/apis'
 import { useSetRecoilState } from 'recoil'
 import { resourceCreatedState } from '../../../../store/atoms/overviewPageState'
+import useAlert from '../../../../hooks/useAlert'
 
 const TruckAddStepTwo = ({ details }) => {
 	const router = useRouter()
 	const [stepTwoDetails, setStepTwoDetails] = useState(details)
-	const setCreateStatus = useSetRecoilState(resourceCreatedState)
+	const setAlert = useAlert()
 
 	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
@@ -26,9 +27,9 @@ const TruckAddStepTwo = ({ details }) => {
 	const submitDetails = async () => {
 		const response = await createTruck(stepTwoDetails)
 		if (response !== 200) {
-			setCreateStatus("error")
+			setAlert(true, "error")
 		} else {
-			setCreateStatus("success")
+			setAlert(true, "success")
 		}
 		router.push(`/carrier/truck/overview`, undefined, { shallow: true })
 	}

@@ -5,20 +5,18 @@ import {
 	FormActions,
 	PrimaryButton,
 	SecondaryButton,
-	Detail,
 	FormHeader
 } from "../../../styles/GlobalComponents"
 import JobDetailsSection from "../../../common/JobDetailsSection"
 import { useRouter } from "next/router"
 import { createJob } from "../../../utilities/apis"
 import { JobDetails } from "../../../../entities/interface/job"
-import { dateFormatter, timeFormatter } from "../../../utilities/helper"
 import { useSetRecoilState } from 'recoil'
-import { resourceCreatedState } from '../../../../store/atoms/overviewPageState'
 import { initMap, route } from "../../../utilities/googlemaps"
 import { MapInterface } from '../../../../entities/interface/googlemaps'
 import { jobDetailsState } from '../../../../store/atoms/jobDetailsState'
 import { costCalculator } from '../../../utilities/costCalculater'
+import useAlert from "../../../../hooks/useAlert";
 
 const Map = styled.div`
     height: 45rem;
@@ -33,47 +31,20 @@ const JobDetailsContainer = styled.div`
     margin: 1.8rem 2rem;
 `;
 
-const JobPrice = styled.div`
-    margin-top: 2rem;
-    display: flex;
-    justify-content: space-between;
-    font-size: 1.4rem;
-    font-weight: 500;
-    color: hsl(0, 0%, 66%);
-
-    ${Detail} {
-        justify-content: flex-end;
-    }
-
-    > span {
-        align-self: flex-end;
-    }
-`;
-
-const Price = styled.div`
-    font-size: 2rem;
-    color: white;
-    padding: 0.4rem 1.6rem;
-    font-weight: 500;
-    border-radius: 6px;
-    background-color: hsl(212, 28%, 28%);
-    height: fit-content;
-`;
-
 const JobAddStepFour = (props: { details: JobDetails }) => {
 	const router = useRouter()
 	const { details } = props
-	const setCreateStatus = useSetRecoilState(resourceCreatedState)
 	const setDetailsState = useSetRecoilState(jobDetailsState)
+	const setAlert = useAlert()
 
 	const submitDetails = async () => {
 		const {geocoder_result, ...jobDetails} = details
 		jobDetails.auto_price = parseInt(costCalculator(jobDetails.distance))
 		const response = await createJob(jobDetails)
 		if (response !== 200) {
-			setCreateStatus("error")
+			setAlert(true, "error")
 		} else {
-			setCreateStatus("success")
+			setAlert(true, "success")
 		}
 		router.push(`/jobs`)
 	}

@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent } from 'react'
+import React, { useState, FunctionComponent, useEffect } from 'react'
 import { useRecoilValue, useResetRecoilState } from 'recoil'
 import styled from "styled-components"
 import { CancelIcon, ErrorIcon, SuccessIcon, WarningIcon } from './Icons'
@@ -60,6 +60,14 @@ const Alert: FunctionComponent = (props) => {
 	const { children } = props
 	const alertProperty = useRecoilValue(alertPropertyState)
 	const discardAlert = useResetRecoilState(alertPropertyState)
+
+	useEffect(() => {
+        if (alertProperty.isShow) {
+            setTimeout(() => {
+                discardAlert()
+            }, 5000)
+        }
+    }, [])
 
 	return (
 		<AlertContainer type={alertProperty.type} isDisplay={alertProperty.isShow}>

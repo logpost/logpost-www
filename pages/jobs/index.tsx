@@ -95,29 +95,18 @@ const JobsPage = () => {
 	const router = useRouter()
 	const [jobs, setJobs] = useState([])
 	const userInfo = useRecoilValue(userInfoState)
-	const createdStatus = useRecoilValue(resourceCreatedState)
-	const setAlertProperty = useSetRecoilState(alertPropertyState)
+	const alertStatus = useRecoilValue(alertPropertyState)
 
 	useEffect(() => {
 		getAllJobs((jobs: JobDocument[]) => setJobs(jobs))
 	},[])
 
-	useEffect(() => {
-		setAlertProperty({
-			type: createdStatus,
-			isShow: Boolean(createdStatus)
-		})
-	}, [createdStatus])
-
 	return (
 		<>
-			{
-				createdStatus &&
-				<Alert>
-					{createdStatus === "success" ? "สร้างงานสำเร็จ" : "สร้างงานไม่สำเร็จ"}
-				</Alert>
-			}
-			<NavigationBar />
+			<Alert>
+				{alertStatus.type === "success" ? "เพิ่มงานสำเร็จ" : "เพิ่มงานสำเร็จ"}
+			</Alert>
+			<NavigationBar activeIndex={1} />
 			{
 				userInfo?.role === "shipper" && 
 					<AddJob onClick={() => router.push("/jobs/add/1")}>

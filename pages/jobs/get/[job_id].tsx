@@ -30,7 +30,7 @@ import { DriverDocument, DriverTable } from "../../../entities/interface/driver"
 import { TruckDocument, TruckTable } from '../../../entities/interface/truck'
 import { trucksState } from '../../../store/atoms/trucksState'
 import { driversState } from '../../../store/atoms/driversState'
-import { resourceCreatedState } from "../../../store/atoms/overviewPageState"
+import useAlert from "../../../hooks/useAlert";
 
 const FormActionsCustom = styled(FormActions)`
     ${PrimaryButton}, ${SecondaryButton} {
@@ -180,11 +180,11 @@ const GetJobPage = () => {
 	const setTableData = useSetRecoilState(tableDataState)
 	const setFilterWord = useSetRecoilState(filterWordState)
 	const [isRadioSelected, setIsRadioSelected] = useState(true)
-	const setCreateStatus = useSetRecoilState(resourceCreatedState)
 	const [carrierDetails, setCarrierDetails] = useState({
 		truck: null,
 		driver: null,
 	})
+	const setAlert = useAlert()
 
 	const driverColumns = [
 		{
@@ -317,16 +317,16 @@ const GetJobPage = () => {
 			driver_id: drivers[parseInt(carrierDetails.driver)].driver_id
 		})
 		if (response !== 200) {
-			setCreateStatus("error")
+			setAlert(true, "error")
 		} else {
-			setCreateStatus("success")
+			setAlert(true, "success")
 		}
 		router.push(`/jobs/details/${jobID}`, undefined, { shallow: true })
 	}
 
 	return (
 		<div>
-			<NavigationBar />
+			<NavigationBar activeIndex={1} />
 			<Header>
 				<JobTitle>
 					รับงาน <span>{jobDetails.pickup_location.province}</span>
