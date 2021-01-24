@@ -15,6 +15,8 @@ export const authorizationHandler = async (fetcher)  => {
 					console.log(error)
 				}
 			} 
+		} else {
+			return error
 		}
 	}
 } 

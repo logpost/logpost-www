@@ -248,6 +248,22 @@ const changeEmail = async (data: { email: string }) => {
 	})
 }
 
+const changePassword = async (
+	data: { 
+		old_password: string,
+		password: string 
+	}) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.put(`${ACCOUNT_URL}/change/password`, data,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
 export {
 	signup,
 	login,
@@ -267,5 +283,6 @@ export {
 	updateJob,
 	updateStatusByDriver,
 	getMyJob,
-	changeEmail
+	changeEmail,
+	changePassword
 }
