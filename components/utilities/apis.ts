@@ -384,6 +384,36 @@ const updateDriverByID = async (id: string, data: DriverDetails) => {
 	})
 }
 
+const deleteTruck = async (id: string) => {
+	return await authorizationHandler(async () => {
+		try {
+			const data = {
+				truck_id: id
+			}
+			const res = await axios.delete(`${CARRIER_URL}/truck/delete`,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }, data})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
+const deleteDriver = async (id: string) => {
+	return await authorizationHandler(async () => {
+		try {
+			const data = {
+				driver_id: id
+			}
+			const res = await axios.delete(`${CARRIER_URL}/driver/delete`,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }, data})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
 export {
 	signup,
 	login,
@@ -412,5 +442,7 @@ export {
 	getTruckByID,
 	updateTruckByID,
 	getDriverByID,
-	updateDriverByID
+	updateDriverByID,
+	deleteDriver,
+	deleteTruck
 }

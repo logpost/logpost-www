@@ -8,9 +8,9 @@ import Modal from '../../../components/common/Modal'
 import { TRUCK_STATUS_LIST } from '../../../data/carrier'
 import ResourceOverview from '../../../components/common/ResourceOverview'
 import { useEffect } from 'react'
-import { getTruck } from '../../../components/utilities/apis'
+import { deleteTruck, getTruck } from '../../../components/utilities/apis'
 import { TruckDocument, TruckTable } from '../../../entities/interface/truck'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
 import { tableDataState } from '../../../store/atoms/tableState'
 import Alert from '../../../components/common/Alert'
 import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
@@ -42,16 +42,27 @@ const ModalContent = styled.div`
 `
 
 const OverviewTruckPage = () => {
-	const [deleteLicenseNumber, setDeleteLicenseNumber] = useState("")
+	const [truckToDelete, setTruckToDelete] = useState<TruckTable>()
 	const [toggleModal, setToggleModal] = useState(false)
 	const [trucks, setTrucks] = useState<TruckDocument[]>([])
 	const alertStatus = useRecoilValue(alertPropertyState)
-	const setTruckTableData = useSetRecoilState(tableDataState)
+	const [truckTableData, setTruckTableData] = useRecoilState(tableDataState)
 	const router = useRouter()
 
-	const toggleDeleteModal = (licenseNumber: string) => {
+	const toggleDeleteModal = (truck: TruckTable) => {
 		setToggleModal(true)
-		setDeleteLicenseNumber(licenseNumber)
+		setTruckToDelete(truck)
+	}
+
+	const deleteSelectedTruck = async () => {
+		const deletedIndex = truckTableData.indexOf(truckToDelete)
+		if (deletedIndex > -1) {
+			const newDriverTableData = truckTableData.slice()
+			newDriverTableData.splice(deletedIndex, 1)
+			setTruckTableData(newDriverTableData)
+		}		
+		const response = await deleteTruck(truckToDelete.truck_id)
+		setToggleModal(false)
 	}
 
 	const navigateToAddTruckPage = () => {
@@ -82,7 +93,7 @@ const OverviewTruckPage = () => {
 			format: (_: number, truck: TruckTable): ReactElement => (
 				<TableRowActions>
 					<button onClick={() => router.push(`/carrier/truck/edit/${truck.truck_id}`)}><EditIcon /></button>
-					<button onClick={() => toggleDeleteModal(truck.license_number)} ><CancelIcon /></button>
+					<button onClick={() => toggleDeleteModal(truck)} ><CancelIcon /></button>
 				</TableRowActions>
 			),
 		},
@@ -126,10 +137,10 @@ const OverviewTruckPage = () => {
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>
 						<WarningIcon />
-						<span>ยืนยันลบข้อมูลรถ <br /> ทะเบียน {deleteLicenseNumber} หรือไม่ ?</span>
+						<span>ยืนยันลบข้อมูลรถ <br /> ทะเบียน {truckToDelete?.license_number} หรือไม่ ?</span>
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleModal(false)}>ยกเลิก</SecondaryButton>
-							<PrimaryButton onClick={() => setToggleModal(false)}>ยืนยันลบข้อมูล</PrimaryButton>
+							<PrimaryButton onClick={deleteSelectedTruck}>ยืนยันลบข้อมูล</PrimaryButton>
 						</FormActions>
 					</ModalContent>
 				</Modal>
