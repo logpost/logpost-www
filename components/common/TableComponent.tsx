@@ -4,6 +4,8 @@ import { TableComponentInterface } from "../../entities/interface/common"
 import { RightArrow, DoubleRightArrow } from "./Icons"
 import { useRecoilValue } from 'recoil'
 import { filterState } from "../../store/atoms/tableState"
+import { TruckTable } from "../../entities/interface/truck"
+import { DriverTable } from "../../entities/interface/driver"
 
 interface CellInterface {
 	width?: string
@@ -129,7 +131,7 @@ const TableComponent = (props: TableComponentInterface) => {
 								return <Header key={cell.id}>{cell.label}</Header>
 							})}
 						</HeaderRow>
-						{data.slice(firstRowOfPage, LastRowOfPage).map((item, index) => {
+						{data.slice(firstRowOfPage, LastRowOfPage).map((item: (TruckTable | DriverTable), index) => {
 							return (
 								<Row key={index}>
 									{columns.map((column) => {
@@ -137,7 +139,7 @@ const TableComponent = (props: TableComponentInterface) => {
 										return (
 											<Cell key={column.id} cellAlign={column.align} width={column.width}>
 												{(column.format &&
-													column.format(index, item[column.id])) ||
+													column.format(index, item)) ||
 													cellValue}
 											</Cell>
 										)

@@ -318,6 +318,102 @@ const changePassword = async (
 	})
 }
 
+const getTruckByID = async (id: string, next: (truck: TruckDocument[]) => void) => {
+	return await authorizationHandler(async () => {
+		try {
+			const query = {
+				query: {
+					truck_id: id,
+				}
+			}
+			const res = await axios.post(`${CARRIER_URL}/truck/filter`, query,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			next(res.data)
+		} catch (error) {
+			throw error	
+		}
+	})
+} 
+
+const updateTruckByID = async (id: string, data: TruckDetails) => {
+	return await authorizationHandler(async () => {
+		try {
+			const body = {
+				truckinfo: data,
+				truck_id: id
+			}
+			const res = await axios.put(`${CARRIER_URL}/truck/update`, body,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
+const getDriverByID = async (id: string, next: (driver: DriverDocument[]) => void) => {
+	return await authorizationHandler(async () => {
+		try {
+			const query = {
+				query: {
+					driver_id: id,
+				}
+			}
+			const res = await axios.post(`${CARRIER_URL}/driver/filter`, query,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			next(res.data)
+		} catch (error) {
+			throw error	
+		}
+	})
+} 
+
+const updateDriverByID = async (id: string, data: DriverDetails) => {
+	return await authorizationHandler(async () => {
+		try {
+			const body = {
+				driverinfo: data,
+				driver_id: id
+			}
+			const res = await axios.put(`${CARRIER_URL}/driver/update`, body,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
+const deleteTruck = async (id: string) => {
+	return await authorizationHandler(async () => {
+		try {
+			const data = {
+				truck_id: id
+			}
+			const res = await axios.delete(`${CARRIER_URL}/truck/delete`,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }, data})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
+const deleteDriver = async (id: string) => {
+	return await authorizationHandler(async () => {
+		try {
+			const data = {
+				driver_id: id
+			}
+			const res = await axios.delete(`${CARRIER_URL}/driver/delete`,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }, data})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
 export {
 	signup,
 	login,
@@ -342,5 +438,11 @@ export {
 	updateShipperProfile,
 	updateCarrierProfile,
 	deleteCarrierUser,
-	deleteShipperUser
+	deleteShipperUser,
+	getTruckByID,
+	updateTruckByID,
+	getDriverByID,
+	updateDriverByID,
+	deleteDriver,
+	deleteTruck
 }
