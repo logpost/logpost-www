@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import styled from "styled-components"
 import { useRouter } from "next/router"
-import InputComponent from '../../../components/common/InputComponent'
-import SelectComponent from '../../../components/common/SelectComponent'
-import { DRIVER_LICENSE_TYPE } from '../../../data/carrier'
-import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHeader } from '../../../components/styles/GlobalComponents'
-import { createDriver } from '../../../components/utilities/apis'
-import useAlert from '../../../hooks/useAlert'
+import { FormActions, PrimaryButton, SecondaryButton, FormInputContainer, FormHeader } from '../../../../components/styles/GlobalComponents'
+import { updateDriverByID, getDriverByID } from '../../../../components/utilities/apis'
+import DriverForm from '../../../../components/common/DriverForm'
+import Alert from '../../../../components/common/Alert'
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from 'recoil'
+import { driverDetailsState, driverValidateState } from '../../../../store/atoms/driverDetailsState'
+import { DriverDocument } from '../../../../entities/interface/driver'
+import useAlert from '../../../../hooks/useAlert'
+import { validateDriverDetails } from '../../../../components/utilities/helper'
 
 const FormHeaderCustom = styled(FormHeader)`
 	padding: 3.4rem 0 3.4rem 3.7rem;
@@ -17,141 +20,58 @@ const FormHeaderCustom = styled(FormHeader)`
 
 const AddDriverPage = () => {
 	const router = useRouter()
-	const [driverDetails, setDriverDetails] = useState({
-		name: "",
-		age: undefined,
-		driver_license: "",
-		driver_license_type: "ประเภท 1",
-		identification_number: "",
-		tel: ""
-	})
-	const initialValidField = {
-		name: true,
-		age: true,
-		driver_license: true,
-		identification_number: true,
-		tel: true
-	}
-	const [validField, setValidField] = useState(initialValidField)
-	const { setAlert } = useAlert()
+	const driverID = router.query.driver_id as string
+	const { alertStatus, setAlert } = useAlert()
+	const [driverDetails, setDriverDetails] = useRecoilState(driverDetailsState)
+	const resetDriverDetails = useResetRecoilState(driverDetailsState)
+	const setDriverValidate = useSetRecoilState(driverValidateState)
 
-	const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		let value = e.target.value
-		if (/^\s/.test(value)) {
-            value = ''
+	useEffect(() => {
+        if (driverID) {
+            getDriverByID(driverID, (driver: DriverDocument[]) => {
+                setDriverDetails(driver[0])
+            })
         }
-		if (e.target.type === "number") {
-			setDriverDetails({ ...driverDetails, [e.target.name]: parseInt(value) })
-		} else {
-			setDriverDetails({ ...driverDetails, [e.target.name]: value })
-		}
-	}
-
-	const validateInput = () => {
-		const copyOfValidField = { ...validField }
-		const isNameValid = (driverDetails.name !== "")
-		const isAgeValid = (driverDetails.age > 18)
-		const isDriverLicenseValid = (driverDetails.driver_license.length === 8)
-		const isIDNumberValid = (driverDetails.identification_number.length === 13)
-		const isTelValid = (/^0[0-9]{9}/.test(driverDetails.tel))
-		const AllInputsValid = (isNameValid && isAgeValid && isDriverLicenseValid && isIDNumberValid && isTelValid)
-		if (AllInputsValid) {
-			setValidField(initialValidField)
-			return true
-		} else {
-			copyOfValidField.name = isNameValid
-			copyOfValidField.age = isAgeValid
-			copyOfValidField.driver_license = isDriverLicenseValid
-			copyOfValidField.identification_number = isIDNumberValid
-			copyOfValidField.tel = isTelValid
-			setValidField(copyOfValidField)
-		}
-	}
+    }, [router.query])
 
 	const submitDetails = async () => {
-		if (validateInput()) {
-			const response = await createDriver(driverDetails)
+		const validateResult = validateDriverDetails(driverDetails)
+		if (validateResult.allInput) {
+			setDriverValidate(validateResult)
+			const response = await updateDriverByID(driverID, driverDetails)
 			if (response !== 200) {
 				setAlert(true, "error")
 			} else {
 				setAlert(true, "success")
 			}
-			router.push(`/carrier/driver/overview`, undefined, { shallow: true })
+		} else {
+			setDriverValidate(validateResult)
 		}
 	}
 
+	const backToOverview = () => {
+		resetDriverDetails()
+		router.push(`/carrier/driver/overview`)
+	}
+
 	return (
-		<div>
+		<>
+			<Alert>
+                {alertStatus.type === "success" ? "แก้ไขข้อมูลสำเร็จ" : "แก้ไขข้อมูลไม่สำเร็จ"}
+            </Alert>
 			<FormHeaderCustom>
-				ข้อมูลพนักงานขับรถ
+				แก้ไขข้อมูลพนักงานขับรถ
 			</FormHeaderCustom>
 			<FormInputContainer>
-				<InputComponent 
-					name="name"
-					labelTH="ชื่อจริง - นามสกุล"
-					labelEN="Name"
-					value={driverDetails.name}
-					handleOnChange={handleOnChange}
-					valid={validField.name}
-				/>
-				<InputComponent 
-					name="identification_number"
-					labelTH="เลขบัตรประชาชน"
-					labelEN="ID Number"
-					value={driverDetails.identification_number}
-					handleOnChange={handleOnChange}
-					valid={validField.identification_number}
-					invalidText="กรุณากรอกเลขบัตรประชาชน 13 หลัก"
-				/>
-				<InputComponent 
-					name="driver_license"
-					labelTH="เลขใบอนุญาตขับขี่"
-					labelEN="Driver License"
-					value={driverDetails.driver_license}
-					handleOnChange={handleOnChange}
-					valid={validField.driver_license}
-					invalidText="กรุณากรอกเลขใบอนุญาตขับขี่ 8 หลัก"
-				/>
-				<InputComponent
-					name="driver_license_type"
-					labelTH="ประเภทใบขับขี่"
-					labelEN="Driver License Type"
-					type="other"
-				>
-					<SelectComponent
-						menuList={DRIVER_LICENSE_TYPE}
-						value={driverDetails.driver_license_type}
-						setValue={(value: string) => setDriverDetails({...driverDetails, driver_license_type: value})}
-					/>
-				</InputComponent>
-				<InputComponent 
-					name="age"
-					type="number"
-					labelTH="อายุ"
-					labelEN="Age"
-					value={driverDetails.age || ""}
-					handleOnChange={handleOnChange}
-					classifier={"ปี"}
-					valid={validField.age}
-					invalidText="พนักงานขับรถต้องมีอายุมากกว่า 18 ปี"
-				/>
-				<InputComponent 
-					name="tel"
-					labelTH="หมายเลขโทรศัพท์"
-					labelEN="Phone Number"
-					value={driverDetails.tel}
-					handleOnChange={handleOnChange}
-					valid={validField.tel}
-					invalidText="กรุณากรอกหมายเลขโทรศัพท์ 10 หลัก"
-				/>
+				<DriverForm />
 				<FormActions>
-					<SecondaryButton onClick={() => router.push(`/carrier/driver/overview`)}>
+					<SecondaryButton onClick={backToOverview}>
 						ยกเลิก
 					</SecondaryButton>
-					<PrimaryButton onClick={submitDetails}>เพิ่มพนักงานขับรถ</PrimaryButton>
+					<PrimaryButton onClick={submitDetails}>บันทึกข้อมูล</PrimaryButton>
 				</FormActions>
 			</FormInputContainer>
-		</div>
+		</>
 	)
 }
 

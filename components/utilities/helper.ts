@@ -1,5 +1,5 @@
 import { SHORT_MONTHS } from "../../data/jobs"
-import { DriverDocument } from "../../entities/interface/driver"
+import { DriverDetails, DriverDocument } from "../../entities/interface/driver"
 import { TruckDocument } from "../../entities/interface/truck"
 import { JobDocument } from '../../entities/interface/job'
 
@@ -102,4 +102,21 @@ export const resourceStatusCount = (
 		})
 	}
 	setValue(countStatus)
+}
+
+export const validateDriverDetails = (driverDetails: DriverDetails) => {
+	const isNameValid = (driverDetails.name !== "")
+	const isAgeValid = (driverDetails.age > 18)
+	const isDriverLicenseValid = (driverDetails.driver_license.length === 8)
+	const isIDNumberValid = (driverDetails.identification_number.length === 13)
+	const isTelValid = (/^0[0-9]{9}/.test(driverDetails.tel))
+	const AllInputsValid = (isNameValid && isAgeValid && isDriverLicenseValid && isIDNumberValid && isTelValid)
+	return {
+		allInput: AllInputsValid,
+		name: isNameValid,
+		age: isAgeValid,
+		driver_license: isDriverLicenseValid,
+		identification_number: isIDNumberValid,
+		tel: isTelValid
+	}
 }

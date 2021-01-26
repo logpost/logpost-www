@@ -349,7 +349,40 @@ const updateTruckByID = async (id: string, data: TruckDetails) => {
 			throw error	
 		}
 	})
+}
+
+const getDriverByID = async (id: string, next: (driver: DriverDocument[]) => void) => {
+	return await authorizationHandler(async () => {
+		try {
+			const query = {
+				query: {
+					driver_id: id,
+				}
+			}
+			const res = await axios.post(`${CARRIER_URL}/driver/filter`, query,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			next(res.data)
+		} catch (error) {
+			throw error	
+		}
+	})
 } 
+
+const updateDriverByID = async (id: string, data: DriverDetails) => {
+	return await authorizationHandler(async () => {
+		try {
+			const body = {
+				driverinfo: data,
+				driver_id: id
+			}
+			const res = await axios.put(`${CARRIER_URL}/driver/update`, body,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
 
 export {
 	signup,
@@ -377,5 +410,7 @@ export {
 	deleteCarrierUser,
 	deleteShipperUser,
 	getTruckByID,
-	updateTruckByID
+	updateTruckByID,
+	getDriverByID,
+	updateDriverByID
 }

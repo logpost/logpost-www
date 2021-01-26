@@ -81,7 +81,7 @@ const OverviewDriverPage = () => {
 			width: "15%",
 			format: (_: number, driver: DriverTable): ReactElement => (
 				<TableRowActions>
-					<button onClick={navigateToAddDriverPage}><EditIcon /></button>
+					<button onClick={() => router.push(`/carrier/driver/edit/${driver.driver_id}`)}><EditIcon /></button>
 					<button onClick={() => toggleDeleteModal(driver.name)} ><CancelIcon /></button>
 				</TableRowActions>
 			),
@@ -112,7 +112,7 @@ const OverviewDriverPage = () => {
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>
 						<WarningIcon />
-						<span>ยืนยันลบข้อมูลพนักงานขับรถ <br /> ชื่อ {drivers[deleteDriverName]?.name} หรือไม่ ?</span>
+						<span>ยืนยันลบข้อมูลพนักงานขับรถ <br /> ชื่อ {deleteDriverName} หรือไม่ ?</span>
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleModal(false)}>ยกเลิก</SecondaryButton>
 							<PrimaryButton onClick={() => setToggleModal(false)}>ยืนยันลบข้อมูล</PrimaryButton>
