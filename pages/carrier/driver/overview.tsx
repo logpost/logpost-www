@@ -8,7 +8,7 @@ import Modal from '../../../components/common/Modal'
 import { DRIVER_STATUS_LIST } from '../../../data/carrier'
 import ResourceOverview from '../../../components/common/ResourceOverview'
 import { getDriver } from '../../../components/utilities/apis'
-import { DriverDocument } from '../../../entities/interface/driver'
+import { DriverDocument, DriverTable } from '../../../entities/interface/driver'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { tableDataState } from '../../../store/atoms/tableState'
 import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
@@ -41,17 +41,16 @@ const ModalContent = styled.div`
 `
 
 const OverviewDriverPage = () => {
-	const [deleteDriverIndex, setDeleteDriverIndex] = useState(0)
+	const [deleteDriverName, setDeleteDriverName] = useState("")
 	const [toggleModal, setToggleModal] = useState(false)
 	const [drivers, setDrivers] = useState<DriverDocument[]>([])
 	const alertStatus = useRecoilValue(alertPropertyState)
 	const setDriverTableData = useSetRecoilState(tableDataState)
-	const setAlertProperty = useSetRecoilState(alertPropertyState)
 	const router = useRouter()
 
-	const toggleDeleteModal = (index: number) => {
+	const toggleDeleteModal = (name: string) => {
 		setToggleModal(true)
-		setDeleteDriverIndex(index)
+		setDeleteDriverName(name)
 	}
 
 	const navigateToAddDriverPage = () => {
@@ -72,18 +71,18 @@ const OverviewDriverPage = () => {
 		{
 			id: "status",
 			label: "สถานะ",
-			format: (_: number, statusCode: number): ReactElement => (
-				<span>{DRIVER_STATUS_LIST[statusCode]}</span>
+			format: (_: number, driver: DriverTable): ReactElement => (
+				<span>{DRIVER_STATUS_LIST[driver.status]}</span>
 			)
 		},
 		{
 			id: "actions",
 			label: "",
 			width: "15%",
-			format: (driverIndex: number): ReactElement => (
+			format: (_: number, driver: DriverTable): ReactElement => (
 				<TableRowActions>
 					<button onClick={navigateToAddDriverPage}><EditIcon /></button>
-					<button onClick={() => toggleDeleteModal(driverIndex)} ><CancelIcon /></button>
+					<button onClick={() => toggleDeleteModal(driver.name)} ><CancelIcon /></button>
 				</TableRowActions>
 			),
 		},
@@ -113,7 +112,7 @@ const OverviewDriverPage = () => {
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>
 						<WarningIcon />
-						<span>ยืนยันลบข้อมูลพนักงานขับรถ <br /> ชื่อ {drivers[deleteDriverIndex]?.name} หรือไม่ ?</span>
+						<span>ยืนยันลบข้อมูลพนักงานขับรถ <br /> ชื่อ {drivers[deleteDriverName]?.name} หรือไม่ ?</span>
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleModal(false)}>ยกเลิก</SecondaryButton>
 							<PrimaryButton onClick={() => setToggleModal(false)}>ยืนยันลบข้อมูล</PrimaryButton>

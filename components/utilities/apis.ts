@@ -318,6 +318,39 @@ const changePassword = async (
 	})
 }
 
+const getTruckByID = async (id: string, next: (truck: TruckDocument[]) => void) => {
+	return await authorizationHandler(async () => {
+		try {
+			const query = {
+				query: {
+					truck_id: id,
+				}
+			}
+			const res = await axios.post(`${CARRIER_URL}/truck/filter`, query,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			next(res.data)
+		} catch (error) {
+			throw error	
+		}
+	})
+} 
+
+const updateTruckByID = async (id: string, data: TruckDetails) => {
+	return await authorizationHandler(async () => {
+		try {
+			const body = {
+				truckinfo: data,
+				truck_id: id
+			}
+			const res = await axios.put(`${CARRIER_URL}/truck/update`, body,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+} 
+
 export {
 	signup,
 	login,
@@ -342,5 +375,7 @@ export {
 	updateShipperProfile,
 	updateCarrierProfile,
 	deleteCarrierUser,
-	deleteShipperUser
+	deleteShipperUser,
+	getTruckByID,
+	updateTruckByID
 }

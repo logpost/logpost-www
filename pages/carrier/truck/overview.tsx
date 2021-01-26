@@ -42,20 +42,20 @@ const ModalContent = styled.div`
 `
 
 const OverviewTruckPage = () => {
-	const [deleteTruckIndex, setDeleteTruckIndex] = useState(0)
+	const [deleteLicenseNumber, setDeleteLicenseNumber] = useState("")
 	const [toggleModal, setToggleModal] = useState(false)
 	const [trucks, setTrucks] = useState<TruckDocument[]>([])
 	const alertStatus = useRecoilValue(alertPropertyState)
 	const setTruckTableData = useSetRecoilState(tableDataState)
 	const router = useRouter()
 
-	const toggleDeleteModal = (index: number) => {
+	const toggleDeleteModal = (licenseNumber: string) => {
 		setToggleModal(true)
-		setDeleteTruckIndex(index)
+		setDeleteLicenseNumber(licenseNumber)
 	}
 
 	const navigateToAddTruckPage = () => {
-		router.push(`/carrier/truck/add/1`)
+		router.push(`/carrier/truck/add`)
 	}
 
 	const truckColumns = [
@@ -70,18 +70,19 @@ const OverviewTruckPage = () => {
 		{
 			id: "status",
 			label: "สถานะ",
-			format: (_: number, statusCode: number): ReactElement => (
-				<span>{TRUCK_STATUS_LIST[statusCode]}</span>
+			format: (_: number, truck: TruckTable): ReactElement => (
+				<span>{TRUCK_STATUS_LIST[truck.status]}</span>
 			)
 		},
 		{
-			id: "actions",
+			id: "truck_id",
 			label: "",
 			width: "15%",
-			format: (truckIndex: number): ReactElement => (
+			get: "truck_id",
+			format: (_: number, truck: TruckTable): ReactElement => (
 				<TableRowActions>
-					<button onClick={navigateToAddTruckPage}><EditIcon /></button>
-					<button onClick={() => toggleDeleteModal(truckIndex)} ><CancelIcon /></button>
+					<button onClick={() => router.push(`/carrier/truck/edit/${truck.truck_id}`)}><EditIcon /></button>
+					<button onClick={() => toggleDeleteModal(truck.license_number)} ><CancelIcon /></button>
 				</TableRowActions>
 			),
 		},
@@ -125,7 +126,7 @@ const OverviewTruckPage = () => {
 				<Modal toggle={toggleModal} setToggle={setToggleModal}>
 					<ModalContent>
 						<WarningIcon />
-						<span>ยืนยันลบข้อมูลรถ <br /> ทะเบียน {trucks[deleteTruckIndex]?.license_number} หรือไม่ ?</span>
+						<span>ยืนยันลบข้อมูลรถ <br /> ทะเบียน {deleteLicenseNumber} หรือไม่ ?</span>
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleModal(false)}>ยกเลิก</SecondaryButton>
 							<PrimaryButton onClick={() => setToggleModal(false)}>ยืนยันลบข้อมูล</PrimaryButton>

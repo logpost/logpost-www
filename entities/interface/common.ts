@@ -1,4 +1,6 @@
 import { ReactElement } from 'react'
+import { DriverTable } from './driver';
+import { TruckTable } from './truck';
 
 export interface AuthInterface {
 	username: string
@@ -57,6 +59,6 @@ export interface TableComponentInterface {
 		label: string
 		align?: string
 		width?: string
-		format?: (index: number, value?: string | number) => ReactElement
+		format?: (index: number, item?: (TruckTable | DriverTable)) => ReactElement
 	}[]
 }
