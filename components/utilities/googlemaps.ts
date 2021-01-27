@@ -134,7 +134,7 @@ export const selectPositionOnMap = (
     setPlace: (
         place: google.maps.places.PlaceResult | google.maps.GeocoderResult
     ) => void,
-    currentPosition: google.maps.LatLng,
+    position: LatLng,
     submitButton: HTMLButtonElement
 ) => {
     let map: google.maps.Map;
@@ -143,6 +143,17 @@ export const selectPositionOnMap = (
         | google.maps.GeocoderResult;
     let marker: google.maps.Marker;
     let isPlaceChanged = false;
+    let currentPosition: google.maps.LatLng
+
+    if (
+        (position as LatLng).latitude ||
+        (position as LatLng).latitude
+    ) {
+        currentPosition = new google.maps.LatLng(
+            (position as LatLng).latitude,
+            (position as LatLng).longitude
+        );
+    }
 
     const setupPlaceChangedListener = (
         autocomplete: google.maps.places.Autocomplete
@@ -179,8 +190,8 @@ export const selectPositionOnMap = (
                     status: google.maps.GeocoderStatus
                 ) => {
                     if (status === "OK") {
-                        currentPlace = results[0];
                         if (!isPlaceChanged) {
+                            currentPlace = results[0];
                             placeInput.value = results[0].formatted_address;
                         } else {
                             isPlaceChanged = false;

@@ -79,11 +79,13 @@ export const extractAddress = (addressComponents: AddressComponentInterface[]) =
 }
 
 export const getAddressFromPlace = (place: google.maps.places.PlaceResult | google.maps.GeocoderResult) => {
-	const extractedAddress = extractAddress(place.address_components)
-	return {
-		latitude: place.geometry.location.lat(),
-		longitude: place.geometry.location.lng(),
-		...extractedAddress
+	if (place !== null) {
+		const extractedAddress = extractAddress(place.address_components)
+		return {
+			latitude: place.geometry.location.lat(),
+			longitude: place.geometry.location.lng(),
+			...extractedAddress
+		}
 	}
 }
 
