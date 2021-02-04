@@ -35,7 +35,7 @@ export const jobStepTwoSelector = selector({
 	get: ({get}) => {
 		const jobDetails = get(jobDetailsState)
 		return {
-			product_type: jobDetails.pickup_location,
+			product_type: jobDetails.product_type,
 			weight: String(jobDetails.weight),
 			waiting_time: String(jobDetails.waiting_time),
 			offer_price: String(jobDetails.offer_price),

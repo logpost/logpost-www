@@ -11,7 +11,6 @@ import React from 'react';
 import Progress from '../../../common/Progress';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { JobAddInterface } from '../../../../entities/interface/job'
 import JobFormStepOne from '../../../common/JobFormStepOne';
 
 const FormActionsCustom = styled(FormActions)`
@@ -19,7 +18,7 @@ const FormActionsCustom = styled(FormActions)`
 	margin: 1.2rem 0 3rem 0;
 `
 
-const JobAddStepOne = (props: JobAddInterface) => {
+const JobAddStepOne = () => {
 	const router = useRouter()
 
 	const nextPage = () => {
