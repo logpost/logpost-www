@@ -49,7 +49,16 @@ export const jobStepThreeSelector = selector({
 	get: ({get}) => {
 		const jobDetails = get(jobDetailsState)
 		return {
-			carrier_specification: jobDetails.carrier_specification,
+			carrier_specification: {
+				...jobDetails.carrier_specification,
+				truck: {
+					...jobDetails.carrier_specification.truck,
+					property: {
+						...jobDetails.carrier_specification.truck.property,
+						chassis: null
+					}
+				}
+			}
 		}
 	}
 })
