@@ -21,7 +21,7 @@ import TableComponent from "../../../components/common/TableComponent"
 import NavigationBar from "../../../components/common/NavigationBar"
 import SearchBar from "../../../components/common/SearchBar"
 import { useSetRecoilState } from 'recoil'
-import { jobDetailsState } from '../../../store/atoms/jobDetailsState'
+import { jobDetailsSelector, jobDetailsState } from '../../../store/atoms/jobDetailsState'
 import { useRecoilState } from 'recoil'
 import { getDriver, getJobDetailsByID, getTruck, pickJob } from "../../../components/utilities/apis"
 import { JobDocument } from "../../../entities/interface/job"
@@ -172,7 +172,7 @@ const RadioButton = styled.div`
 const GetJobPage = () => {
 	const router = useRouter()
 	const jobID = router.query.job_id as string
-	const [jobDetails, setJobDetails] = useRecoilState<JobDocument>(jobDetailsState)
+	const [jobDetails, setJobDetails] = useRecoilState(jobDetailsSelector)
 	const [trucks, setTrucks] = useRecoilState(trucksState)
 	const [drivers, setDrivers] = useRecoilState(driversState)
 	const [toggleDriverModal, setToggleDriverModal] = useState(false)

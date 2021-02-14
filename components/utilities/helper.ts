@@ -1,7 +1,7 @@
 import { SHORT_MONTHS } from "../../data/jobs"
 import { DriverDetails, DriverDocument } from "../../entities/interface/driver"
 import { TruckDocument } from "../../entities/interface/truck"
-import { JobDocument } from '../../entities/interface/job'
+import { JobDocument, LocationInterface } from '../../entities/interface/job'
 
 export const filterData = (
 	data: Object[],
@@ -121,4 +121,11 @@ export const validateDriverDetails = (driverDetails: DriverDetails) => {
 		identification_number: isIDNumberValid,
 		tel: isTelValid
 	}
+}
+
+export const formatAddressToString = (addressObject: LocationInterface) => {
+	console.log(addressObject)
+	const addressArray = [addressObject.address, addressObject.district, addressObject.province, addressObject.zipcode]	
+	const formattedAddress = addressArray.filter(Boolean).join(" ")
+	return formattedAddress
 }

@@ -11,7 +11,7 @@ import { initMap, route, selectPositionOnMap } from '../utilities/googlemaps';
 import InputComponent from './InputComponent';
 import Modal from './Modal';
 import DateAndTimePicker from './DateAndTimePicker';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { jobDetailsState, jobStepOneSelector } from '../../store/atoms/jobDetailsState';
 
 
@@ -61,6 +61,7 @@ const Map = styled.div`
 
 const JobFormStepOne = () => {
     const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
+	console.log(jobDetails)
 	const stepOneDetails = useRecoilValue(jobStepOneSelector)
 	const [togglePickupModal, setTogglePickupModal] = useState(false)
 	const [toggleDropoffModal, setToggleDropoffModal] = useState(false)
@@ -135,7 +136,7 @@ const JobFormStepOne = () => {
 
 	return (
 		<>
-			<Map id="route-map" />
+			{/* <Map id="route-map" /> */}
 			<FormInputContainer>
 				<SectionHeader>
 					<div>ขึ้นสินค้า</div> <Line />
@@ -146,7 +147,7 @@ const JobFormStepOne = () => {
 						labelEN="Location"
 						labelTH="สถานที่"
 						readOnly={true}
-						value={(jobDetails.geocoder_result.pickup["formatted_address"]) || "เลือกสถานที่ขึ้นสินค้า"}
+						value={(jobDetails.geocoder_result?.pickup?.formatted_address) || "เลือกสถานที่ขึ้นสินค้า"}
 					/>
 				</div>
 				<Modal toggle={togglePickupModal} setToggle={setTogglePickupModal}>
@@ -186,7 +187,7 @@ const JobFormStepOne = () => {
 						labelEN="Location"
 						labelTH="สถานที่"
 						readOnly={true}
-						value={(jobDetails.geocoder_result.dropoff["formatted_address"]) || "เลือกสถานที่ลงสินค้า"}
+						value={(jobDetails.geocoder_result?.dropoff?.formatted_address) || "เลือกสถานที่ลงสินค้า"}
 					/>
 				</div>
 				<Modal toggle={toggleDropoffModal} setToggle={setToggleDropoffModal}>

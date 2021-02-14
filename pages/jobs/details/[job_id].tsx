@@ -17,10 +17,10 @@ import {
 import { getJobDetailsByID, updateJob } from '../../../components/utilities/apis';
 import { initMap, route } from '../../../components/utilities/googlemaps';
 import { JOB_STATUS_CODE } from '../../../data/jobs';
-import { jobDetailsState } from '../../../store/atoms/jobDetailsState';
+import { jobDetailsSelector, jobDetailsState } from '../../../store/atoms/jobDetailsState';
 import { JobDocument } from '../../../entities/interface/job';
 import { MapInterface } from '../../../entities/interface/googlemaps';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userInfoState } from '../../../store/atoms/userInfoState';
 import { useRouter } from 'next/router';
 import {
@@ -155,7 +155,7 @@ const Map = styled.div`
 
 const JobDetailPage = () => {
 	const userInfo = useRecoilValue(userInfoState)
-	const [jobDetails, setJobDetails] = useRecoilState<JobDocument>(jobDetailsState)
+	const [jobDetails, setJobDetails] = useRecoilState(jobDetailsSelector)
 	const router = useRouter()
 	const driverURLRef = useRef(null)
 	const [toggleModal, setToggleModal] = useState(false)
@@ -179,8 +179,8 @@ const JobDetailPage = () => {
 
 	useEffect(() => {
 		if (jobID) {
-			getJobDetailsByID(jobID, (jobDetails: JobDocument) => {
-				setJobDetails(jobDetails)
+			getJobDetailsByID(jobID, (jobDocument: JobDocument) => {
+                setJobDetails(jobDocument)
 				// initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
 				// 	const pickupLatLng = {
 				// 		latitude: jobDetails.pickup_location.latitude,
@@ -192,7 +192,7 @@ const JobDetailPage = () => {
 				// 	} 
 				// 	route(pickupLatLng, dropoffLatLng, routeMap)
 				// })
-			})
+            })
 		}
 	}, [router.query.job_id])
 
@@ -250,7 +250,7 @@ const JobDetailPage = () => {
 				{isShipperCanEditDetails && (
 					<ButtonContainer>
 						<SecondaryButtonCustom>ลบงาน</SecondaryButtonCustom>
-						<SecondaryButtonCustom>แก้ไขงาน</SecondaryButtonCustom>
+						<SecondaryButtonCustom onClick={() => router.push(`/jobs/edit/${jobDetails.job_id}`)}>แก้ไขงาน</SecondaryButtonCustom>
 					</ButtonContainer>
 				)}
 				{isCarrierCanEditDetails && (

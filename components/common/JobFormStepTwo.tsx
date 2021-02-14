@@ -9,8 +9,12 @@ const JobFormStepTwo = () => {
     const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
     const stepTwoDetails = useRecoilValue(jobStepTwoSelector)
     const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value
-		setJobDetails({ ...jobDetails, [e.target.name]: value })
+        const value = e.target.value
+        if (e.target.type === "number") {
+            setJobDetails({ ...jobDetails, [e.target.name]: parseInt(value)})
+        } else {
+            setJobDetails({ ...jobDetails, [e.target.name]: value })
+        }
     }
     
     return (

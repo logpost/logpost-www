@@ -1,18 +1,43 @@
 import { atom, selector } from 'recoil';
+import { formatAddressToString } from '../../components/utilities/helper';
 import { DEFAULT_JOB } from '../../data/jobs';
+import { PlaceInterface } from '../../entities/interface/googlemaps';
+import { JobDocument } from '../../entities/interface/job';
 
-export const jobDetailsState = atom({
+export const jobDetailsState = atom<JobDocument>({
 	key: 'jobDetails',
 	default: {
 		...DEFAULT_JOB,
-		waiting_time: "",
+		waiting_time: null,
 		description: "",
-		geocoder_result: {
-			pickup: {},
-			dropoff: {}
-		}
+		geocoder_result: <PlaceInterface>{pickup: {}, dropoff: {}}
 	}
 });
+
+export const jobDetailsSelector = selector({
+	key: "jobDetailsSelector",
+	get: ({get}) => {
+		return get(jobDetailsState)
+	},
+	set: ({set}, newValue: JobDocument) => {
+		set(
+			jobDetailsState,
+			{
+				...newValue,
+				pickup_date: new Date(newValue.pickup_date),
+				dropoff_date: new Date(newValue.dropoff_date),
+				geocoder_result: {
+					pickup: {
+						formatted_address: formatAddressToString(newValue.pickup_location)
+					},
+					dropoff: {
+						formatted_address: formatAddressToString(newValue.dropoff_location)
+					}
+				}
+			}
+		)
+	}
+})
 
 export const jobStepOneSelector = selector({
 	key: "jobStepOneSelector",
