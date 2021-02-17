@@ -1,4 +1,4 @@
-import { atom, selector } from 'recoil';
+import { atom, DefaultValue, selector } from 'recoil';
 import { formatAddressToString } from '../../components/utilities/helper';
 import { DEFAULT_JOB } from '../../data/jobs';
 import { PlaceInterface } from '../../entities/interface/googlemaps';
@@ -19,10 +19,13 @@ export const jobDetailsSelector = selector({
 	get: ({get}) => {
 		return get(jobDetailsState)
 	},
-	set: ({set}, newValue: JobDocument) => {
+	set: ({get, set}, newValue: JobDocument) => {
+		const jobDetails = get(jobDetailsState)
 		set(
 			jobDetailsState,
+			newValue instanceof DefaultValue ? newValue :
 			{
+				...jobDetails,
 				...newValue,
 				pickup_date: new Date(newValue.pickup_date),
 				dropoff_date: new Date(newValue.dropoff_date),
@@ -78,10 +81,6 @@ export const jobStepThreeSelector = selector({
 				...jobDetails.carrier_specification,
 				truck: {
 					...jobDetails.carrier_specification.truck,
-					property: {
-						...jobDetails.carrier_specification.truck.property,
-						chassis: null
-					}
 				}
 			}
 		}

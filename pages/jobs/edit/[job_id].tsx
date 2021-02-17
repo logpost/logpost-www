@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
-import { useRecoilState } from 'recoil'
-import { jobDetailsSelector } from '../../../store/atoms/jobDetailsState'
-import { getJobDetailsByID } from '../../../components/utilities/apis'
-import { JobDocument } from '../../../entities/interface/job'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { jobDetailsSelector, jobDetailsState } from '../../../store/atoms/jobDetailsState'
+import { getJobDetailsByID, updateJob } from '../../../components/utilities/apis'
+import { JobDocument, JobFormField } from '../../../entities/interface/job'
 import JobFormStepOne from '../../../components/common/JobFormStepOne'
 import JobFormStepTwo from '../../../components/common/JobFormStepTwo'
 import JobFormStepThree from '../../../components/common/JobFormStepThree'
@@ -12,6 +12,19 @@ import { FormActions, JobTitle, PrimaryButton, SecondaryButton } from '../../../
 import Header from '../../../components/common/Header'
 import { RightArrowLine } from '../../../components/common/Icons'
 import JobDetailsSection from '../../../components/common/JobDetailsSection'
+import { MapInterface } from '../../../entities/interface/googlemaps'
+import { initMap, route } from '../../../components/utilities/googlemaps'
+import { costCalculator } from '../../../components/utilities/costCalculater'
+import useAlert from '../../../hooks/useAlert'
+
+const Map = styled.div`
+	height: 45rem;
+	width: 100%;
+
+	&#route-map {
+		height: 19rem;
+	}
+`
 
 const SectionHeader = styled.div`
     padding: 0 2.6rem;
@@ -50,16 +63,60 @@ const EditJobPage = () => {
     const router = useRouter()
     const jobID = router.query.job_id as string
     const [currentPage, setCurrentPage] = useState("edit")
-    const [jobDetails, setJobDetails] = useRecoilState(jobDetailsSelector)
+    const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
+    const setJobDetailsSelector = useSetRecoilState(jobDetailsSelector)
+    const [changedField, setChangedField] = useState<JobFormField>({})
+    const [routeMap, setRouteMap] = useState<MapInterface>({
+		map: null,
+		directionsService: null,
+		directionsRenderer: null
+	})
+    const { setAlert } = useAlert()
 
-    const updateJob = () => {
-		// router.push(`/jobs/add/4`, undefined, { shallow: true })
+	useEffect(() => {
+		initMap(document.getElementById("route-map") as HTMLElement, setRouteMap)
+	}, [])
+
+    useEffect(() => {
+        console.log("geocoder effect")
+		const setRouteDetails = (distance: number, duration: number) => setJobDetails({...jobDetails, distance, duration})
+        if (jobDetails.pickup_location.latitude && jobDetails.dropoff_location.latitude && routeMap.map) {
+			const pickupLatLng = {
+                latitude: jobDetails.pickup_location.latitude,
+                longitude: jobDetails.pickup_location.longitude
+            }
+			const dropoffLatLng = {
+                latitude: jobDetails.dropoff_location.latitude,
+                longitude: jobDetails.dropoff_location.longitude
+            }
+            route(pickupLatLng, dropoffLatLng, routeMap, setRouteDetails)
+		}
+	}, [jobDetails.geocoder_result])
+
+    const handleUpdateJob = async () => {
+        const updateJobDetails = {}
+        Object.keys(changedField).map((key) => {
+            if (changedField[key] === true) {
+                updateJobDetails[key] = jobDetails[key]
+            }
+        })
+        const isLocationChanged = (changedField.pickup_date === true || changedField.dropoff_date === true)
+        if (isLocationChanged) {
+            updateJobDetails["auto_price"] = parseInt(costCalculator(jobDetails.distance))
+        }
+        const response = await updateJob(jobID, updateJobDetails) 
+		if (response !== 200) {
+			setAlert(true, "error")
+		} else {
+			setAlert(true, "success")
+		}
+		router.push(`/jobs`)
 	}
 
     useEffect(() => {
         if (jobID) {
             getJobDetailsByID(jobID, (jobDocument: JobDocument) => {
-                setJobDetails(jobDocument)
+                setJobDetailsSelector(jobDocument)
             })
         }
     }, [router.query])
@@ -75,15 +132,16 @@ const EditJobPage = () => {
 			</Header>
                 {currentPage === "edit" ? 
                     <>
-                        <JobFormStepOne />
+			            <Map id="route-map" />
+                        <JobFormStepOne changedField={changedField} setChangedField={setChangedField} />
                         <SectionHeader>
                             <div>ข้อมูลสินค้า</div> <Line />
                         </SectionHeader>
-                        <JobFormStepTwo />
+                        <JobFormStepTwo changedField={changedField} setChangedField={setChangedField} />
                         <SectionHeader>
                             <div>ข้อมูลรถบรรทุก</div> <Line />
                         </SectionHeader>
-                        <JobFormStepThree />
+                        <JobFormStepThree changedField={changedField} setChangedField={setChangedField} />
                         <FormActionsCustom>
                             <SecondaryButton onClick={() => router.back()}>
                                 ยกเลิก
@@ -100,7 +158,7 @@ const EditJobPage = () => {
                             <SecondaryButton onClick={() => setCurrentPage("edit")}>
                                 กลับไปแก้ไข
                             </SecondaryButton>
-                            <PrimaryButton onClick={updateJob}>ยืนยันแก้ไขงาน</PrimaryButton>
+                            <PrimaryButton onClick={handleUpdateJob}>ยืนยันแก้ไขงาน</PrimaryButton>
                         </FormActions>
                     </JobDetailsContainer> 
                 } 

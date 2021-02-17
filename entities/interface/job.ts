@@ -47,3 +47,21 @@ export interface JobAddInterface {
 	details: JobDetails
 	setDetails: (jobDetails: JobDetails) => void
 }
+
+export interface JobFormField {
+	pickup_location?: boolean,
+	dropoff_location?: boolean,
+	pickup_date?: boolean,
+	dropoff_date?: boolean,
+	weight?: boolean,
+	carrier_specification?: boolean,
+	product_type?: boolean,
+	offer_price?: boolean,
+	description?: boolean,
+	waiting_time?: boolean
+}
+
+export interface JobFormInterface {
+	changedField?: JobFormField
+	setChangedField?: (changedField: JobFormField) => void
+}

@@ -1,19 +1,25 @@
 import React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
+import { JobFormInterface } from '../../entities/interface/job'
 import { jobDetailsState, jobStepTwoSelector } from '../../store/atoms/jobDetailsState'
 import { FormInputContainer } from '../styles/GlobalComponents'
 import { offerCalculator } from '../utilities/costCalculater'
+import { handleChangedField } from '../utilities/helper'
 import InputComponent from './InputComponent'
 
-const JobFormStepTwo = () => {
+const JobFormStepTwo = (props: JobFormInterface) => {
+    const { changedField, setChangedField } = props
+
     const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
     const stepTwoDetails = useRecoilValue(jobStepTwoSelector)
     const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value
+        const field = e.target.name
+        handleChangedField(changedField, setChangedField, [field])
         if (e.target.type === "number") {
-            setJobDetails({ ...jobDetails, [e.target.name]: parseInt(value)})
+            setJobDetails({ ...jobDetails, [field]: parseInt(value)})
         } else {
-            setJobDetails({ ...jobDetails, [e.target.name]: value })
+            setJobDetails({ ...jobDetails, [field]: value })
         }
     }
     

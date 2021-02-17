@@ -1,30 +1,37 @@
 import React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { DRIVER_LICENSE_TYPE, TRUCK_TYPE_LIST } from '../../data/carrier'
+import { JobFormInterface } from '../../entities/interface/job'
 import { jobStepThreeSelector, jobDetailsState } from '../../store/atoms/jobDetailsState'
 import { ButtonGroupContainer, ButtonItem, FormInputContainer } from '../styles/GlobalComponents'
+import { handleChangedField } from '../utilities/helper'
 import InputComponent from './InputComponent'
 import SelectComponent from './SelectComponent'
 
-const JobFormStepThree = () => {
+const JobFormStepThree = (props: JobFormInterface) => {
+    const { changedField, setChangedField } = props
+
     const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
     const stepThreeDetails = useRecoilValue(jobStepThreeSelector)
     const truckType = stepThreeDetails.carrier_specification.truck.property.type
 
     const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
+        const field = e.target.name
+        handleChangedField(changedField, setChangedField, ["carrier_specification"])
 		setJobDetails({ 
             ...jobDetails, carrier_specification: {
                 ...jobDetails.carrier_specification,
                 truck: {
                     ...jobDetails.carrier_specification.truck,
-                    [e.target.name]: value
+                    [field]: value
                 }
             }
         })
     }
 
     const handleDriverOnChange = (field: string, value: (string | number)) => {
+        handleChangedField(changedField, setChangedField, ["carrier_specification"])
 		setJobDetails({ 
             ...jobDetails, carrier_specification: {
                 ...jobDetails.carrier_specification,
@@ -37,6 +44,7 @@ const JobFormStepThree = () => {
     }
     
     const handleTruckOnChange = (field: string, value: (string | number)) => {
+        handleChangedField(changedField, setChangedField, ["carrier_specification"])
         setJobDetails({ 
             ...jobDetails, carrier_specification: {
                 ...jobDetails.carrier_specification,

@@ -3,16 +3,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 import React, { useState } from 'react';
 
 import styled from 'styled-components';
-import { useEffect } from 'react'
 import { FormActions, FormInputContainer, PrimaryButton, SecondaryButton } from '../styles/GlobalComponents';
-import { MapInterface } from '../../entities/interface/googlemaps';
-import { getAddressFromPlace } from '../utilities/helper';
-import { initMap, route, selectPositionOnMap } from '../utilities/googlemaps';
+import { getAddressFromPlace, handleChangedField } from '../utilities/helper';
+import { selectPositionOnMap } from '../utilities/googlemaps';
 import InputComponent from './InputComponent';
 import Modal from './Modal';
 import DateAndTimePicker from './DateAndTimePicker';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { jobDetailsState, jobStepOneSelector } from '../../store/atoms/jobDetailsState';
+import { JobFormInterface } from '../../entities/interface/job';
 
 
 const SectionHeader = styled.div`
@@ -59,60 +58,26 @@ const Map = styled.div`
 	}
 `
 
-const JobFormStepOne = () => {
+const JobFormStepOne = (props: JobFormInterface) => {
+	const { changedField, setChangedField } = props
+
     const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
-	console.log(jobDetails)
 	const stepOneDetails = useRecoilValue(jobStepOneSelector)
 	const [togglePickupModal, setTogglePickupModal] = useState(false)
 	const [toggleDropoffModal, setToggleDropoffModal] = useState(false)
-	const [routeMap, setRouteMap] = useState<MapInterface>({
-		map: null,
-		directionsService: null,
-		directionsRenderer: null
-	})
+	const [tempLocation, setTempLocation] = useState()
 
-	useEffect(() => {
-		initMap(document.getElementById("route-map") as HTMLElement, setRouteMap)
-	}, [])
-
-	useEffect(() => {
-		const setRouteDetails = (distance: number, duration: number) => setJobDetails({...jobDetails, distance, duration})
-		if (jobDetails.pickup_location.latitude && jobDetails.dropoff_location.latitude && routeMap.map) {
-			const pickupLatLng = {
-                latitude: jobDetails.pickup_location.latitude,
-                longitude: jobDetails.pickup_location.longitude
-            }
-			const dropoffLatLng = {
-                latitude: jobDetails.dropoff_location.latitude,
-                longitude: jobDetails.dropoff_location.longitude
-            }
-            route(pickupLatLng, dropoffLatLng, routeMap, setRouteDetails)
-		}
-	}, [jobDetails.geocoder_result, routeMap])
-
-	const chooseDropoff = () => {
-		setToggleDropoffModal(true)
-		const targetMap = document.getElementById("dropoff-map") as HTMLElement
-		const placeInput = document.getElementById("dropoff-location") as HTMLInputElement
-		const dropoffLatLng = {
-            latitude: jobDetails.dropoff_location.latitude,
-            longitude: jobDetails.dropoff_location.longitude
-        }
-        const setDropoffPlace = (value: google.maps.places.PlaceResult | google.maps.GeocoderResult) => {
-            setJobDetails({
-                ...jobDetails, 
-                dropoff_location: getAddressFromPlace(value),
-                geocoder_result: {
-                    ...jobDetails.geocoder_result,
-                    dropoff: value
-                }
-            })
-        }
-		const submitButton = document.getElementById("submit-dropoff") as HTMLButtonElement
-		selectPositionOnMap(targetMap, placeInput, setDropoffPlace, dropoffLatLng, submitButton)
+	const choosePickupDate = (value: Date) => {
+		handleChangedField(changedField, setChangedField, ["pickup_date", "dropoff_date"])
+		setJobDetails({ ...jobDetails, pickup_date: value})
 	}
 
-	const choosePickup = () => {
+	const chooseDropoffDate = (value: Date) => {
+		handleChangedField(changedField, setChangedField, ["dropoff_date"])
+		setJobDetails({ ...jobDetails, dropoff_date: value})
+	}
+
+	const initPickupMap = () => {
 		setTogglePickupModal(true)
 		const targetMap = document.getElementById("pickup-map") as HTMLElement
 		const placeInput = document.getElementById("pickup-location") as HTMLInputElement
@@ -120,28 +85,53 @@ const JobFormStepOne = () => {
             latitude: jobDetails.pickup_location.latitude,
             longitude: jobDetails.pickup_location.longitude
         }
-        const setPickupPlace = (value: google.maps.places.PlaceResult | google.maps.GeocoderResult) => {
-            setJobDetails({
-                ...jobDetails, 
-                pickup_location: getAddressFromPlace(value),
-                geocoder_result: {
-                    ...jobDetails.geocoder_result,
-                    pickup: value
-                }
-            })
+		selectPositionOnMap(targetMap, placeInput, setTempLocation, pickupLatLng)
+	}
+	
+	const setPickupLocation = () => {
+		handleChangedField(changedField, setChangedField, ["pickup_location"])
+		setJobDetails({
+			...jobDetails, 
+			pickup_location: getAddressFromPlace(tempLocation),
+			geocoder_result: {
+				...jobDetails.geocoder_result,
+				pickup: tempLocation
+			}
+		})
+		setTogglePickupModal(false)
+	}
+
+	const initDropoffMap = () => {
+		setToggleDropoffModal(true)
+		const targetMap = document.getElementById("dropoff-map") as HTMLElement
+		const placeInput = document.getElementById("dropoff-location") as HTMLInputElement
+		const dropoffLatLng = {
+            latitude: jobDetails.dropoff_location.latitude,
+            longitude: jobDetails.dropoff_location.longitude
         }
-		const submitButton = document.getElementById("submit-pickup") as HTMLButtonElement
-		selectPositionOnMap(targetMap, placeInput, setPickupPlace, pickupLatLng, submitButton)
+		selectPositionOnMap(targetMap, placeInput, setTempLocation, dropoffLatLng)
+	}
+	
+	const setDropoffLocation = () => {
+		handleChangedField(changedField, setChangedField, ["dropoff_location"])
+		setJobDetails({
+			...jobDetails, 
+			dropoff_location: getAddressFromPlace(tempLocation),
+			geocoder_result: {
+				...jobDetails.geocoder_result,
+				dropoff: tempLocation
+			}
+		})
+		setToggleDropoffModal(false)
 	}
 
 	return (
 		<>
-			{/* <Map id="route-map" /> */}
 			<FormInputContainer>
 				<SectionHeader>
 					<div>ขึ้นสินค้า</div> <Line />
 				</SectionHeader>
-				<div onClick={choosePickup}>
+				<div onClick={initPickupMap}>
 					<InputComponent
 						name="pickup_location"
 						labelEN="Location"
@@ -163,7 +153,7 @@ const JobFormStepOne = () => {
 						<Map id="pickup-map" />
 						<FormActions>
 							<SecondaryButton onClick={() => setTogglePickupModal(false)}>ย้อนกลับ</SecondaryButton>
-							<PrimaryButton id="submit-pickup" onClick={() => setTogglePickupModal(false)}>เลือกตำแหน่ง</PrimaryButton>
+							<PrimaryButton onClick={setPickupLocation}>เลือกตำแหน่ง</PrimaryButton>
 						</FormActions>
 					</ModalContent>
 				</Modal>
@@ -175,13 +165,13 @@ const JobFormStepOne = () => {
 				>
 					<DateAndTimePicker
 						dateAndTime={stepOneDetails.pickup_date || new Date()}
-						setDateAndTime={(value: Date) => setJobDetails({ ...jobDetails, pickup_date: value })}
+						setDateAndTime={(value: Date) => choosePickupDate(value)}
 					/>
 				</InputComponent>
 				<SectionHeader>
 					<div>ลงสินค้า</div> <Line />
 				</SectionHeader>
-				<div onClick={chooseDropoff}>
+				<div onClick={initDropoffMap}>
 					<InputComponent
 						name="dropoff_location"
 						labelEN="Location"
@@ -203,7 +193,7 @@ const JobFormStepOne = () => {
 						<Map id="dropoff-map" />
 						<FormActions>
 							<SecondaryButton onClick={() => setToggleDropoffModal(false)}>ย้อนกลับ</SecondaryButton>
-							<PrimaryButton id="submit-dropoff" onClick={() => setToggleDropoffModal(false)}>เลือกตำแหน่ง</PrimaryButton>
+							<PrimaryButton onClick={setDropoffLocation}>เลือกตำแหน่ง</PrimaryButton>
 						</FormActions>
 					</ModalContent>
 				</Modal>
@@ -216,7 +206,7 @@ const JobFormStepOne = () => {
 					<DateAndTimePicker
 						minDate={stepOneDetails.pickup_date}
 						dateAndTime={stepOneDetails.dropoff_date < stepOneDetails.pickup_date ? stepOneDetails.pickup_date : stepOneDetails.dropoff_date}
-						setDateAndTime={(value: Date) => setJobDetails({ ...jobDetails, dropoff_date: value })}
+						setDateAndTime={(value: Date) => chooseDropoffDate(value)}
 					/>
 				</InputComponent>
 			</FormInputContainer>

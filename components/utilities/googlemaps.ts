@@ -135,12 +135,8 @@ export const selectPositionOnMap = (
         place: google.maps.places.PlaceResult | google.maps.GeocoderResult
     ) => void,
     position: LatLng,
-    submitButton: HTMLButtonElement
 ) => {
     let map: google.maps.Map;
-    let currentPlace:
-        | google.maps.places.PlaceResult
-        | google.maps.GeocoderResult;
     let marker: google.maps.Marker;
     let isPlaceChanged = false;
     let currentPosition: google.maps.LatLng
@@ -164,7 +160,7 @@ export const selectPositionOnMap = (
             if (!place.geometry) {
                 return;
             }
-            currentPlace = place;
+            setPlace(place)
             if (place.geometry) {
                 if (place.geometry.viewport) {
                     map.fitBounds(place.geometry.viewport);
@@ -179,8 +175,8 @@ export const selectPositionOnMap = (
     const setupCenterChangedListener = () => {
         google.maps.event.addListener(map, "center_changed", () => {
             // window.setTimeout(function() {
-            let center = map.getCenter();
-            marker.setPosition(center);
+                let center = map.getCenter();
+                marker.setPosition(center);
             // }, 100);
             const geocoder = new google.maps.Geocoder();
             geocoder.geocode(
@@ -191,8 +187,8 @@ export const selectPositionOnMap = (
                 ) => {
                     if (status === "OK") {
                         if (!isPlaceChanged) {
-                            currentPlace = results[0];
                             placeInput.value = results[0].formatted_address;
+                            setPlace(results[0])
                         } else {
                             isPlaceChanged = false;
                         }
@@ -228,14 +224,6 @@ export const selectPositionOnMap = (
             ]);
             setupPlaceChangedListener(originAutocomplete);
             setupCenterChangedListener();
-        }
-
-        if (submitButton) {
-            submitButton.addEventListener("click", () => {
-                if (currentPlace) {
-                    setPlace(currentPlace);
-                }
-            });
         }
     });
 };

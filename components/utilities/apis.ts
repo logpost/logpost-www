@@ -195,10 +195,14 @@ const createDriver = async (data: DriverDetails):Promise<number|void> => {
 	})
 }
 
-const updateJob = async (data: Object) => {
+const updateJob = async (jobID: string, data: Object) => {
 	return await authorizationHandler(async () => {
 		try {
-			const res = await axios.put(`${JOB_URL}/update`, data,
+			const body = {
+				job_id: jobID,
+				jobinfo: data
+			}
+			const res = await axios.put(`${JOB_URL}/update`, body,
 			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
 			return res.status
 		} catch (error) {
