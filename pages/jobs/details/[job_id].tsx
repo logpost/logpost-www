@@ -181,28 +181,23 @@ const JobDetailPage = () => {
 		if (jobID) {
 			getJobDetailsByID(jobID, (jobDocument: JobDocument) => {
                 setJobDetails(jobDocument)
-				// initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
-				// 	const pickupLatLng = {
-				// 		latitude: jobDetails.pickup_location.latitude,
-				// 		longitude: jobDetails.pickup_location.longitude
-				// 	}
-				// 	const dropoffLatLng = {
-				// 		latitude: jobDetails.dropoff_location.latitude,
-				// 		longitude: jobDetails.dropoff_location.longitude
-				// 	} 
-				// 	route(pickupLatLng, dropoffLatLng, routeMap)
-				// })
+				initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
+					const pickupLatLng = {
+						latitude: jobDetails.pickup_location.latitude,
+						longitude: jobDetails.pickup_location.longitude
+					}
+					const dropoffLatLng = {
+						latitude: jobDetails.dropoff_location.latitude,
+						longitude: jobDetails.dropoff_location.longitude
+					} 
+					route(pickupLatLng, dropoffLatLng, routeMap)
+				})
             })
 		}
 	}, [router.query.job_id])
 
 	const startJob = async () => {
-		const response = await updateJob({
-			jobinfo: { 
-				"status": 300
-			},
-			job_id: jobID
-		})
+		const response = await updateJob(jobID, { status: 300 })
 		setToggleModal(false)
 	}
 
