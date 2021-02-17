@@ -10,8 +10,7 @@ import {
 import JobDetailsSection from "../../../common/JobDetailsSection"
 import { useRouter } from "next/router"
 import { createJob } from "../../../utilities/apis"
-import { JobDetails } from "../../../../entities/interface/job"
-import { useSetRecoilState } from 'recoil'
+import { useRecoilValue } from 'recoil'
 import { initMap, route } from "../../../utilities/googlemaps"
 import { MapInterface } from '../../../../entities/interface/googlemaps'
 import { jobDetailsState } from '../../../../store/atoms/jobDetailsState'
@@ -31,16 +30,18 @@ const JobDetailsContainer = styled.div`
     margin: 1.8rem 2rem;
 `;
 
-const JobAddStepFour = (props: { details: JobDetails }) => {
+const JobAddStepFour = () => {
 	const router = useRouter()
-	const { details } = props
-	const setDetailsState = useSetRecoilState(jobDetailsState)
+	const jobDetails = useRecoilValue(jobDetailsState)
 	const { setAlert } = useAlert()
 
 	const submitDetails = async () => {
-		const {geocoder_result, ...jobDetails} = details
-		jobDetails.auto_price = parseInt(costCalculator(jobDetails.distance))
-		const response = await createJob(jobDetails)
+		const {geocoder_result, ...details} = jobDetails
+		details.auto_price = parseInt(costCalculator(details.distance))
+		const response = await createJob({ 
+			...details,
+			waiting_time: details.waiting_time || 0
+		})
 		if (response !== 200) {
 			setAlert(true, "error")
 		} else {
@@ -51,12 +52,11 @@ const JobAddStepFour = (props: { details: JobDetails }) => {
 
 	useEffect(() => {
 		initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
-			const place = details.geocoder_result
-			const pickupLatLng = place.pickup.geometry.location
-			const dropoffLatLng = place.dropoff.geometry.location
+			const { pickup, dropoff } = jobDetails.geocoder_result
+			const pickupLatLng = (pickup as google.maps.places.PlaceResult).geometry.location
+			const dropoffLatLng = (dropoff as google.maps.places.PlaceResult).geometry.location
 			route(pickupLatLng, dropoffLatLng, routeMap)
 		})
-		setDetailsState(details)
 	}, [])
 
 	return (

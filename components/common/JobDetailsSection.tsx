@@ -238,7 +238,7 @@ const JobDetailsSection = (props) => {
 					</SectionHeader>
 					<>
 						<Detail>
-							ประเภทรถ <span>{details.carrier_specification.truck.property.type} {details.carrier_specification.truck.property.option} {details.carrier_specification.truck.property.chassis}</span>
+							ประเภทรถ <span>{details.carrier_specification.truck.property.type} {details.carrier_specification.truck.property.option} {details.carrier_specification.truck.property.chassis > 0 &&  ` ${details.carrier_specification.truck.property.chassis} เพลา`} </span>
 						</Detail>
 						<Detail>
 							อายุไม่เกิน <span>{details.carrier_specification.truck.age}</span> <span>ปี</span>

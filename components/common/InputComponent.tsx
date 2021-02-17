@@ -18,13 +18,14 @@ const Input = styled.input<Input>`
 	margin-top: 1rem;
 	font-size: 1.6rem;
 	padding: 1.2rem;
-	&::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
 
 	&[type=number] {
-		 -moz-appearance:textfield;
+		&::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		-moz-appearance:textfield;
 	}
 `
 
@@ -147,6 +148,7 @@ const InputComponent: FunctionComponent<InputComponentInterface> = (props) => {
 						type={type}
 						onChange={(e) => handleOnChange(e)}
 						valid={valid}
+						onWheel={(e) => (e.target as HTMLElement).blur()}
 						{...inputProps}
 					/> : 
 					<Input

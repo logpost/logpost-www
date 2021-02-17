@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import Header from '../../components/common/Header'
 import styled from 'styled-components'
-import { CarrierDetailsContainer, JobTitle, PrimaryButton, Detail, SecondaryButton } from '../../components/styles/GlobalComponents'
+import { JobTitle, PrimaryButton, Detail, SecondaryButton } from '../../components/styles/GlobalComponents'
 import { useRouter } from 'next/router'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { getJobDetailsByID, updateStatusByDriver } from '../../components/utilities/apis'
 import { JobDocument } from '../../entities/interface/job'
 import { initMap, route } from "../../components/utilities/googlemaps"
@@ -14,8 +14,7 @@ import { JOB_STATUS_CODE } from '../../data/jobs'
 import JobDetailsSection from '../../components/common/JobDetailsSection'
 import Modal from '../../components/common/Modal'
 import InputComponent from '../../components/common/InputComponent'
-import { jobDocumentState } from '../../store/atoms/jobDocumentState'
-import { jobDetailsState } from '../../store/atoms/jobDetailsState'
+import { jobDetailsSelector, jobDetailsState } from '../../store/atoms/jobDetailsState'
 
 const JobDocumentContainer = styled.div`
 	margin: 1.8rem 2rem;
@@ -84,6 +83,7 @@ const DriverPage = () => {
 	const jobID = router.query.job_id as string
 	const [driverTel, setDriverTel] = useState("")
 	const [jobDetails, setJobDetails] = useRecoilState<JobDocument>(jobDetailsState)
+	const setJobDetailsSelector = useSetRecoilState(jobDetailsSelector)
 	const [toggleModal, setToggleModal] = useState(true)
 
 	const changeStatus = async () => {
@@ -103,7 +103,7 @@ const DriverPage = () => {
 
 	const confirmDriverTel = () => {
 		getJobDetailsByID(jobID, (jobDocument: JobDocument) => {
-			setJobDetails(jobDocument)
+			setJobDetailsSelector(jobDocument)
 			setToggleModal(false)
 			initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
 				const pickupLatLng = {

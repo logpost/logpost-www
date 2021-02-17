@@ -1,7 +1,7 @@
 import { SHORT_MONTHS } from "../../data/jobs"
 import { DriverDetails, DriverDocument } from "../../entities/interface/driver"
 import { TruckDocument } from "../../entities/interface/truck"
-import { JobDocument } from '../../entities/interface/job'
+import { JobDocument, JobFormField, LocationInterface } from '../../entities/interface/job'
 
 export const filterData = (
 	data: Object[],
@@ -79,11 +79,13 @@ export const extractAddress = (addressComponents: AddressComponentInterface[]) =
 }
 
 export const getAddressFromPlace = (place: google.maps.places.PlaceResult | google.maps.GeocoderResult) => {
-	const extractedAddress = extractAddress(place.address_components)
-	return {
-		latitude: place.geometry.location.lat(),
-		longitude: place.geometry.location.lng(),
-		...extractedAddress
+	if (place !== null) {
+		const extractedAddress = extractAddress(place.address_components)
+		return {
+			latitude: place.geometry.location.lat(),
+			longitude: place.geometry.location.lng(),
+			...extractedAddress
+		}
 	}
 }
 
@@ -118,5 +120,28 @@ export const validateDriverDetails = (driverDetails: DriverDetails) => {
 		driver_license: isDriverLicenseValid,
 		identification_number: isIDNumberValid,
 		tel: isTelValid
+	}
+}
+
+export const formatAddressToString = (addressObject: LocationInterface) => {
+	const addressArray = [addressObject.address, addressObject.district, addressObject.province, addressObject.zipcode]	
+	const formattedAddress = addressArray.filter(Boolean).join(" ")
+	return formattedAddress
+}
+
+export const handleChangedField = (
+	changedField: JobFormField,
+	setChangedField: (changedField: JobFormField) => void, 
+	fields: String[]
+	) => {
+	if (changedField !== undefined) {
+		const updateChangedField = {}
+		fields.forEach((field: string) => {
+			updateChangedField[field] = true
+		})
+		setChangedField({
+			...changedField,
+			...updateChangedField
+		})
 	}
 }

@@ -134,15 +134,22 @@ export const selectPositionOnMap = (
     setPlace: (
         place: google.maps.places.PlaceResult | google.maps.GeocoderResult
     ) => void,
-    currentPosition: google.maps.LatLng,
-    submitButton: HTMLButtonElement
+    position: LatLng,
 ) => {
     let map: google.maps.Map;
-    let currentPlace:
-        | google.maps.places.PlaceResult
-        | google.maps.GeocoderResult;
     let marker: google.maps.Marker;
     let isPlaceChanged = false;
+    let currentPosition: google.maps.LatLng
+
+    if (
+        (position as LatLng).latitude ||
+        (position as LatLng).latitude
+    ) {
+        currentPosition = new google.maps.LatLng(
+            (position as LatLng).latitude,
+            (position as LatLng).longitude
+        );
+    }
 
     const setupPlaceChangedListener = (
         autocomplete: google.maps.places.Autocomplete
@@ -153,7 +160,7 @@ export const selectPositionOnMap = (
             if (!place.geometry) {
                 return;
             }
-            currentPlace = place;
+            setPlace(place)
             if (place.geometry) {
                 if (place.geometry.viewport) {
                     map.fitBounds(place.geometry.viewport);
@@ -168,8 +175,8 @@ export const selectPositionOnMap = (
     const setupCenterChangedListener = () => {
         google.maps.event.addListener(map, "center_changed", () => {
             // window.setTimeout(function() {
-            let center = map.getCenter();
-            marker.setPosition(center);
+                let center = map.getCenter();
+                marker.setPosition(center);
             // }, 100);
             const geocoder = new google.maps.Geocoder();
             geocoder.geocode(
@@ -179,9 +186,9 @@ export const selectPositionOnMap = (
                     status: google.maps.GeocoderStatus
                 ) => {
                     if (status === "OK") {
-                        currentPlace = results[0];
                         if (!isPlaceChanged) {
                             placeInput.value = results[0].formatted_address;
+                            setPlace(results[0])
                         } else {
                             isPlaceChanged = false;
                         }
@@ -217,14 +224,6 @@ export const selectPositionOnMap = (
             ]);
             setupPlaceChangedListener(originAutocomplete);
             setupCenterChangedListener();
-        }
-
-        if (submitButton) {
-            submitButton.addEventListener("click", () => {
-                if (currentPlace) {
-                    setPlace(currentPlace);
-                }
-            });
         }
     });
 };

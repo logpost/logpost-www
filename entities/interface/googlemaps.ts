@@ -1,3 +1,4 @@
+
 export interface MapInterface {
 	map: google.maps.Map
 	directionsService: google.maps.DirectionsService,
@@ -9,7 +10,11 @@ export interface InitMapInterface {
 	setMap: (mapProperty: MapInterface) => void
 }
 
+export interface FormattedPlace {
+	formatted_address: string
+}
+
 export interface PlaceInterface {
-	pickup: google.maps.places.PlaceResult | google.maps.GeocoderResult
-	dropoff: google.maps.places.PlaceResult | google.maps.GeocoderResult
+	pickup: google.maps.places.PlaceResult | google.maps.GeocoderResult | FormattedPlace
+	dropoff: google.maps.places.PlaceResult | google.maps.GeocoderResult | FormattedPlace
 }
