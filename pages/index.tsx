@@ -1,12 +1,36 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { LogpostIcon } from "../components/common/Icons";
 import {
     PrimaryButton,
     TextButton,
     Background,
 } from "../components/styles/GlobalComponents";
+import breakpointGenerator from "../components/utilities/breakpoint";
+
+const BackgroundCustom = styled(Background)`
+    ${
+        breakpointGenerator({
+            large: css`
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+
+                > div {
+                    grid-column-start: 2;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `,
+
+            extraLarge: css`
+                grid-template-columns: 1fr 1.2fr;
+            `
+        })
+    }
+`
 
 const LogoContainer = styled.div`
     color: hsl(212, 28%, 28%);
@@ -20,6 +44,20 @@ const LogoContainer = styled.div`
 
     svg {
         margin-bottom: 0.2rem;
+    }
+
+    ${
+        breakpointGenerator({
+            large: css`
+                font-size: 3.2rem;
+                position: static;
+
+                svg {
+                    height: 4.6rem;
+                    width: auto;
+                }
+            `
+        })
     }
 `;
 
@@ -36,6 +74,18 @@ const SignUpContainer = styled.div`
     bottom: 0;
     background-color: white;
     width: 100%;
+
+    ${
+        breakpointGenerator({
+            large: css`
+                position: static;
+                box-shadow: none;
+                background-color: transparent;
+                padding: 0;
+                margin-top: 6rem;
+            `
+        })
+    }
 `;
 
 const PrimaryButtonCustom = styled(PrimaryButton)`
@@ -55,11 +105,11 @@ const TextButtonCustom = styled(TextButton)`
 const Home = () => {
     const router = useRouter();
 
-    // useEffect(() => {
-    //     if (localStorage.getItem("access_token") !== null) {
-    //         router.push("/jobs");
-    //     }
-    // }, []);
+    useEffect(() => {
+        if (localStorage.getItem("access_token") !== null) {
+            router.push("/jobs");
+        }
+    }, []);
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>, path: string) => {
         e.preventDefault();
@@ -67,23 +117,25 @@ const Home = () => {
     };
 
     return (
-        <Background>
-            <LogoContainer>
-                <LogpostIcon />
-                แหล่งรวมงานขนส่ง
-            </LogoContainer>
-            <SignUpContainer>
-                <PrimaryButtonCustom onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "shipper")}>
-                    ลงทะเบียนผู้ส่ง
-                </PrimaryButtonCustom>
-                <PrimaryButtonCustom onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "carrier")}>
-                    ลงทะเบียนขนส่ง
-                </PrimaryButtonCustom>
-                <TextButtonCustom onClick={() => router.push("/login")}>
-                    เข้าสู่ระบบ
-                </TextButtonCustom>
-            </SignUpContainer>
-        </Background>
+        <BackgroundCustom>
+            <div>
+                <LogoContainer>
+                    <LogpostIcon />
+                    แหล่งรวมงานขนส่ง
+                </LogoContainer>
+                <SignUpContainer>
+                    <PrimaryButtonCustom onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "shipper")}>
+                        ลงทะเบียนผู้ส่ง
+                    </PrimaryButtonCustom>
+                    <PrimaryButtonCustom onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleClick(e, "carrier")}>
+                        ลงทะเบียนขนส่ง
+                    </PrimaryButtonCustom>
+                    <TextButtonCustom onClick={() => router.push("/login")}>
+                        เข้าสู่ระบบ
+                    </TextButtonCustom>
+                </SignUpContainer>
+            </div>
+        </BackgroundCustom>
     );
 };
 
