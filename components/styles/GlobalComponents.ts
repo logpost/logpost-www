@@ -105,7 +105,7 @@ export const Form = styled.form`
 	display: flex;
 	flex-direction: column;
 
-	> div:not(:first-child) {
+	> div > div:not(:first-child) {
 		margin-top: 1.8rem;
 	}
 
@@ -121,6 +121,29 @@ export const Form = styled.form`
 		> span {
 			font-size: 1.4rem;
 		}
+	}
+
+	${
+		breakpointGenerator({
+			medium: css`
+				display: grid;
+				margin: 0;
+				grid-template-columns: 1fr 2fr;
+				min-height: 100vh;
+				height: 100%;
+
+				> div:last-child {
+					margin: 4.2rem;
+					max-width: 45rem;
+				}
+			`,
+
+			large: css`
+				> div:last-child {
+					margin-left: 6.4rem;
+				}
+			`
+		})
 	}
 `
 
