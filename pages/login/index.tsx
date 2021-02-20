@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import InputComponent from "../../components/common/InputComponent";
 import { useRouter } from "next/router";
 import {
@@ -12,6 +12,31 @@ import { login } from "../../components/utilities/apis";
 import Alert from "../../components/common/Alert";
 import { useRecoilState } from "recoil";
 import { alertPropertyState } from "../../store/atoms/alertPropertyState";
+import breakpointGenerator from "../../components/utilities/breakpoint";
+import { BreakpointLG, BreakpointMD } from "../../components/styles/Breakpoints";
+
+const BackgroundCustom = styled(Background)`
+    ${
+        breakpointGenerator({
+            large: css`
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+
+                > div {
+                    grid-column-start: 2;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                }
+            `,
+
+            extraLarge: css`
+                grid-template-columns: 1fr 1.2fr;
+            `
+        })
+    }
+`
 
 const LoginContainer = styled.div`
     position: absolute;
@@ -19,19 +44,44 @@ const LoginContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
+
+    ${
+        breakpointGenerator({
+            large: css`
+                position: static;
+                max-width: 32rem;
+                margin-top: 2.8rem;
+            `
+        })
+    }
 `;
 
 const InputContainer = styled.form`
     display: flex;
     align-items: center;
     flex-direction: column;
-    font-size: 2.4rem;
+    font-size: 24px;
     font-weight: 500;
     padding: 3rem 5.45rem 0;
     background-color: white;
 
     > div:not(:last-child) {
         margin-bottom: 2.4rem;
+    }
+
+    ${
+        breakpointGenerator({
+            medium: css`
+                > div {
+                    max-width: 36rem;
+                }
+            `,
+
+            large: css`
+                padding: 0;
+                margin-top: 2.8rem;
+            `
+        })
     }
 `;
 
@@ -46,12 +96,23 @@ const SignUpContainer = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
-    margin: 2.6rem 0;
+    padding: 2.6rem 0;
     font-size: 2rem;
     color: hsl(217, 16%, 16%);
+    background-color: white;
 
     > button {
         margin-top: 0.6rem;
+    }
+
+    ${
+        breakpointGenerator({
+            large: css`
+                position: static;
+                background-color: transparent;
+                margin-top: 2rem;
+            `
+        })
     }
 `;
 
@@ -63,12 +124,6 @@ const RadioInput = styled.button`
     text-align: center;
     background-color: hsl(16, 56%, 51%);
     color: white;
-    ${(props) =>
-        props.value === props.name &&
-        `
-		background-color: white;
-		color: hsl(16, 56%, 51%);
-	`}
 
     &:last-child {
         border-top-right-radius: 3.6rem;
@@ -77,11 +132,43 @@ const RadioInput = styled.button`
     &:first-child {
         border-top-left-radius: 3.6rem;
     }
+
+    ${(props) => css`
+        ${props.value === props.name && `
+            background-color: white;
+            color: hsl(16, 56%, 51%);
+        `}
+        ${breakpointGenerator({
+            large: `
+                border: 2px solid hsl(16, 56%, 51%);
+                background-color: white;
+                color: hsl(16, 56%, 51%);
+                padding: 1.2rem 0;
+
+                &:last-child {
+                    border-radius: 0 10px 10px 0;
+                    border-left: 0;
+                }
+
+                &:first-child {
+                    border-radius: 10px 0 0 10px;
+                    border-right: 0;
+                }
+
+                ${
+                    props.value === props.name && `
+                        background-color: hsl(16, 56%, 51%);
+                        color: white;
+                    `
+                }
+            `
+        })}        
+    `}
 `;
 
 const TitleContainer = styled.div`
     color: hsl(16, 56%, 51%);
-    font-size: 2.4rem;
+    font-size: 24px;
     font-weight: 600;
     display: flex;
     flex-direction: column;
@@ -91,6 +178,22 @@ const TitleContainer = styled.div`
 
     div {
         margin-bottom: 1rem;
+
+        ${
+        breakpointGenerator({
+            large: css`
+                margin-bottom: 2.8rem;
+            `
+        })
+    }
+    }
+
+    ${
+        breakpointGenerator({
+            large: css`
+                position: static;
+            `
+        })
     }
 `;
 
@@ -161,63 +264,73 @@ const LoginPage = () => {
     };
 
     return (
-        <Background>
+        <BackgroundCustom>
             {alertProperty.isShow && <Alert>{alertDescriptiton}</Alert>}
-            <TitleContainer>
-                <Title>เข้าสู่ระบบ</Title>
-                {role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
-            </TitleContainer>
-            <LoginContainer>
-                <div>
-                    <RadioInput
-                        type="button"
-                        value={role}
-                        name="shipper"
-                        onClick={() => setRole("shipper")}
-                    >
-                        ผู้ส่ง
-                    </RadioInput>
-                    <RadioInput
-                        type="button"
-                        value={role}
-                        name="carrier"
-                        onClick={() => setRole("carrier")}
-                    >
-                        ขนส่ง
-                    </RadioInput>
-                </div>
-                <InputContainer onSubmit={handleLogin}>
-                    <InputComponent
-                        labelSize="large"
-                        labelTH="ชื่อผู้ใช้"
-                        labelEN="Username"
-                        name="username"
-                        required={false}
-                        value={auth.username}
-                        handleOnChange={handleInputOnChange}
-                    />
-                    <InputComponent
-                        type="password"
-                        labelSize="large"
-                        labelTH="รหัสผ่าน"
-                        labelEN="Password"
-                        name="password"
-                        required={false}
-                        value={auth.password}
-                        handleOnChange={handleInputOnChange}
-                    />
-                    <PrimaryButtonCustom type="submit">
-                        เข้าสู่ระบบ
-                    </PrimaryButtonCustom>
-                </InputContainer>
-                <SignUpContainer>
-                    ยังไม่ได้ลงทะเบียน?
-                    <TextButton onClick={() => router.push(`/signup/${role}`)}>
-                        ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
-                    </TextButton>
-                </SignUpContainer>
-            </LoginContainer>
-        </Background>
+            <div>
+                <BreakpointMD>
+                    <TitleContainer>
+                        <Title>เข้าสู่ระบบ</Title>
+                        <BreakpointMD>{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</BreakpointMD>
+                    </TitleContainer>
+                </BreakpointMD>
+                <LoginContainer>
+                    <BreakpointLG>
+                        <TitleContainer>
+                            <Title>เข้าสู่ระบบ</Title>
+                            <BreakpointMD>{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</BreakpointMD>
+                        </TitleContainer>
+                    </BreakpointLG>
+                    <div>
+                        <RadioInput
+                            type="button"
+                            value={role}
+                            name="shipper"
+                            onClick={() => setRole("shipper")}
+                        >
+                            ผู้ส่ง
+                        </RadioInput>
+                        <RadioInput
+                            type="button"
+                            value={role}
+                            name="carrier"
+                            onClick={() => setRole("carrier")}
+                        >
+                            ขนส่ง
+                        </RadioInput>
+                    </div>
+                    <InputContainer onSubmit={handleLogin}>
+                        <InputComponent
+                            labelSize="large"
+                            labelTH="ชื่อผู้ใช้"
+                            labelEN="Username"
+                            name="username"
+                            required={false}
+                            value={auth.username}
+                            handleOnChange={handleInputOnChange}
+                        />
+                        <InputComponent
+                            type="password"
+                            labelSize="large"
+                            labelTH="รหัสผ่าน"
+                            labelEN="Password"
+                            name="password"
+                            required={false}
+                            value={auth.password}
+                            handleOnChange={handleInputOnChange}
+                        />
+                        <PrimaryButtonCustom type="submit">
+                            เข้าสู่ระบบ
+                        </PrimaryButtonCustom>
+                    </InputContainer>
+                    <SignUpContainer>
+                        ยังไม่ได้ลงทะเบียน?
+                        <TextButton onClick={() => router.push(`/signup/${role}`)}>
+                            ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}
+                        </TextButton>
+                    </SignUpContainer>
+                </LoginContainer>
+            </div>
+        </BackgroundCustom>
     );
 };
 

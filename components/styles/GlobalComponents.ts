@@ -17,7 +17,8 @@ export const Background = styled.div`
 			large: css`
 				background: url('/images/main-bg-desktop.png') no-repeat fixed;
 				background-size: auto 100%;
-				height: 100vh;
+				height: 100%;
+				min-height: 100vh;
 				background-position: -120px 0;
 			`,
 			
@@ -27,11 +28,11 @@ export const Background = styled.div`
 		})
 	}
 
-	@media screen and (min-width: ${breakpointSize.medium}px) and (max-width: ${breakpointSize.large}px) and (min-height: 1000px) {
-		background-position: -300px 0;
+	@media screen and (min-width: ${breakpointSize.medium}px) and (max-width: ${breakpointSize.large}px) and (min-height: 980px) {
+		background-position: -280px 0;
 	}
 
-	@media screen and (min-width: ${breakpointSize.large}px) and (max-width: 1600px) and (min-height: 968px) {
+	@media screen and (min-width: ${breakpointSize.large}px) and (max-width: 1600px) and (min-height: 980px) {
 		background-position: -100px 0;
 	}
 

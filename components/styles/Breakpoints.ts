@@ -21,7 +21,7 @@ export const BreakpointMD = styled.div`
 `
 
 export const BreakpointLG = styled.div`
-    @media screen and (min-width: ${breakpointSize.large}px) {
+    @media screen and (max-width: ${breakpointSize.medium}px) {
         display: none;
         background-color: blue;
     }
