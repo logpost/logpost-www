@@ -22,8 +22,10 @@ const signup = async (role: string, data: AccountInterface) => {
 		console.log(data)
 		const res = await axios.post(`${ACCOUNT_URL}/signup/${role}`, data)
 		localStorage.setItem("email_token", res.data.email_token)
+		return res.status
 	} catch (error) {
 		console.log(error.response)
+		return error.response.status
 	}
 }
 

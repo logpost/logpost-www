@@ -2,16 +2,16 @@
 
 html {
     scroll-behavior: smooth;
-    font-size: 62.5%; /* waiting for change */
+    font-size: 72.5%; /* waiting for change */
 }
 
 @media screen and (max-width: 768px) {
     html {
-        font-size: 55.5%; /* waiting for change */
+        font-size: 67.5; /* waiting for change */
     }
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 576px) {
     html {
         font-size: 62.5%;
     }

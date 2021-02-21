@@ -1,9 +1,48 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import breakpointGenerator from '../utilities/breakpoint'
+import { breakpointSize } from './Breakpoints'
 
 export const Background = styled.div`
-	background-image: url('/images/main-bg.png');
+	background: url('/images/main-bg.png');
 	background-size: cover;
-	height: 80vh;
+	height: 82vh;
+	background-position: center center;
+
+	${
+		breakpointGenerator({
+			medium: css`
+				background-position: 0 -40px;
+			`,
+
+			large: css`
+				background: url('/images/main-bg-desktop.png') no-repeat fixed;
+				background-size: auto 100%;
+				height: 100%;
+				min-height: 100vh;
+				background-position: -120px 0;
+			`,
+			
+			extraLarge: css`
+				background-position: 0;
+			`
+		})
+	}
+
+	@media screen and (min-width: ${breakpointSize.medium}px) and (max-width: ${breakpointSize.large}px) and (min-height: 980px) {
+		background-position: -280px 0;
+	}
+
+	@media screen and (min-width: ${breakpointSize.large}px) and (max-width: 1600px) and (min-height: 980px) {
+		background-position: -100px 0;
+	}
+
+	@media screen and (min-width: ${breakpointSize.medium}px) and (max-width: ${breakpointSize.large}px) and (min-height: 1200px) {
+		background-position: -400px 0;
+	}
+
+	@media screen and (min-width: ${breakpointSize.large}px) and (max-width: 1600px) and (min-height: 1200px) {
+		background-position: -250px 0;
+	}
 `
 
 export const Title = styled.div`
@@ -66,7 +105,7 @@ export const Form = styled.form`
 	display: flex;
 	flex-direction: column;
 
-	> div:not(:first-child) {
+	> div > div:not(:first-child) {
 		margin-top: 1.8rem;
 	}
 
@@ -82,6 +121,29 @@ export const Form = styled.form`
 		> span {
 			font-size: 1.4rem;
 		}
+	}
+
+	${
+		breakpointGenerator({
+			medium: css`
+				display: grid;
+				margin: 0;
+				grid-template-columns: 1fr 2fr;
+				min-height: 100vh;
+				height: 100%;
+
+				> div:last-child {
+					margin: 4.2rem;
+					max-width: 45rem;
+				}
+			`,
+
+			large: css`
+				> div:last-child {
+					margin-left: 6.4rem;
+				}
+			`
+		})
 	}
 `
 
