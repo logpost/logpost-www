@@ -14,6 +14,7 @@ import { jobStatusCountState, myJobsState } from "../../../store/atoms/carrierPr
 import { resourceStatusCount } from "../../../components/utilities/helper"
 import { getMyJob, getShipperProfile } from "../../../components/utilities/apis"
 import { JobDocument } from '../../../entities/interface/job'
+import { BreakpointMD } from "../../../components/styles/Breakpoints"
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
@@ -36,9 +37,11 @@ const ShipperProfilePage = () => {
 	return (
 		<>
 			<NavigationBar activeIndex={2} />
-			<Header enabledSetting={true}>
-				{shipperInfo.displayName}
-      		</Header>
+			<BreakpointMD>
+				<Header enabledSetting={true}>
+					{shipperInfo.displayName}
+				</Header>
+			</BreakpointMD>
 			<ProfileStatusContainer>
 				<ProfileStatus
 					title="รายการงาน"

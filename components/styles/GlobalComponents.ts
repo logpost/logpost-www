@@ -83,7 +83,7 @@ export const TextButton = styled.button`
 	white-space: nowrap;
 `
 
-export const HeaderTitle = styled.div`
+export const HeaderTitle = styled.header`
 	font-size: 2.4rem;
 	font-weight: 500;
 	color: white;
@@ -98,6 +98,22 @@ export const HeaderContainer = styled.div`
 	button {
 		align-self: flex-end;
 	}
+
+	${breakpointGenerator({
+		large: css`
+			padding: 1.6rem 0;
+			align-self: center;
+			width: 100%;
+
+			header {
+				font-size: 2rem;
+			}
+
+			button {
+				align-self: center;
+			}
+		`
+	})}
 `
 
 export const Form = styled.form`

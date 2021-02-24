@@ -15,6 +15,7 @@ const BackgroundCustom = styled(Background)`
             large: css`
                 display: grid;
                 grid-template-columns: 1fr 1fr;
+                width: 100%;
 
                 > div {
                     grid-column-start: 2;

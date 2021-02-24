@@ -5,9 +5,25 @@ html {
     font-size: 72.5%; /* waiting for change */
 }
 
-@media screen and (max-width: 768px) {
+body {
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, "Bai Jamjuree", sans-serif, BlinkMacSystemFont,
+        Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+        Helvetica Neue, sans-serif;
+}
+
+body > div {
+    display: flex;
+}
+
+@media screen and (max-width: 960px) {
     html {
         font-size: 67.5; /* waiting for change */
+    }
+    
+    body > div {
+        display: block;
     }
 }
 
@@ -15,14 +31,6 @@ html {
     html {
         font-size: 62.5%;
     }
-}
-
-body {
-    padding: 0;
-    margin: 0;
-    font-family: -apple-system, "Bai Jamjuree", sans-serif, BlinkMacSystemFont,
-        Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
-        Helvetica Neue, sans-serif;
 }
 
 a {
