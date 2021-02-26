@@ -12,7 +12,15 @@ export const filterWordState = atom({
 
 export const filterStatusState = atom({
 	key: "filterStatusState",
-	default: "0"
+	default: [0]
+})
+
+export const filterLocationState = atom({
+	key: "filterLocationState",
+	default: {
+		pickup: "ทั้งหมด",
+		dropoff: "ทั้งหมด"
+	}
 })
 
 export const filterState = selector({
@@ -20,8 +28,9 @@ export const filterState = selector({
 	get: ({get}) => {
 		const filterWord = get(filterWordState)
 		const filterStatus = get(filterStatusState)
-		const data = get(tableDataState)
-		const filteredDataByWord = data.filter((item) => {
+		const filterLocation = get(filterLocationState)
+		let filteredData = get(tableDataState)
+		filteredData = filteredData.filter((item) => {
 			const {status, ...restItem} = item
 			return Object.values(restItem)
 				.map((value) => {
@@ -31,13 +40,21 @@ export const filterState = selector({
 					return value.toLowerCase().includes(filterWord)
 				})
 		})
-		if (filterStatus !== "0") {
-			const filteredDataByStatus = filteredDataByWord.filter((item) => {
-				return String(item.status) === filterStatus
+		if (filterStatus[0] !== 0) {
+			filteredData = filteredData.filter((item) => {
+				return filterStatus.includes(item.status)
 			})
-			return filteredDataByStatus
-		} else {
-			return filteredDataByWord
-		}
+		} 
+		if (filterLocation.pickup !== "ทั้งหมด") {
+			filteredData = filteredData.filter((item) => {
+				return filterLocation.pickup === item.pickup_location
+			})
+		} 
+		if (filterLocation.dropoff !== "ทั้งหมด") {
+			filteredData = filteredData.filter((item) => {
+				return filterLocation.dropoff === item.dropoff_location
+			})
+		} 
+		return filteredData
 	}
 });

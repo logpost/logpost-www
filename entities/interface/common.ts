@@ -1,4 +1,5 @@
 import { ReactElement } from 'react'
+import { StyledComponent } from 'styled-components';
 import { DriverTable } from './driver';
 import { TruckTable } from './truck';
 
@@ -61,4 +62,11 @@ export interface TableComponentInterface {
 		width?: string
 		format?: (index: number, item?: (TruckTable | DriverTable)) => ReactElement
 	}[]
+	tableStyle?: {
+		width?: string,
+		gap: string
+	}
+	RowStyle?: StyledComponent<"tr", any, {}>
+	HeaderStyle?: StyledComponent<"tr", any, {}>
+	PaginationStyle?: StyledComponent<"div", any, {}>
 }

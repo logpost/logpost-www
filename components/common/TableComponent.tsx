@@ -1,11 +1,12 @@
 import React, { useState } from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { TableComponentInterface } from "../../entities/interface/common"
 import { RightArrow, DoubleRightArrow } from "./Icons"
 import { useRecoilValue } from 'recoil'
 import { filterState } from "../../store/atoms/tableState"
 import { TruckTable } from "../../entities/interface/truck"
 import { DriverTable } from "../../entities/interface/driver"
+import { Pagination } from "../styles/GlobalComponents"
 
 interface CellInterface {
 	width?: string
@@ -13,18 +14,32 @@ interface CellInterface {
 }
 
 interface TableContainerInterface {
-	tableHeight: boolean
+	tableHeight: boolean,
+}
+
+interface TableInterface {
+	width?: string,
+	gap?: string
 }
 
 const TableContainer = styled.div<TableContainerInterface>`
-    height: ${props => props.tableHeight ? "auto" : "30rem"};
-    width: 100%;
+    height: 100%;
+	display: flex;
+	justify-content: center;
+	width: 100%;
 	min-height: 30rem;
 `
 
-const Table = styled.table`
+const Table = styled.table<TableInterface>`
 	width: 100%;
 	-webkit-border-horizontal-spacing: 0;
+	width: ${props => props.width ? props.width : "100%"};
+
+	${props => props.gap && 
+		css`
+			border-spacing: 0 ${props.gap};
+		`
+	}
 `
 
 const HeaderRow = styled.tr`
@@ -41,6 +56,11 @@ const Header = styled.th`
 	font-size: 1.6rem;
 	font-weight: bold;
 	padding: 0.8rem 0;
+	white-space: nowrap;
+
+	&:first-child {
+		padding: 0.8rem 0.5rem 0.8rem 1.8rem;
+	}
 `
 
 const Cell = styled.td<CellInterface>`
@@ -67,47 +87,14 @@ const TableCaption = styled.div`
 	margin-top: 1.4rem;
 `
 
-const Pagination = styled.div`
-	display: flex;
-    align-items: center;
-	color: hsl(16, 56%, 51%);
-	font-weight: 700;
-	width: 50%;
-    max-width: 16rem;
-    justify-content: space-between;
-
-	> span {
-		padding: 0 0.8rem;
-		text-align: center;
-		width: 40%;
-	}
-
-	button {
-		display: flex;
-		
-		svg {
-			height: 1.6rem;
-			width: 1.6rem;
-
-			path {
-				fill: hsl(16, 56%, 51%);
-			}
-		}
-
-		&:disabled {
-			svg path {
-				fill: hsl(0, 0%, 93%);
-			}
-		}
-
-		&:nth-child(-n + 2) {
-			transform: rotate(-180deg)
-		}
-	}
-`
-
 const TableComponent = (props: TableComponentInterface) => {
-	const { columns } = props
+	const { 
+		columns, 
+		tableStyle,
+		RowStyle = Row,
+		HeaderStyle = HeaderRow,
+		PaginationStyle = Pagination
+	} = props
 	const [currentPage, setCurrentPage] = useState(1)
 	const data = useRecoilValue<Object[]>(filterState)
 	const numberOfRow = data.length
@@ -119,21 +106,21 @@ const TableComponent = (props: TableComponentInterface) => {
 
 	if (maxPage <= 0) {
 		maxPage = 1
-	} 
+	}
 
 	return (
 		<>
 			<TableContainer tableHeight={numberOfRow < 7}>
-				<Table>
+				<Table {...tableStyle}>
 					<tbody>
-						<HeaderRow>
+						<HeaderStyle>
 							{columns.map((cell) => {
 								return <Header key={cell.id}>{cell.label}</Header>
 							})}
-						</HeaderRow>
+						</HeaderStyle>
 						{data.slice(firstRowOfPage, LastRowOfPage).map((item: (TruckTable | DriverTable), index) => {
 							return (
-								<Row key={index}>
+								<RowStyle key={index}>
 									{columns.map((column) => {
 										const cellValue = item[column.id]
 										return (
@@ -144,7 +131,7 @@ const TableComponent = (props: TableComponentInterface) => {
 											</Cell>
 										)
 									})}
-								</Row>
+								</RowStyle>
 							)
 						})}
 					</tbody>
@@ -152,13 +139,13 @@ const TableComponent = (props: TableComponentInterface) => {
 			</TableContainer>
 			<TableCaption>
 				<span>แสดง {remainingRow < maxRowPerPage ? numberOfRow : maxRowPerPage * currentPage} จาก {numberOfRow}</span>
-				<Pagination>
+				<PaginationStyle>
 					<button disabled={currentPage <= 1} onClick={()=> setCurrentPage(1)}><DoubleRightArrow /></button>
 					<button disabled={currentPage <= 1} onClick={()=> setCurrentPage(currentPage - 1)}><RightArrow/></button>
 					<span>{currentPage} / {maxPage}</span>
 					<button disabled={currentPage >= maxPage} onClick={()=> setCurrentPage(currentPage + 1)}><RightArrow/></button>
 					<button disabled={currentPage >= maxPage} onClick={()=> setCurrentPage(maxPage)}><DoubleRightArrow /></button>
-				</Pagination>
+				</PaginationStyle>
 			</TableCaption>
 		</>
 	)

@@ -19,6 +19,10 @@ interface NavBarItemInterface {
 	isActive: boolean;
 }
 
+const NavBarBlank = styled.div`
+	margin-left: 7rem;
+`
+
 const NavBarContainer = styled.div`
     display: flex;
     justify-content: space-around;
@@ -35,8 +39,8 @@ const NavBarContainer = styled.div`
 	${breakpointGenerator({
 	large: css`
 		background-color: hsl(212, 28%, 28%);
-		height: 100vh;
-		position: static;
+		min-height: 100vh;
+		position: fixed;
 		flex-direction: column;
 		justify-content: flex-start;
 		align-items: flex-start;
@@ -169,7 +173,8 @@ const NavigationBar = (props: NavBarInterface) => {
 	}
 
 	return (
-		userInfo && (
+		userInfo && (<>
+			<NavBarBlank />
 			<NavBarContainer>
 				<BreakpointLG>
 					<Header enabledSetting={true}>
@@ -200,7 +205,7 @@ const NavigationBar = (props: NavBarInterface) => {
 					<span>บัญชีของฉัน</span>
 				</NavBarItem>
 			</NavBarContainer>
-		)
+		</>)
 	);
 };
 

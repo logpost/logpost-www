@@ -296,3 +296,57 @@ export const TableRowActions = styled.div`
 		}
 	}
 `
+
+export const NumberOfJobs = styled.div`
+	border-radius: 100%;
+	background-color: hsl(16, 56%, 51%);
+	color: white;
+	font-size: 1.2rem;
+	text-align: center;
+	position: absolute;
+	left: 55%;
+	width: 2.1rem;
+	height: 2.1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`
+
+export const Pagination = styled.div`
+	display: flex;
+    align-items: center;
+	color: hsl(16, 56%, 51%);
+	font-weight: 700;
+	width: 50%;
+    max-width: 16rem;
+    justify-content: space-between;
+
+	> span {
+		padding: 0 0.8rem;
+		text-align: center;
+		width: 40%;
+	}
+
+	button {
+		display: flex;
+		
+		svg {
+			height: 1.6rem;
+			width: 1.6rem;
+
+			path {
+				fill: hsl(16, 56%, 51%);
+			}
+		}
+
+		&:disabled {
+			svg path {
+				fill: hsl(0, 0%, 93%);
+			}
+		}
+
+		&:nth-child(-n + 2) {
+			transform: rotate(-180deg)
+		}
+	}
+`

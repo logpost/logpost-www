@@ -81,7 +81,7 @@ const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) =
 
 	useEffect(() => {
 		const statusCode = Object.keys(statusList)[Object.values(statusList).indexOf(statusFilter)]
-		setFilterStatus(statusCode)
+		setFilterStatus([parseInt(statusCode)])
 	}, [statusFilter])
 
 	return (
