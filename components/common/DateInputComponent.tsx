@@ -6,11 +6,12 @@ interface DateInputComponentInterface {
 	value: string,
 	toggleCalendar: (toggle: boolean) => void,
 	setDateAndTime: (date: Date) => void,
-	time: number
+	time: number,
+	disabled: boolean
 }
 
 const DateInputComponent = forwardRef((props: DateInputComponentInterface, ref) => {
-	const { value, toggleCalendar, setDateAndTime, time } = props
+	const { value, toggleCalendar, setDateAndTime, time, disabled } = props
 	const [displayValue, setDisplayValue] = useState(value)
 
 	const handleOnChange = (value: string) => {
@@ -61,6 +62,7 @@ const DateInputComponent = forwardRef((props: DateInputComponentInterface, ref) 
 			onBlur={submitDate}
 			value={displayValue}
 			onClick={() => toggleCalendar(true)}
+			disabled={disabled}
 		/>
 	)
 })

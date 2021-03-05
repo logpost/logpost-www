@@ -23,12 +23,32 @@ export const filterLocationState = atom({
 	}
 })
 
+export const filterPickupDateState = atom({
+	key: "filterPickupDateState",
+	default: {
+		isFilter: false,
+		start: new Date(),
+		end: new Date()
+	}
+})
+
+export const filterDropoffDateState = atom({
+	key: "filterDropoffDateState",
+	default: {
+		isFilter: false,
+		start: new Date(),
+		end: new Date()
+	}
+})
+
 export const filterState = selector({
 	key: "filterFunction",
 	get: ({get}) => {
 		const filterWord = get(filterWordState)
 		const filterStatus = get(filterStatusState)
 		const filterLocation = get(filterLocationState)
+		const filterPickupDate = get(filterPickupDateState)
+		const filterDropoffDate = get(filterDropoffDateState)
 		let filteredData = get(tableDataState)
 		filteredData = filteredData.filter((item) => {
 			const {status, ...restItem} = item
@@ -55,6 +75,18 @@ export const filterState = selector({
 				return filterLocation.dropoff === item.dropoff_location
 			})
 		} 
+		if (filterPickupDate.isFilter) {
+			filteredData = filteredData.filter((item) => {
+				const pickup_date = new Date(item.pickup_date)
+				return (pickup_date >= filterPickupDate.start) && (pickup_date <= filterPickupDate.end)
+			})
+		}
+		if (filterDropoffDate.isFilter) {
+			filteredData = filteredData.filter((item) => {
+				const dropoff_date = new Date(item.dropoff_date)
+				return (dropoff_date >= filterDropoffDate.start) && (dropoff_date <= filterDropoffDate.end)
+			})
+		}
 		return filteredData
 	}
 });

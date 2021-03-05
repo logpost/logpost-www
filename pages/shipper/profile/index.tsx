@@ -1,11 +1,12 @@
 import React, { ReactElement, useEffect, useState } from "react"
-import styled, { css, StyledComponent } from "styled-components"
+import styled, { css } from "styled-components"
 import {
 	CancelIcon,
 	DownArrowLine,
 	EditIcon,
 	JobIcon,
 	JobSuccessIcon,
+	RightArrow,
 	TruckIcon,
 	UpArrowLine,
 } from "../../../components/common/Icons"
@@ -20,16 +21,22 @@ import { getMyJob } from "../../../components/utilities/apis"
 import { JobDocument } from '../../../entities/interface/job'
 import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoints"
 import DesktopHeader from "../../../components/common/DesktopHeader"
-import { HeaderTitle, NumberOfJobs, Pagination, PrimaryButton, TableRowActions } from "../../../components/styles/GlobalComponents"
+import { HeaderTitle, NumberOfJobs, Pagination, PrimaryButton, RadioButton, TableRowActions, TextButton } from "../../../components/styles/GlobalComponents"
 import SearchBar from "../../../components/common/SearchBar"
 import SelectComponent from "../../../components/common/SelectComponent"
 import { JOB_STATUS_CODE, PROVINCES } from "../../../data/jobs"
 import TableComponent from "../../../components/common/TableComponent"
-import { filterLocationState, filterState, filterStatusState, filterWordState, tableDataState } from "../../../store/atoms/tableState"
+import { filterDropoffDateState, filterLocationState, filterPickupDateState, filterState, filterStatusState, filterWordState, tableDataState } from "../../../store/atoms/tableState"
 import { useRouter } from "next/router"
+import InputComponent from "../../../components/common/InputComponent"
+import DateAndTimePicker from "../../../components/common/DateAndTimePicker"
 
 interface TabItemInterface {
 	isActive: boolean;
+}
+
+interface FiltersContainerInterface {
+	isExpand: boolean;
 }
 
 const ProfileStatusContainer = styled.div`
@@ -52,44 +59,117 @@ const HeaderTitleContainer = styled.div`
 	}
 `
 
-const FilterContainer = styled.div`
+const FilterRow = styled.div`
 	display: flex;
 	align-items: center;
-	margin-top: 1.4rem;
 
-	> div:first-child {
-		border: 1px solid hsl(0, 0%, 66%);
-		background-color: white;
-		max-width: 39rem;
-		height: max-content;
+	&:not(:first-child) {
+		justify-content: flex-start;
 
-		input {
-			background-color: white;
+		&:last-child {
+			grid-template-columns: repeat(auto-fit, minmax(24rem, max-content));
+		}
+
+		> div {
+			width: auto;
 		}
 	}
 
-	> div:not(:last-child) {
-		margin-right: 2.2rem;
+	&:first-child {
+		justify-content: space-between;
+
+		> div {
+			display: flex;
+			width: 80%;
+
+			> div {
+				margin-right: 2%;
+
+				&:first-child {
+					border: 1px solid hsl(0, 0%, 66%);
+					background-color: white;
+					min-width: 15rem;
+					height: max-content;
+			
+					input {
+						background-color: white;
+					}
+				}
+			}
+		}
+
+
+		${TextButton} {
+			text-decoration: none;
+			font-size: 1.4rem;
+			justify-self: flex-end;
+
+			svg {
+				transform: rotate(90deg);
+				margin-left: 0.8rem;
+			}
+		}
 	}
 `
 
-const LocationSelectContainer = styled.div`
-	font-size: 1.6rem;
+const FiltersContainer = styled.div<FiltersContainerInterface>`
+	display: flex;
+	flex-direction: column;
+	margin-top: 1.4rem;
+	width: 100%;
+	height: ${(props) => props.isExpand ? "auto" : "3.4rem"};
+	transition: all 300ms ease-in-out;
+
+	> div:not(:first-child) {
+		margin-top: 1.8rem;
+		opacity: ${(props) => props.isExpand ? 1 : 0};
+		transition: all 300ms ease-in-out;
+	}
+`
+
+const FilterContainer = styled.div`
+	font-size: 1.4rem;
 	display: flex;
 	align-items: center;
+	width: 80%;
+
+	&:last-child {
+		margin-left: 1.4rem;
+	}
+
+	input {
+		margin-top: 0;
+		font-size: 1.6rem;
+
+		& ~ div {
+			font-size: 1.4rem;
+			margin-left: 1.4rem;
+		}
+	}
 
 	> svg {
 		margin-right: 0.5rem;
-	}
-
-	> span {
-		margin-right: 1.4rem;
-		white-space: nowrap;
+		min-height: 1.8rem;
+		min-width: 1.8rem;
 	}
 
 	> div {
-		width: 14.2rem;
 		margin-top: 0;
+
+		&.MuiInputBase-root {
+			width: 80%;
+			max-width: 17rem;
+			min-width: 12rem;
+
+		}
+		
+		.react-datepicker__input-container input {
+			margin-top: 0;
+		}
+	}
+
+	> span {
+		margin: 0 1.4rem;
 	}
 `
 
@@ -191,7 +271,38 @@ const TablItem = styled.button<TabItemInterface>`
 			}
 		` 
 	}
+`
 
+const RadioContainer = styled.div`
+	display: flex;
+	margin-right: 1.4rem;
+	
+	> div {
+		display: flex;
+
+		&:last-child {
+			margin-left: 1.4rem;
+		}
+
+		${RadioButton} {
+			margin: 0;
+		}
+
+		> span {
+			margin-left: 1rem;
+			white-space: nowrap;
+		}
+	}
+`
+
+const FilterLabel = styled.div`
+	white-space: nowrap;
+	display: flex;
+	margin-right: 1.4rem;
+
+	svg {
+		margin-right: 1rem;
+	}
 `
 
 const ShipperProfilePage = () => {
@@ -201,14 +312,27 @@ const ShipperProfilePage = () => {
 		search: "",
 		pickup_province: "ทั้งหมด",
 		dropoff_province: "ทั้งหมด",
-		status: [0]
+		status: [0],
+		pickup_date: {
+			isFilter: false,
+			start: new Date(new Date().setHours(0, 0, 0, 0)),
+			end: new Date(new Date().setHours(23, 59, 59, 999))
+		},
+		dropoff_date: {
+			isFilter: false,
+			start: new Date(new Date().setHours(0, 0, 0, 0)),
+			end: new Date(new Date().setHours(23, 59, 59, 999))
+		},
 	})
-	const setTableData = useSetRecoilState(tableDataState)
+	const [jobTableData, setTableData] = useRecoilState(tableDataState)
 	const router = useRouter()
 	const filteredData = useRecoilValue(filterState)
 	const setFilterWord = useSetRecoilState(filterWordState)
 	const setFilterLocation = useSetRecoilState(filterLocationState)
+	const setFilterPickupDate = useSetRecoilState(filterPickupDateState)
+	const setFilterDropoffDate = useSetRecoilState(filterDropoffDateState)
 	const setFilterStatus = useSetRecoilState(filterStatusState)
+	const [showMoreFilter, setShowMoreFilter] = useState(false)
 
 	useEffect(() => {
 		setFilterStatus(filters.status)
@@ -222,12 +346,30 @@ const ShipperProfilePage = () => {
 	}, [filters.pickup_province, filters.dropoff_province])
 
 	useEffect(() => {
-		resourceStatusCount(filteredData, {
-			0: 0,
-			100: 0,
-			800: 0
-		}, setJobStatusCount)
-	}, [filteredData])
+		setFilterPickupDate(filters.pickup_date)
+	}, [filters.pickup_date])
+
+	useEffect(() => {
+		setFilterDropoffDate(filters.dropoff_date)
+	}, [filters.dropoff_date])
+
+	const filterDate = (filterField: string, targetField: string, value: (Date | boolean)) => {
+		const updateFilterDate = {
+			...filters,
+			[filterField]: {
+				...filters[filterField],
+				[targetField]: value
+			}
+		}
+		setFilters(updateFilterDate)
+	}
+ 	// useEffect(() => {
+	// 	resourceStatusCount(filteredData, {
+	// 		0: 0,
+	// 		100: 0,
+	// 		800: 0
+	// 	}, setJobStatusCount)
+	// }, [filteredData])
 
 	const jobColumns = [
 		{
@@ -246,13 +388,19 @@ const ShipperProfilePage = () => {
 			id: "pickup_date",
 			label: "วันขึ้นสินค้า",
 			width: "14%",
-			align: "left"
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{`${dateFormatter(job.pickup_date)} ${timeFormatter(job.pickup_date)}`.slice(0, -3)}</span>
+			)
 		},
 		{
 			id: "dropoff_date",
 			label: "วันลงสินค้า",
 			width: "14%",
-			align: "left"
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{`${dateFormatter(job.dropoff_date)} ${timeFormatter(job.dropoff_date)}`.slice(0, -3)}</span>
+			)
 		},
 		{
 			id: "product_type",
@@ -321,8 +469,8 @@ const ShipperProfilePage = () => {
 				job_id,
 				pickup_location: pickup_location.province,
 				dropoff_location: dropoff_location.province,
-				pickup_date: `${dateFormatter(pickup_date)} ${timeFormatter(pickup_date)}`.slice(0, -3),
-				dropoff_date: `${dateFormatter(dropoff_date)} ${timeFormatter(dropoff_date)}`.slice(0, -3), 
+				pickup_date,
+				dropoff_date, 
 				product_type,
 				weight: `${weight} ตัน`,
 				offer_price,
@@ -338,6 +486,11 @@ const ShipperProfilePage = () => {
 			getMyJob((jobs: JobDocument[]) => {
 				const jobTableData = convertJobToTableFormat(jobs)
 				setTableData(jobTableData)
+				resourceStatusCount(jobTableData, {
+					0: 0,
+					100: 0,
+					800: 0
+				}, setJobStatusCount)
 			})
 		}
 	}, [shipperInfo])
@@ -384,36 +537,165 @@ const ShipperProfilePage = () => {
 						<HeaderTitle>รายการงาน</HeaderTitle>
 						<PrimaryButton>สร้างงานใหม่</PrimaryButton>
 					</HeaderTitleContainer>
-					<FilterContainer>
-						<SearchBar
-							placeholder="ค้นหา"
-							setValue={setFilterWord}
-						/>
-						<LocationSelectContainer>
-							<UpArrowLine />
-							<span>ต้นทาง</span>
-							<SelectComponent
-								value={filters.pickup_province}
-								setValue={(value: string) => setFilters({ ...filters, pickup_province: value })}
-								menuList={["ทั้งหมด", ...PROVINCES]}
+					<FiltersContainer isExpand={showMoreFilter}>
+						<FilterRow>
+							<div>
+								<SearchBar
+									placeholder="ค้นหาจังหวัด สินค้า ประเภทรถ ฯลฯ"
+									setValue={setFilterWord}
+								/>
+								<FilterContainer>
+									<FilterLabel>
+										<UpArrowLine />
+										<span>ต้นทาง</span>
+									</FilterLabel>
+									<SelectComponent
+										value={filters.pickup_province}
+										setValue={(value: string) => setFilters({ ...filters, pickup_province: value })}
+										menuList={["ทั้งหมด", ...PROVINCES]}
+									/>
+								</FilterContainer>
+								<FilterContainer>
+									<FilterLabel>
+										<DownArrowLine />
+										<span>ปลายทาง</span>
+									</FilterLabel>
+									<SelectComponent
+										value={filters.dropoff_province}
+										setValue={(value: string) => setFilters({ ...filters, dropoff_province: value })}
+										menuList={["ทั้งหมด", ...PROVINCES]}
+									/>
+								</FilterContainer>
+							</div>
+							<TextButton onClick={() => setShowMoreFilter(!showMoreFilter)}><span>แสดงตัวกรองอื่น ๆ</span><RightArrow/></TextButton>
+						</FilterRow>
+						<FilterContainer>
+							<FilterLabel>
+								<UpArrowLine />
+								<span>วันขึ้นสินค้า</span>
+							</FilterLabel>
+							<RadioContainer>
+								<div>
+									<RadioButton>
+										<input 
+											defaultChecked 
+											type="radio" 
+											value="ทุกวัน" 
+											name="pickup_date" 
+											onChange={() => filterDate("pickup_date", "isFilter", false)} />
+										<JobSuccessIcon />
+									</RadioButton>
+									<span>ทุกวัน</span>
+								</div>
+								<div>
+									<RadioButton>
+										<input 
+											type="radio" 
+											value="เลือกช่วง" 
+											name="pickup_date" 
+											onChange={() => filterDate("pickup_date", "isFilter", true)} />
+										<JobSuccessIcon />
+									</RadioButton>
+									<span>เลือกช่วง</span>
+								</div>
+							</RadioContainer>
+							<DateAndTimePicker 
+								dateAndTime={filters.pickup_date.start}
+								setDateAndTime={(value: Date) => setFilters({...filters, pickup_date: {...filters.pickup_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
+								hideTime={true}
+								disabledDate={!filters.pickup_date.isFilter}
+								minDate={new Date(2000)}
 							/>
-						</LocationSelectContainer>
-						<LocationSelectContainer>
-							<DownArrowLine />
-							<span>ปลายทาง</span>
-							<SelectComponent
-								value={filters.dropoff_province}
-								setValue={(value: string) => setFilters({ ...filters, dropoff_province: value })}
-								menuList={["ทั้งหมด", ...PROVINCES]}
+							<span>ถึง</span>
+							<DateAndTimePicker 
+								dateAndTime={filters.pickup_date.end < filters.pickup_date.start ? filters.pickup_date.start : filters.pickup_date.end}
+								setDateAndTime={(value: Date) => setFilters({...filters, pickup_date: {...filters.pickup_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
+								minDate={filters.pickup_date.start}
+								hideTime={true}
+								disabledDate={!filters.pickup_date.isFilter}
 							/>
-						</LocationSelectContainer>
-					</FilterContainer>
+						</FilterContainer>
+						<FilterContainer>
+							<FilterLabel>
+								<DownArrowLine />
+								<span>วันลงสินค้า</span>
+							</FilterLabel>
+							<RadioContainer>
+								<div>
+									<RadioButton>
+										<input 
+											defaultChecked 
+											type="radio" 
+											value="ทุกวัน" 
+											name="dropoff_date" 
+											onChange={() => filterDate("dropoff_date", "isFilter", false)} />
+										<JobSuccessIcon />
+									</RadioButton>
+									<span>ทุกวัน</span>
+								</div>
+								<div>
+									<RadioButton>
+										<input 
+											type="radio" 
+											value="เลือกช่วง" 
+											name="dropoff_date" 
+											onChange={() => filterDate("dropoff_date", "isFilter", true)} />
+										<JobSuccessIcon />
+									</RadioButton>
+									<span>เลือกช่วง</span>
+								</div>
+							</RadioContainer>
+							<DateAndTimePicker 
+								dateAndTime={filters.dropoff_date.start}
+								setDateAndTime={(value: Date) => setFilters({...filters, dropoff_date: {...filters.dropoff_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
+								hideTime={true}
+								disabledDate={!filters.dropoff_date.isFilter}
+								minDate={new Date(2000)}
+							/>
+							<span>ถึง</span>
+							<DateAndTimePicker 
+								dateAndTime={filters.dropoff_date.end < filters.dropoff_date.start ? filters.dropoff_date.start : filters.dropoff_date.end}
+								setDateAndTime={(value: Date) => setFilters({...filters, dropoff_date: {...filters.dropoff_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
+								minDate={filters.dropoff_date.start}
+								hideTime={true}
+								disabledDate={!filters.dropoff_date.isFilter}
+							/>
+						</FilterContainer>
+						<FilterRow>
+							<FilterContainer>
+								<FilterLabel>
+									<DownArrowLine />
+									<span>น้ำหนัก ไม่เกิน</span>
+								</FilterLabel>
+								<InputComponent
+									type="number"
+									classifier="ตัน"
+									disableLabel={true}
+									value={filters.pickup_province}
+									handleOnChange={() => {console.log("up")}}
+								/>
+							</FilterContainer>
+							<FilterContainer>
+								<FilterLabel>
+									<DownArrowLine />
+									<span>ราคา ขั้นต่ำ</span>
+								</FilterLabel>
+								<InputComponent
+									type="number"
+									classifier="บาท"
+									disableLabel={true}
+									value={filters.pickup_province}
+									handleOnChange={() => {console.log("up")}}
+								/>
+							</FilterContainer>
+						</FilterRow>
+					</FiltersContainer>
 				</DesktopHeader>
 				<ContentContainer>
 					<TabContainer>
 						<TablItem isActive={filters.status[0] === 0} onClick={() => setFilters({...filters, status: [0]})}>
 							ทั้งหมด
-							<NumberOfJobs>{filteredData.length}</NumberOfJobs>
+							<NumberOfJobs>{jobTableData.length}</NumberOfJobs>
 						</TablItem>
 						<TablItem isActive={filters.status[0] === 100} onClick={() => setFilters({...filters, status: [100]})}>
 							รอผู้รับงาน

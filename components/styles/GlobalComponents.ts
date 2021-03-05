@@ -350,3 +350,58 @@ export const Pagination = styled.div`
 		}
 	}
 `
+
+export const RadioButton = styled.div`
+    position: relative;
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 0.1rem solid hsl(16, 56%, 51%);
+    border-radius: 50%;
+    margin: auto;
+    transition: all 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 0 0 6px hsl(16, 56%, 51%, 10%);
+    }
+
+    svg {
+        width: 2.7rem;
+        height: 2.7rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        #circle {
+            display: none;
+        }
+
+        #check {
+            fill: transparent;
+        }
+    }
+
+    input {
+        position: absolute;
+        height: 1.6rem;
+        width: 1.6rem;
+        margin: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        opacity: 0;
+
+        &:checked {
+            & ~ svg {
+                #check {
+                    fill: white;
+                }
+
+                #background {
+                    fill: hsl(16, 56%, 51%);
+                }
+            }
+        }
+    }
+`;
