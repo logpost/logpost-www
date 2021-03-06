@@ -26,7 +26,7 @@ import { jobDetailsSelector, jobDetailsState } from '../../../store/atoms/jobDet
 import { useRecoilState } from 'recoil'
 import { getDriver, getJobDetailsByID, getTruck, pickJob } from "../../../components/utilities/apis"
 import { JobDocument } from "../../../entities/interface/job"
-import { filterWordState, tableDataState } from "../../../store/atoms/tableState"
+import { filterResourceState, filterWordState, tableDataState } from "../../../store/atoms/tableState"
 import { DriverDocument, DriverTable } from "../../../entities/interface/driver"
 import { TruckDocument, TruckTable } from '../../../entities/interface/truck'
 import { trucksState } from '../../../store/atoms/trucksState'
@@ -337,6 +337,7 @@ const GetJobPage = () => {
 					/>
 					<TableComponent
 						columns={driverColumns}
+						filterSelector={filterResourceState}
 					/>
 					{!isRadioSelected && (
 						<Warning>กรุณาเลือกพนักงานขับรถ</Warning>
@@ -362,6 +363,7 @@ const GetJobPage = () => {
 					/>
 					<TableComponent
 						columns={truckColumns}
+						filterSelector={filterResourceState}
 					/>
 					{!isRadioSelected && <Warning>กรุณาเลือกรถบรรทุก</Warning>}
 					<FormActionsCustom>

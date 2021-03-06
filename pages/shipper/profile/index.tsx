@@ -742,6 +742,7 @@ const ShipperProfilePage = () => {
 							RowStyle={TableRowStyle}
 							HeaderStyle={TableHeaderStyle}
 							PaginationStyle={TablePaginationStyle}
+							filterSelector={filterState}
 						/>
 					</TableContainer>
 				</ContentContainer>

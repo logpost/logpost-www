@@ -1,4 +1,5 @@
 import { ReactElement } from 'react'
+import { RecoilState } from 'recoil';
 import { StyledComponent } from 'styled-components';
 import { DriverTable } from './driver';
 import { TruckTable } from './truck';
@@ -70,4 +71,5 @@ export interface TableComponentInterface {
 	RowStyle?: StyledComponent<"tr", any, {}>
 	HeaderStyle?: StyledComponent<"tr", any, {}>
 	PaginationStyle?: StyledComponent<"div", any, {}>
+	filterSelector: RecoilState<any[]>
 }

@@ -10,6 +10,11 @@ export const filterWordState = atom({
 	default: ""
 })
 
+export const filterStatusState = atom({
+	key: "filterStatusState",
+	default: [0]
+})
+
 export const jobFiltersState = atom({
 	key: "jobFiltersState",
 	default: {
@@ -33,6 +38,34 @@ export const jobFiltersState = atom({
 			type: "ทั้งหมด",
 			option: "ทั้งหมด",
 		}
+	}
+})
+
+export const filterResourceState = selector({
+	key: "filterResourceState",
+	set: ({set}, newValue: Object[]) => {
+		set(tableDataState, newValue)
+	},
+	get: ({get}) => {
+		const filterWord = get(filterWordState)
+		const filterStatus = get(filterStatusState)
+		let filteredData = get(tableDataState)
+		filteredData = filteredData.filter((item) => {
+			const {status, ...restItem} = item
+			return Object.values(restItem)
+				.map((value) => {
+					return String(value)
+				})
+				.find((value) => {
+					return value.toLowerCase().includes(filterWord)
+				})
+		})
+		if (filterStatus[0] !== 0) {
+			filteredData = filteredData.filter((item) => {
+				return filterStatus.includes(item.status)
+			})
+		} 
+		return filteredData
 	}
 })
 

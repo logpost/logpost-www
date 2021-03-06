@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled, { css } from "styled-components"
 import { TableComponentInterface } from "../../entities/interface/common"
 import { RightArrow, DoubleRightArrow, UpArrowLine, DownArrowLine } from "./Icons"
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { filterState } from "../../store/atoms/tableState"
 import { TruckTable } from "../../entities/interface/truck"
 import { DriverTable } from "../../entities/interface/driver"
@@ -122,14 +122,15 @@ const TableComponent = (props: TableComponentInterface) => {
 		tableStyle,
 		RowStyle = Row,
 		HeaderStyle = HeaderRow,
-		PaginationStyle = Pagination
+		PaginationStyle = Pagination,
+		filterSelector
 	} = props
 	const [currentPage, setCurrentPage] = useState(1)
 	const [sortOrder, setSortOrder] = useState({
 		field: "",
 		isAscending: false,
 	})
-	const [data, setData] = useRecoilState<Object[]>(filterState)
+	const [data, setData] = useRecoilState<Object[]>(filterSelector)
 	const numberOfRow = data.length
 	const maxRowPerPage = 7
 	const firstRowOfPage = (currentPage - 1)*maxRowPerPage
