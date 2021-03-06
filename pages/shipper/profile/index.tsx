@@ -184,13 +184,11 @@ const FiltersContainer = styled.div<FiltersContainerInterface>`
 	flex-direction: column;
 	margin-top: 1.4rem;
 	width: 100%;
-	height: ${(props) => props.isExpand ? "auto" : "3.4rem"};
-	transition: all 300ms ease-in-out;
+	max-height: ${(props) => props.isExpand ? "50rem" : "3.4rem"};
+	transition: all 0.3s ease-in;
 
 	> div:not(:first-child) {
 		margin-top: 1.8rem;
-		opacity: ${(props) => props.isExpand ? 1 : 0};
-		transition: all 300ms ease-in-out;
 	}
 `
 
@@ -422,9 +420,6 @@ const ShipperProfilePage = () => {
 			label: "ประเภทรถ",
 			width: "12%",
 			align: "left",
-			format: (_: number, job): ReactElement => (
-				<span>{`${job.carrier_specification.truck.property.type} ${job.carrier_specification.truck.property.option}`}</span>
-			)
 		},
 		{
 			id: "status",
@@ -439,6 +434,8 @@ const ShipperProfilePage = () => {
 			id: "actions",
 			label: "เลือก",
 			width: "8%",
+			sortable: false,
+			align: "center",
 			format: (_: number, job): ReactElement => (
 				<TableRowActions>
 					<button onClick={() => router.push(`/jobs/edit/${job.job_id}`)}><EditIcon /></button>
@@ -456,6 +453,7 @@ const ShipperProfilePage = () => {
 				...job, 
 				pickup_location: pickup_location.province,
 				dropoff_location: dropoff_location.province,
+				truck_type: `${job.carrier_specification.truck.property.type} ${job.carrier_specification.truck.property.option}`
 			})
 		})
 		return jobTableData
@@ -549,164 +547,168 @@ const ShipperProfilePage = () => {
 							</div>
 							<TextButton onClick={() => setShowMoreFilter(!showMoreFilter)}><span>แสดงตัวกรองอื่น ๆ</span><RightArrow/></TextButton>
 						</FilterRow>
-						<FilterContainer>
-							<FilterLabel>
-								<UpArrowLine />
-								<span>วันขึ้นสินค้า</span>
-							</FilterLabel>
-							<RadioContainer>
-								<div>
-									<RadioButton>
-										<input 
-											defaultChecked 
-											type="radio" 
-											value="ทุกวัน" 
-											name="pickup_date" 
-											onChange={() => filterDate("pickup_date", "isFilter", false)} />
-										<JobSuccessIcon />
-									</RadioButton>
-									<span>ทุกวัน</span>
-								</div>
-								<div>
-									<RadioButton>
-										<input 
-											type="radio" 
-											value="เลือกช่วง" 
-											name="pickup_date" 
-											onChange={() => filterDate("pickup_date", "isFilter", true)} />
-										<JobSuccessIcon />
-									</RadioButton>
-									<span>เลือกช่วง</span>
-								</div>
-							</RadioContainer>
-							<DateAndTimePicker 
-								dateAndTime={jobFilters.pickup_date.start}
-								setDateAndTime={(value: Date) => setJobFilters({...jobFilters, pickup_date: {...jobFilters.pickup_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
-								hideTime={true}
-								disabledDate={!jobFilters.pickup_date.isFilter}
-								minDate={new Date(2000)}
-							/>
-							<span>ถึง</span>
-							<DateAndTimePicker 
-								dateAndTime={jobFilters.pickup_date.end < jobFilters.pickup_date.start ? jobFilters.pickup_date.start : jobFilters.pickup_date.end}
-								setDateAndTime={(value: Date) => setJobFilters({...jobFilters, pickup_date: {...jobFilters.pickup_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
-								minDate={jobFilters.pickup_date.start}
-								hideTime={true}
-								disabledDate={!jobFilters.pickup_date.isFilter}
-							/>
-						</FilterContainer>
-						<FilterContainer>
-							<FilterLabel>
-								<DownArrowLine />
-								<span>วันลงสินค้า</span>
-							</FilterLabel>
-							<RadioContainer>
-								<div>
-									<RadioButton>
-										<input 
-											defaultChecked 
-											type="radio" 
-											value="ทุกวัน" 
-											name="dropoff_date" 
-											onChange={() => filterDate("dropoff_date", "isFilter", false)} />
-										<JobSuccessIcon />
-									</RadioButton>
-									<span>ทุกวัน</span>
-								</div>
-								<div>
-									<RadioButton>
-										<input 
-											type="radio" 
-											value="เลือกช่วง" 
-											name="dropoff_date" 
-											onChange={() => filterDate("dropoff_date", "isFilter", true)} />
-										<JobSuccessIcon />
-									</RadioButton>
-									<span>เลือกช่วง</span>
-								</div>
-							</RadioContainer>
-							<DateAndTimePicker 
-								dateAndTime={jobFilters.dropoff_date.start}
-								setDateAndTime={(value: Date) => setJobFilters({...jobFilters, dropoff_date: {...jobFilters.dropoff_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
-								hideTime={true}
-								disabledDate={!jobFilters.dropoff_date.isFilter}
-								minDate={new Date(2000)}
-							/>
-							<span>ถึง</span>
-							<DateAndTimePicker 
-								dateAndTime={jobFilters.dropoff_date.end < jobFilters.dropoff_date.start ? jobFilters.dropoff_date.start : jobFilters.dropoff_date.end}
-								setDateAndTime={(value: Date) => setJobFilters({...jobFilters, dropoff_date: {...jobFilters.dropoff_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
-								minDate={jobFilters.dropoff_date.start}
-								hideTime={true}
-								disabledDate={!jobFilters.dropoff_date.isFilter}
-							/>
-						</FilterContainer>
-						<FilterRow>
+						{
+							showMoreFilter && <>
 							<FilterContainer>
 								<FilterLabel>
-									<WeightIcon />
-									<span>น้ำหนัก ไม่เกิน</span>
+									<UpArrowLine />
+									<span>วันขึ้นสินค้า</span>
 								</FilterLabel>
-								<InputComponent
-									type="number"
-									classifier="ตัน"
-									disableLabel={true}
-									value={jobFilters.weight}
-									handleOnChange={(e) => setJobFilters({...jobFilters, weight: e.target.value})}
+								<RadioContainer>
+									<div>
+										<RadioButton>
+											<input 
+												defaultChecked 
+												type="radio" 
+												value="ทุกวัน" 
+												name="pickup_date" 
+												onChange={() => filterDate("pickup_date", "isFilter", false)} />
+											<JobSuccessIcon />
+										</RadioButton>
+										<span>ทุกวัน</span>
+									</div>
+									<div>
+										<RadioButton>
+											<input 
+												type="radio" 
+												value="เลือกช่วง" 
+												name="pickup_date" 
+												onChange={() => filterDate("pickup_date", "isFilter", true)} />
+											<JobSuccessIcon />
+										</RadioButton>
+										<span>เลือกช่วง</span>
+									</div>
+								</RadioContainer>
+								<DateAndTimePicker 
+									dateAndTime={jobFilters.pickup_date.start}
+									setDateAndTime={(value: Date) => setJobFilters({...jobFilters, pickup_date: {...jobFilters.pickup_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
+									hideTime={true}
+									disabledDate={!jobFilters.pickup_date.isFilter}
+									minDate={new Date(2000)}
+								/>
+								<span>ถึง</span>
+								<DateAndTimePicker 
+									dateAndTime={jobFilters.pickup_date.end < jobFilters.pickup_date.start ? jobFilters.pickup_date.start : jobFilters.pickup_date.end}
+									setDateAndTime={(value: Date) => setJobFilters({...jobFilters, pickup_date: {...jobFilters.pickup_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
+									minDate={jobFilters.pickup_date.start}
+									hideTime={true}
+									disabledDate={!jobFilters.pickup_date.isFilter}
 								/>
 							</FilterContainer>
 							<FilterContainer>
 								<FilterLabel>
-									<PriceIcon />
-									<span>ราคา ขั้นต่ำ</span>
+									<DownArrowLine />
+									<span>วันลงสินค้า</span>
 								</FilterLabel>
-								<InputComponent
-									type="number"
-									classifier="บาท"
-									disableLabel={true}
-									value={jobFilters.price}
-									handleOnChange={(e) => setJobFilters({...jobFilters, price: e.target.value})}
+								<RadioContainer>
+									<div>
+										<RadioButton>
+											<input 
+												defaultChecked 
+												type="radio" 
+												value="ทุกวัน" 
+												name="dropoff_date" 
+												onChange={() => filterDate("dropoff_date", "isFilter", false)} />
+											<JobSuccessIcon />
+										</RadioButton>
+										<span>ทุกวัน</span>
+									</div>
+									<div>
+										<RadioButton>
+											<input 
+												type="radio" 
+												value="เลือกช่วง" 
+												name="dropoff_date" 
+												onChange={() => filterDate("dropoff_date", "isFilter", true)} />
+											<JobSuccessIcon />
+										</RadioButton>
+										<span>เลือกช่วง</span>
+									</div>
+								</RadioContainer>
+								<DateAndTimePicker 
+									dateAndTime={jobFilters.dropoff_date.start}
+									setDateAndTime={(value: Date) => setJobFilters({...jobFilters, dropoff_date: {...jobFilters.dropoff_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
+									hideTime={true}
+									disabledDate={!jobFilters.dropoff_date.isFilter}
+									minDate={new Date(2000)}
+								/>
+								<span>ถึง</span>
+								<DateAndTimePicker 
+									dateAndTime={jobFilters.dropoff_date.end < jobFilters.dropoff_date.start ? jobFilters.dropoff_date.start : jobFilters.dropoff_date.end}
+									setDateAndTime={(value: Date) => setJobFilters({...jobFilters, dropoff_date: {...jobFilters.dropoff_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
+									minDate={jobFilters.dropoff_date.start}
+									hideTime={true}
+									disabledDate={!jobFilters.dropoff_date.isFilter}
 								/>
 							</FilterContainer>
-						</FilterRow>
-						<FilterRow>
-							<FilterContainer>
-								<FilterLabel>
-									<TruckIcon />
-									<span>ประเภทรถ</span>
-								</FilterLabel>
-								<SelectComponent
-									menuList={["ทั้งหมด", ...Object.keys(TRUCK_TYPE_LIST)]}
-									value={jobFilters.truck.type}
-									setValue={(value: string) => setJobFilters({...jobFilters, truck: {...jobFilters.truck, type: value}})}
-								/>
-							</FilterContainer>
-							{
-								jobFilters.truck.type !== "ทั้งหมด" &&
-								<FilterContainer id="option">
+							<FilterRow>
+								<FilterContainer>
 									<FilterLabel>
-										<OptionIcon />
-										<span>ส่วนเสริม</span>
+										<WeightIcon />
+										<span>น้ำหนัก ไม่เกิน</span>
 									</FilterLabel>
-									<ButtonGroupContainer>
-										{	
-											["ทั้งหมด", ...TRUCK_TYPE_LIST[jobFilters.truck.type].option].map((option: string, index: number) => {
-												return (
-													<ButtonItem
-														key={index}
-														onClick={() => setJobFilters({...jobFilters, truck: {...jobFilters.truck, option: option}})}
-														name={option}
-														value={jobFilters.truck.option}
-													>
-														{option}
-													</ButtonItem>
-												)
-											})
-										}
-									</ButtonGroupContainer>
+									<InputComponent
+										type="number"
+										classifier="ตัน"
+										disableLabel={true}
+										value={jobFilters.weight}
+										handleOnChange={(e) => setJobFilters({...jobFilters, weight: e.target.value})}
+									/>
 								</FilterContainer>
-							}
-						</FilterRow>
+								<FilterContainer>
+									<FilterLabel>
+										<PriceIcon />
+										<span>ราคา ขั้นต่ำ</span>
+									</FilterLabel>
+									<InputComponent
+										type="number"
+										classifier="บาท"
+										disableLabel={true}
+										value={jobFilters.price}
+										handleOnChange={(e) => setJobFilters({...jobFilters, price: e.target.value})}
+									/>
+								</FilterContainer>
+							</FilterRow>
+							<FilterRow>
+								<FilterContainer>
+									<FilterLabel>
+										<TruckIcon />
+										<span>ประเภทรถ</span>
+									</FilterLabel>
+									<SelectComponent
+										menuList={["ทั้งหมด", ...Object.keys(TRUCK_TYPE_LIST)]}
+										value={jobFilters.truck.type}
+										setValue={(value: string) => setJobFilters({...jobFilters, truck: {...jobFilters.truck, type: value}})}
+									/>
+								</FilterContainer>
+								{
+									jobFilters.truck.type !== "ทั้งหมด" &&
+									<FilterContainer id="option">
+										<FilterLabel>
+											<OptionIcon />
+											<span>ส่วนเสริม</span>
+										</FilterLabel>
+										<ButtonGroupContainer>
+											{	
+												["ทั้งหมด", ...TRUCK_TYPE_LIST[jobFilters.truck.type].option].map((option: string, index: number) => {
+													return (
+														<ButtonItem
+															key={index}
+															onClick={() => setJobFilters({...jobFilters, truck: {...jobFilters.truck, option: option}})}
+															name={option}
+															value={jobFilters.truck.option}
+														>
+															{option}
+														</ButtonItem>
+													)
+												})
+											}
+										</ButtonGroupContainer>
+									</FilterContainer>
+								}
+							</FilterRow>
+							</>
+						}
 					</FiltersContainer>
 				</DesktopHeader>
 				<ContentContainer>

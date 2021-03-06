@@ -38,6 +38,9 @@ export const jobFiltersState = atom({
 
 export const filterState = selector({
 	key: "filterFunction",
+	set: ({set}, newValue: Object[]) => {
+		set(tableDataState, newValue)
+	},
 	get: ({get}) => {
 		const filterWord = get(filterWordState)
 		const jobFilter = get(jobFiltersState)

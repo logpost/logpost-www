@@ -1,12 +1,13 @@
 import React, { useState } from "react"
 import styled, { css } from "styled-components"
 import { TableComponentInterface } from "../../entities/interface/common"
-import { RightArrow, DoubleRightArrow } from "./Icons"
-import { useRecoilValue } from 'recoil'
+import { RightArrow, DoubleRightArrow, UpArrowLine, DownArrowLine } from "./Icons"
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { filterState } from "../../store/atoms/tableState"
 import { TruckTable } from "../../entities/interface/truck"
 import { DriverTable } from "../../entities/interface/driver"
 import { Pagination } from "../styles/GlobalComponents"
+import { JobDetails } from "../../entities/interface/job"
 
 interface CellInterface {
 	width?: string
@@ -20,6 +21,11 @@ interface TableContainerInterface {
 interface TableInterface {
 	width?: string,
 	gap?: string
+}
+
+interface HeaderInterface {
+	sortActive?: boolean
+	cellAlign?: string
 }
 
 const TableContainer = styled.div<TableContainerInterface>`
@@ -52,11 +58,34 @@ const Row = styled.tr`
 	}
 `
 
-const Header = styled.th`
+const Header = styled.th<HeaderInterface>`
 	font-size: 1.6rem;
 	font-weight: bold;
 	padding: 0.8rem 0;
 	white-space: nowrap;
+
+	> div {
+		display: flex;
+		align-items: center;
+		justify-content: ${props => 
+			props.cellAlign === "center" ? "center" :
+				props.cellAlign === "left" ? "flex-start" : "flex-end"};
+
+		> button {
+			display: flex;
+			
+			svg {
+				margin-left: 0.4rem;
+				height: 1.8rem;
+				width: 1.8rem;
+
+				path {
+					fill: ${props => props.sortActive ? "hsl(16, 56%, 51%)" : "hsl(0, 0%, 80%)"};
+				}
+			}
+		}
+
+	}
 
 	&:first-child {
 		padding: 0.8rem 0.5rem 0.8rem 1.8rem;
@@ -96,13 +125,52 @@ const TableComponent = (props: TableComponentInterface) => {
 		PaginationStyle = Pagination
 	} = props
 	const [currentPage, setCurrentPage] = useState(1)
-	const data = useRecoilValue<Object[]>(filterState)
+	const [sortOrder, setSortOrder] = useState({
+		field: "",
+		isAscending: false,
+	})
+	const [data, setData] = useRecoilState<Object[]>(filterState)
 	const numberOfRow = data.length
 	const maxRowPerPage = 7
 	const firstRowOfPage = (currentPage - 1)*maxRowPerPage
 	const LastRowOfPage = currentPage*maxRowPerPage
 	let maxPage = Math.ceil(numberOfRow / 7)
 	const remainingRow = numberOfRow - firstRowOfPage
+
+	const compare = (a: JobDetails, b: JobDetails, field: string) => {
+		let rowA: number | string, rowB: number | string
+		if (Number.isInteger(a[field])) {
+			rowA = a[field]
+			rowB = b[field]
+		} else {
+			rowA = a[field].toLowerCase()
+			rowB = b[field].toLowerCase()
+		}
+		const isCurrentDescending = (sortOrder.field === field ? !sortOrder.isAscending : true)
+		setSortOrder({
+			field,
+			isAscending: isCurrentDescending
+		})
+		if (isCurrentDescending) {
+			if (rowA < rowB)
+				return -1 
+			if (rowA > rowB)
+				return 1
+		} else {
+			if (rowA > rowB)
+				return -1 
+			if (rowA < rowB)
+				return 1
+		}
+		return 0
+	}
+
+	const sortField = (field: string) => {
+		const sortedData = [...data].sort((a: JobDetails, b: JobDetails) => 
+			compare(a, b, field)
+		)
+		setData(sortedData)
+	}	
 
 	if (maxPage <= 0) {
 		maxPage = 1
@@ -115,7 +183,19 @@ const TableComponent = (props: TableComponentInterface) => {
 					<tbody>
 						<HeaderStyle>
 							{columns.map((cell) => {
-								return <Header key={cell.id}>{cell.label}</Header>
+								return (
+									<Header key={cell.id} sortActive={sortOrder.field === cell.id} cellAlign={cell.align}>
+										<div>
+											{cell.label}
+											{
+												cell.sortable !== false &&
+												<button onClick={() => sortField(cell.id)}>
+													{ sortOrder.field === cell.id ? (sortOrder.isAscending ? <DownArrowLine /> : <UpArrowLine/>) : <DownArrowLine /> }
+												</button>
+											}
+										</div>
+									</Header>
+								)
 							})}
 						</HeaderStyle>
 						{data.slice(firstRowOfPage, LastRowOfPage).map((item: (TruckTable | DriverTable), index) => {

@@ -60,6 +60,7 @@ export interface TableComponentInterface {
 		label: string
 		align?: string
 		width?: string
+		sortable?: boolean
 		format?: (index: number, item?: (TruckTable | DriverTable)) => ReactElement
 	}[]
 	tableStyle?: {
