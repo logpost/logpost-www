@@ -14,6 +14,8 @@ interface DateAndTimePickerInterface {
 	dateAndTime: Date
 	minDate?: Date
 	setDateAndTime: (date: Date) => void
+	hideTime?: boolean
+	disabledDate?: boolean
 }
 
 const CalendarHeader = styled.div`
@@ -62,6 +64,10 @@ const DatePickerContainer = styled.div`
 		margin-top: 1rem;
 		font-size: 1.6rem;
 		padding: 1.2rem;
+
+		&:disabled {
+			color: hsl(0, 0%, 66%);
+		}
 	}
 
 	.react-datepicker {
@@ -187,7 +193,7 @@ const DateAndTimePickerContainer = styled.div`
 `
 
 const DateAndTimePicker = (props:DateAndTimePickerInterface) => {
-	const { dateAndTime, setDateAndTime, minDate } = props
+	const { dateAndTime, setDateAndTime, minDate, hideTime = false, disabledDate = false } = props
 	const timepicker = useRef(null)
 	const datepicker = useRef(null)
 	
@@ -229,30 +235,35 @@ const DateAndTimePicker = (props:DateAndTimePickerInterface) => {
 						toggleCalendar={toggleDatePicker}
 						setDateAndTime={setDateAndTime}
 						time={dateAndTime.getTime()}
+						disabled={disabledDate}
 					/>}
 					locale={"th"}
 					minDate={minDate || new Date()}
 					showPopperArrow={false}
 					showDisabledMonthNavigation
+					popperPlacement="top-start"
+					disabled={disabledDate}
 				/>
 			</DatePickerContainer>
-			<TimePickerContainer>
-				<DatePicker
-					ref={timepicker}
-					showTimeInput
-					onChange={(date: Date) => setDateAndTime(date)}
-					value={`${pad(String(dateAndTime.getHours()), 2)} : ${pad(String(dateAndTime.getMinutes() - (dateAndTime.getMinutes() % 15)), 2)} น.`}
-					selected={dateAndTime}
-					showTimeSelectOnly
-					showPopperArrow={false}
-					customTimeInput={<TimeInputComponent
-						date={dateAndTime}
-						setDateAndTime={setDateAndTime}
-						closePicker={closePicker}
-					/>}
-					popperPlacement="bottom-end"
-				/>
-			</TimePickerContainer>
+			{!hideTime &&
+				<TimePickerContainer>
+					<DatePicker
+						ref={timepicker}
+						showTimeInput
+						onChange={(date: Date) => setDateAndTime(date)}
+						value={`${pad(String(dateAndTime.getHours()), 2)} : ${pad(String(dateAndTime.getMinutes() - (dateAndTime.getMinutes() % 15)), 2)} น.`}
+						selected={dateAndTime}
+						showTimeSelectOnly
+						showPopperArrow={false}
+						customTimeInput={<TimeInputComponent
+							date={dateAndTime}
+							setDateAndTime={setDateAndTime}
+							closePicker={closePicker}
+						/>}
+						popperPlacement="bottom-end"
+					/>
+				</TimePickerContainer>
+			}
 		</DateAndTimePickerContainer>
 	)
 }

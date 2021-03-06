@@ -1,20 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@300;400;500;600;700;800&display=swap");
+@import 'react-datepicker/dist/react-datepicker.css';
 
 html {
     scroll-behavior: smooth;
     font-size: 72.5%; /* waiting for change */
-}
-
-@media screen and (max-width: 768px) {
-    html {
-        font-size: 67.5; /* waiting for change */
-    }
-}
-
-@media screen and (max-width: 576px) {
-    html {
-        font-size: 62.5%;
-    }
 }
 
 body {
@@ -23,6 +12,26 @@ body {
     font-family: -apple-system, "Bai Jamjuree", sans-serif, BlinkMacSystemFont,
         Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
         Helvetica Neue, sans-serif;
+}
+
+body > div {
+    display: flex;
+}
+
+@media screen and (max-width: 960px) {
+    html {
+        font-size: 67.5; /* waiting for change */
+    }
+    
+    body > div {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    html {
+        font-size: 62.5%;
+    }
 }
 
 a {

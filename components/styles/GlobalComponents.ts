@@ -83,7 +83,7 @@ export const TextButton = styled.button`
 	white-space: nowrap;
 `
 
-export const HeaderTitle = styled.div`
+export const HeaderTitle = styled.header`
 	font-size: 2.4rem;
 	font-weight: 500;
 	color: white;
@@ -98,6 +98,22 @@ export const HeaderContainer = styled.div`
 	button {
 		align-self: flex-end;
 	}
+
+	${breakpointGenerator({
+		large: css`
+			padding: 1.6rem 0;
+			align-self: center;
+			width: 100%;
+
+			header {
+				font-size: 2rem;
+			}
+
+			button {
+				align-self: center;
+			}
+		`
+	})}
 `
 
 export const Form = styled.form`
@@ -280,3 +296,112 @@ export const TableRowActions = styled.div`
 		}
 	}
 `
+
+export const NumberOfJobs = styled.div`
+	border-radius: 100%;
+	background-color: hsl(16, 56%, 51%);
+	color: white;
+	font-size: 1.2rem;
+	text-align: center;
+	position: absolute;
+	left: 55%;
+	width: 2.1rem;
+	height: 2.1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`
+
+export const Pagination = styled.div`
+	display: flex;
+    align-items: center;
+	color: hsl(16, 56%, 51%);
+	font-weight: 700;
+	width: 50%;
+    max-width: 16rem;
+    justify-content: space-between;
+
+	> span {
+		padding: 0 0.8rem;
+		text-align: center;
+		width: 40%;
+	}
+
+	button {
+		display: flex;
+		
+		svg {
+			height: 1.6rem;
+			width: 1.6rem;
+
+			path {
+				fill: hsl(16, 56%, 51%);
+			}
+		}
+
+		&:disabled {
+			svg path {
+				fill: hsl(0, 0%, 93%);
+			}
+		}
+
+		&:nth-child(-n + 2) {
+			transform: rotate(-180deg)
+		}
+	}
+`
+
+export const RadioButton = styled.div`
+    position: relative;
+    width: 1.6rem;
+    height: 1.6rem;
+    border: 0.1rem solid hsl(16, 56%, 51%);
+    border-radius: 50%;
+    margin: auto;
+    transition: all 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 0 0 6px hsl(16, 56%, 51%, 10%);
+    }
+
+    svg {
+        width: 2.7rem;
+        height: 2.7rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        #circle {
+            display: none;
+        }
+
+        #check {
+            fill: transparent;
+        }
+    }
+
+    input {
+        position: absolute;
+        height: 1.6rem;
+        width: 1.6rem;
+        margin: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        opacity: 0;
+
+        &:checked {
+            & ~ svg {
+                #check {
+                    fill: white;
+                }
+
+                #background {
+                    fill: hsl(16, 56%, 51%);
+                }
+            }
+        }
+    }
+`;

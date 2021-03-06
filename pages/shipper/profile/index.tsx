@@ -1,9 +1,17 @@
-import React, { useEffect } from "react"
-import styled from "styled-components"
+import React, { ReactElement, useEffect, useState } from "react"
+import styled, { css } from "styled-components"
 import {
+	CancelIcon,
+	DownArrowLine,
+	EditIcon,
 	JobIcon,
 	JobSuccessIcon,
+	OptionIcon,
+	PriceIcon,
+	RightArrow,
 	TruckIcon,
+	UpArrowLine,
+	WeightIcon,
 } from "../../../components/common/Icons"
 import NavigationBar from "../../../components/common/NavigationBar"
 import Header from "../../../components/common/Header"
@@ -11,24 +19,456 @@ import ProfileStatus from "../../../components/common/ProfileStatus"
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil'
 import { userInfoState } from "../../../store/atoms/userInfoState"
 import { jobStatusCountState, myJobsState } from "../../../store/atoms/carrierProfileState"
-import { resourceStatusCount } from "../../../components/utilities/helper"
-import { getMyJob, getShipperProfile } from "../../../components/utilities/apis"
+import { dateFormatter, resourceStatusCount, timeFormatter } from "../../../components/utilities/helper"
+import { getMyJob } from "../../../components/utilities/apis"
 import { JobDocument } from '../../../entities/interface/job'
+import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoints"
+import DesktopHeader from "../../../components/common/DesktopHeader"
+import { ButtonGroupContainer, ButtonItem, HeaderTitle, NumberOfJobs, Pagination, PrimaryButton, RadioButton, TableRowActions, TextButton } from "../../../components/styles/GlobalComponents"
+import SearchBar from "../../../components/common/SearchBar"
+import SelectComponent from "../../../components/common/SelectComponent"
+import { JOB_STATUS_CODE, PROVINCES } from "../../../data/jobs"
+import TableComponent from "../../../components/common/TableComponent"
+import { jobFiltersState, filterState, filterWordState, tableDataState } from "../../../store/atoms/tableState"
+import { useRouter } from "next/router"
+import InputComponent from "../../../components/common/InputComponent"
+import DateAndTimePicker from "../../../components/common/DateAndTimePicker"
+import { TRUCK_TYPE_LIST } from "../../../data/carrier"
+
+interface TabItemInterface {
+	isActive: boolean;
+}
+
+interface FiltersContainerInterface {
+	isExpand: boolean;
+}
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
 `
 
+const HeaderTitleContainer = styled.div`
+	display: flex;
+	justify-content: space-between;
+
+	${HeaderTitle} {
+		color: hsl(212, 28%, 28%);
+        font-weight: 600;
+	}
+
+	${PrimaryButton} {
+		background-color: hsl(212, 28%, 28%);
+		padding: 0.6rem 1.6rem;
+		border-radius: 6px;
+	}
+`
+
+const FilterContainer = styled.div`
+	font-size: 1.4rem;
+	display: flex;
+	align-items: center;
+	width: 50%;
+
+	&#option {
+		width: 100%;
+
+		> ${ButtonGroupContainer} {
+			width: 100%;
+			grid-template-columns: repeat(auto-fill, 8.5rem);
+
+			${ButtonItem} {
+				font-size: 1.4rem;
+				height: 3.2rem;
+				width: 8.2rem;
+				padding: 0;
+			}
+		}
+	}
+
+	input {
+		margin-top: 0;
+		font-size: 1.4rem;
+		height: 3.2rem;
+
+		& ~ div {
+			font-size: 1.4rem;
+			margin-left: 1.4rem;
+		}
+	}
+
+	> svg {
+		margin-right: 0.5rem;
+		min-height: 1.8rem;
+		min-width: 1.8rem;
+	}
+
+	> div {
+		margin-top: 0;
+
+		&.MuiInputBase-root {
+			width: 70%;
+			max-width: 17rem;
+			min-width: 12rem;
+			font-size: 1.4rem;
+			height: 2.8rem;
+
+			> svg {
+				height: 2.6rem;
+				width: 2.6rem;
+				padding: 0.9rem;
+			}
+		}
+		
+		.react-datepicker__input-container input {
+			font-size: 1.4rem;
+			margin-top: 0;
+			height: 3.2rem;
+		}
+	}
+
+	> span {
+		margin: 0 1.4rem;
+	}
+`
+
+const FilterRow = styled.div`
+	display: flex;
+	align-items: center;
+
+	${FilterContainer}:not(:first-child) {
+		margin-left: 1.4rem;
+	}
+
+	&:not(:first-child) {
+		justify-content: flex-start;
+
+		> div {
+			width: auto;
+		}
+	}
+
+	&:first-child {
+		justify-content: space-between;
+
+		> div {
+			display: flex;
+			width: 80%;
+
+			> div:first-child {
+				border: 1px solid hsl(0, 0%, 66%);
+				background-color: white;
+				min-width: 15rem;
+				height: max-content;
+		
+				input {
+					background-color: white;
+				}
+			}
+		}
+
+		${TextButton} {
+			text-decoration: none;
+			font-size: 1.4rem;
+			justify-self: flex-end;
+
+			svg {
+				transform: rotate(90deg);
+				margin-left: 0.8rem;
+			}
+		}
+	}
+`
+
+const FiltersContainer = styled.div<FiltersContainerInterface>`
+	display: flex;
+	flex-direction: column;
+	margin-top: 1.4rem;
+	width: 100%;
+	max-height: ${(props) => props.isExpand ? "50rem" : "3.4rem"};
+	transition: all 0.3s ease-in;
+
+	> div:not(:first-child) {
+		margin-top: 1.8rem;
+	}
+`
+
+const ContentContainer = styled.div`
+	background-color: hsla(211, 28%, 28%, 0.06);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 3rem; 
+`
+
+const TableContainer = styled.div`
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+	border-radius: 0 8px 8px 8px;
+	padding-bottom: 1.8rem;
+`
+
+const TableRowStyle = styled.tr`
+	background-color: hsl(211, 22%, 96%);
+	border-radius: 6px;
+	font-weight: 300;
+
+	td {
+		padding: 1.4rem 0.6rem;
+		
+		&:first-child {
+			border-radius: 6px 0 0 6px;
+		}
+
+		&:last-child {
+			border-radius: 0 6px 6px 0;
+		}
+	}
+`
+
+const TableHeaderStyle = styled.tr`
+	background-color: transparent;
+	box-shadow: none;
+
+	> th {
+		padding: 0;
+	}
+`
+
+const TablePaginationStyle = styled(Pagination)`
+	&& {
+		color: hsl(212, 28%, 28%);
+
+		> span {
+			width: 50%
+		}
+		
+		svg {
+			path {
+				fill: hsl(212, 28%, 28%);
+			}
+		}
+	}
+`
+
+const TabContainer = styled.div`
+	display: flex;
+	align-self: flex-start;
+	border-radius: 8px 8px 0 0;
+	background-color: transparent;
+`
+
+const TablItem = styled.button<TabItemInterface>`
+	padding: 1rem 2rem;
+	font-size: 1.7rem;
+	display: flex;
+	align-items: center;
+	color: hsl(212, 28%, 28%);
+
+	${NumberOfJobs} {
+		position: static;
+		margin-left: 0.9rem;
+		background-color: hsl(211, 28%, 90%);
+		color: hsl(228, 22%, 57%);
+		height: 2.5rem;
+		width: 2.5rem;
+		font-size: 1.3rem;
+		border-radius: 20px;
+	}
+
+	${props => props.isActive && 
+		css`
+			background-color: white;
+			font-weight: 600;
+			border-radius: 8px 8px 0 0;
+			
+			${NumberOfJobs} {
+				color: white;
+				background-color: hsl(212, 28%, 28%);
+			}
+		` 
+	}
+`
+
+const RadioContainer = styled.div`
+	display: flex;
+	margin-right: 1.4rem;
+	
+	> div {
+		display: flex;
+
+		&:last-child {
+			margin-left: 1.4rem;
+		}
+
+		${RadioButton} {
+			margin: 0;
+		}
+
+		> span {
+			margin-left: 1rem;
+			white-space: nowrap;
+		}
+	}
+`
+
+const FilterLabel = styled.div`
+	white-space: nowrap;
+	display: flex;
+	margin-right: 1.4rem;
+
+	svg {
+		margin-right: 1rem;
+		height: 20px;
+		width: 20px; 
+		
+		#truck {
+			stroke: hsl(16, 56%, 51%);
+			stroke-width: 3px;
+		}
+	}
+`
+
 const ShipperProfilePage = () => {
 	const shipperInfo = useRecoilValue(userInfoState)
-	const [jobStatusCount, setJobStatusCount] = useRecoilState<{[key: number]: number}>(jobStatusCountState)
-	const setMyJobs = useSetRecoilState(myJobsState)
+	const [jobStatusCount, setJobStatusCount] = useRecoilState<{ [key: number]: number }>(jobStatusCountState)
+	const [jobTableData, setTableData] = useRecoilState(tableDataState)
+	const router = useRouter()
+	const filteredData = useRecoilValue(filterState)
+	const setFilterWord = useSetRecoilState(filterWordState)
+	const [jobFilters, setJobFilters] = useRecoilState(jobFiltersState)
+	const [showMoreFilter, setShowMoreFilter] = useState(false)
+
+	const filterDate = (filterField: string, targetField: string, value: (Date | boolean)) => {
+		const updateFilterDate = {
+			...jobFilters,
+			[filterField]: {
+				...jobFilters[filterField],
+				[targetField]: value
+			}
+		}
+		setJobFilters(updateFilterDate)
+	}
+
+ 	// useEffect(() => {
+	// 	resourceStatusCount(filteredData, {
+	// 		0: 0,
+	// 		100: 0,
+	// 		800: 0
+	// 	}, setJobStatusCount)
+	// }, [filteredData])
+
+	const jobColumns = [
+		{
+			id: "pickup_location",
+			label: "ขึ้นสินค้า",
+			width: "10%",
+			align: "left"
+		},
+		{
+			id: "dropoff_location",
+			label: "ลงสินค้า",
+			width: "10%",
+			align: "left"
+		},
+		{
+			id: "pickup_date",
+			label: "วันขึ้นสินค้า",
+			width: "14%",
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{`${dateFormatter(job.pickup_date)} ${timeFormatter(job.pickup_date)}`.slice(0, -3)}</span>
+			)
+		},
+		{
+			id: "dropoff_date",
+			label: "วันลงสินค้า",
+			width: "14%",
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{`${dateFormatter(job.dropoff_date)} ${timeFormatter(job.dropoff_date)}`.slice(0, -3)}</span>
+			)
+		},
+		{
+			id: "product_type",
+			label: "สินค้า",
+			width: "8%",
+			align: "left"
+		},
+		{
+			id: "weight",
+			label: "น้ำหนัก",
+			width: "8%",
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{`${job.weight} ตัน`}</span>
+			)
+		},
+		{
+			id: "offer_price",
+			label: "ราคา",
+			width: "8%",
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{job.offer_price.toLocaleString()}</span>
+			)
+		},
+		{
+			id: "truck_type",
+			label: "ประเภทรถ",
+			width: "12%",
+			align: "left",
+		},
+		{
+			id: "status",
+			label: "สถานะ",
+			width: "8%",
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{JOB_STATUS_CODE[job.status].status_name}</span>
+			)
+		},
+		{
+			id: "actions",
+			label: "เลือก",
+			width: "8%",
+			sortable: false,
+			align: "center",
+			format: (_: number, job): ReactElement => (
+				<TableRowActions>
+					<button onClick={() => router.push(`/jobs/edit/${job.job_id}`)}><EditIcon /></button>
+					<button ><CancelIcon /></button>
+				</TableRowActions>
+			),
+		},
+	]
+
+	const convertJobToTableFormat = (jobs: JobDocument[]) => {
+		const jobTableData = []
+		jobs.map((job) => {
+			const { pickup_location, dropoff_location } = job
+			jobTableData.push({
+				...job, 
+				pickup_location: pickup_location.province,
+				dropoff_location: dropoff_location.province,
+				truck_type: `${job.carrier_specification.truck.property.type} ${job.carrier_specification.truck.property.option}`
+			})
+		})
+		return jobTableData
+	}
 
 	useEffect(() => {
 		if (shipperInfo.username) {
 			getMyJob((jobs: JobDocument[]) => {
-				resourceStatusCount(jobs, jobStatusCount, setJobStatusCount)
-				setMyJobs(jobs)
+				const jobTableData = convertJobToTableFormat(jobs)
+				setTableData(jobTableData)
+				resourceStatusCount(jobTableData, {
+					0: 0,
+					100: 0,
+					800: 0
+				}, setJobStatusCount)
 			})
 		}
 	}, [shipperInfo])
@@ -36,37 +476,277 @@ const ShipperProfilePage = () => {
 	return (
 		<>
 			<NavigationBar activeIndex={2} />
-			<Header enabledSetting={true}>
-				{shipperInfo.displayName}
-      		</Header>
-			<ProfileStatusContainer>
-				<ProfileStatus
-					title="รายการงาน"
-					buttonText="รายการทั้งหมด"
-					buttonLink="jobs?status=all"
-					type="button"
-					items={[
+			<BreakpointMD>
+				<Header enabledSetting={true}>
+					{shipperInfo.displayName}
+				</Header>
+				<ProfileStatusContainer>
+					<ProfileStatus
+						title="รายการงาน"
+						buttonText="รายการทั้งหมด"
+						buttonLink="jobs?status=all"
+						type="button"
+						items={[
+							{
+								name: "รอผู้รับงาน",
+								onClickLink: "jobs?status=waiting",
+								icon: <JobIcon />,
+								noOfJobs: jobStatusCount[100],
+							},
+							{
+								name: "กำลังขนส่ง",
+								onClickLink: "jobs?status=shipping",
+								icon: <TruckIcon />,
+								noOfJobs: jobStatusCount[0],
+							},
+							{
+								name: "ขนส่งเสร็จสิ้น",
+								onClickLink: "jobs?status=finished",
+								icon: <JobSuccessIcon />,
+								noOfJobs: jobStatusCount[800],
+							},
+						]}
+					/>
+				</ProfileStatusContainer>
+			</BreakpointMD>
+			<BreakpointLG>
+				<DesktopHeader>
+					<HeaderTitleContainer>
+						<HeaderTitle>รายการงาน</HeaderTitle>
+						<PrimaryButton>สร้างงานใหม่</PrimaryButton>
+					</HeaderTitleContainer>
+					<FiltersContainer isExpand={showMoreFilter}>
+						<FilterRow>
+							<div>
+								<SearchBar
+									placeholder="ค้นหาจังหวัด สินค้า ประเภทรถ ฯลฯ"
+									setValue={setFilterWord}
+								/>
+								<FilterContainer>
+									<FilterLabel>
+										<UpArrowLine />
+										<span>ต้นทาง</span>
+									</FilterLabel>
+									<SelectComponent
+										value={jobFilters.pickup_province}
+										setValue={(value: string) => setJobFilters({ ...jobFilters, pickup_province: value })}
+										menuList={["ทั้งหมด", ...PROVINCES]}
+									/>
+								</FilterContainer>
+								<FilterContainer>
+									<FilterLabel>
+										<DownArrowLine />
+										<span>ปลายทาง</span>
+									</FilterLabel>
+									<SelectComponent
+										value={jobFilters.dropoff_province}
+										setValue={(value: string) => setJobFilters({ ...jobFilters, dropoff_province: value })}
+										menuList={["ทั้งหมด", ...PROVINCES]}
+									/>
+								</FilterContainer>
+							</div>
+							<TextButton onClick={() => setShowMoreFilter(!showMoreFilter)}><span>แสดงตัวกรองอื่น ๆ</span><RightArrow/></TextButton>
+						</FilterRow>
 						{
-							name: "รอผู้รับงาน",
-							onClickLink: "jobs?status=waiting",
-							icon: <JobIcon />,
-							noOfJobs: jobStatusCount[100],
-						},
-						{
-							name: "กำลังขนส่ง",
-							onClickLink: "jobs?status=shipping",
-							icon: <TruckIcon />,
-							noOfJobs: jobStatusCount[0],
-						},
-						{
-							name: "ขนส่งเสร็จสิ้น",
-							onClickLink: "jobs?status=finished",
-							icon: <JobSuccessIcon />,
-							noOfJobs: jobStatusCount[800],
-						},
-					]}
-				/>
-			</ProfileStatusContainer>
+							showMoreFilter && <>
+							<FilterContainer>
+								<FilterLabel>
+									<UpArrowLine />
+									<span>วันขึ้นสินค้า</span>
+								</FilterLabel>
+								<RadioContainer>
+									<div>
+										<RadioButton>
+											<input 
+												defaultChecked 
+												type="radio" 
+												value="ทุกวัน" 
+												name="pickup_date" 
+												onChange={() => filterDate("pickup_date", "isFilter", false)} />
+											<JobSuccessIcon />
+										</RadioButton>
+										<span>ทุกวัน</span>
+									</div>
+									<div>
+										<RadioButton>
+											<input 
+												type="radio" 
+												value="เลือกช่วง" 
+												name="pickup_date" 
+												onChange={() => filterDate("pickup_date", "isFilter", true)} />
+											<JobSuccessIcon />
+										</RadioButton>
+										<span>เลือกช่วง</span>
+									</div>
+								</RadioContainer>
+								<DateAndTimePicker 
+									dateAndTime={jobFilters.pickup_date.start}
+									setDateAndTime={(value: Date) => setJobFilters({...jobFilters, pickup_date: {...jobFilters.pickup_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
+									hideTime={true}
+									disabledDate={!jobFilters.pickup_date.isFilter}
+									minDate={new Date(2000)}
+								/>
+								<span>ถึง</span>
+								<DateAndTimePicker 
+									dateAndTime={jobFilters.pickup_date.end < jobFilters.pickup_date.start ? jobFilters.pickup_date.start : jobFilters.pickup_date.end}
+									setDateAndTime={(value: Date) => setJobFilters({...jobFilters, pickup_date: {...jobFilters.pickup_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
+									minDate={jobFilters.pickup_date.start}
+									hideTime={true}
+									disabledDate={!jobFilters.pickup_date.isFilter}
+								/>
+							</FilterContainer>
+							<FilterContainer>
+								<FilterLabel>
+									<DownArrowLine />
+									<span>วันลงสินค้า</span>
+								</FilterLabel>
+								<RadioContainer>
+									<div>
+										<RadioButton>
+											<input 
+												defaultChecked 
+												type="radio" 
+												value="ทุกวัน" 
+												name="dropoff_date" 
+												onChange={() => filterDate("dropoff_date", "isFilter", false)} />
+											<JobSuccessIcon />
+										</RadioButton>
+										<span>ทุกวัน</span>
+									</div>
+									<div>
+										<RadioButton>
+											<input 
+												type="radio" 
+												value="เลือกช่วง" 
+												name="dropoff_date" 
+												onChange={() => filterDate("dropoff_date", "isFilter", true)} />
+											<JobSuccessIcon />
+										</RadioButton>
+										<span>เลือกช่วง</span>
+									</div>
+								</RadioContainer>
+								<DateAndTimePicker 
+									dateAndTime={jobFilters.dropoff_date.start}
+									setDateAndTime={(value: Date) => setJobFilters({...jobFilters, dropoff_date: {...jobFilters.dropoff_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
+									hideTime={true}
+									disabledDate={!jobFilters.dropoff_date.isFilter}
+									minDate={new Date(2000)}
+								/>
+								<span>ถึง</span>
+								<DateAndTimePicker 
+									dateAndTime={jobFilters.dropoff_date.end < jobFilters.dropoff_date.start ? jobFilters.dropoff_date.start : jobFilters.dropoff_date.end}
+									setDateAndTime={(value: Date) => setJobFilters({...jobFilters, dropoff_date: {...jobFilters.dropoff_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
+									minDate={jobFilters.dropoff_date.start}
+									hideTime={true}
+									disabledDate={!jobFilters.dropoff_date.isFilter}
+								/>
+							</FilterContainer>
+							<FilterRow>
+								<FilterContainer>
+									<FilterLabel>
+										<WeightIcon />
+										<span>น้ำหนัก ไม่เกิน</span>
+									</FilterLabel>
+									<InputComponent
+										type="number"
+										classifier="ตัน"
+										disableLabel={true}
+										value={jobFilters.weight}
+										handleOnChange={(e) => setJobFilters({...jobFilters, weight: e.target.value})}
+									/>
+								</FilterContainer>
+								<FilterContainer>
+									<FilterLabel>
+										<PriceIcon />
+										<span>ราคา ขั้นต่ำ</span>
+									</FilterLabel>
+									<InputComponent
+										type="number"
+										classifier="บาท"
+										disableLabel={true}
+										value={jobFilters.price}
+										handleOnChange={(e) => setJobFilters({...jobFilters, price: e.target.value})}
+									/>
+								</FilterContainer>
+							</FilterRow>
+							<FilterRow>
+								<FilterContainer>
+									<FilterLabel>
+										<TruckIcon />
+										<span>ประเภทรถ</span>
+									</FilterLabel>
+									<SelectComponent
+										menuList={["ทั้งหมด", ...Object.keys(TRUCK_TYPE_LIST)]}
+										value={jobFilters.truck.type}
+										setValue={(value: string) => setJobFilters({...jobFilters, truck: {...jobFilters.truck, type: value}})}
+									/>
+								</FilterContainer>
+								{
+									jobFilters.truck.type !== "ทั้งหมด" &&
+									<FilterContainer id="option">
+										<FilterLabel>
+											<OptionIcon />
+											<span>ส่วนเสริม</span>
+										</FilterLabel>
+										<ButtonGroupContainer>
+											{	
+												["ทั้งหมด", ...TRUCK_TYPE_LIST[jobFilters.truck.type].option].map((option: string, index: number) => {
+													return (
+														<ButtonItem
+															key={index}
+															onClick={() => setJobFilters({...jobFilters, truck: {...jobFilters.truck, option: option}})}
+															name={option}
+															value={jobFilters.truck.option}
+														>
+															{option}
+														</ButtonItem>
+													)
+												})
+											}
+										</ButtonGroupContainer>
+									</FilterContainer>
+								}
+							</FilterRow>
+							</>
+						}
+					</FiltersContainer>
+				</DesktopHeader>
+				<ContentContainer>
+					<TabContainer>
+						<TablItem isActive={jobFilters.status[0] === 0} onClick={() => setJobFilters({...jobFilters, status: [0]})}>
+							ทั้งหมด
+							<NumberOfJobs>{jobTableData.length}</NumberOfJobs>
+						</TablItem>
+						<TablItem isActive={jobFilters.status[0] === 100} onClick={() => setJobFilters({...jobFilters, status: [100]})}>
+							รอผู้รับงาน
+							<NumberOfJobs>{jobStatusCount[100]}</NumberOfJobs>
+						</TablItem>
+						<TablItem 
+							isActive={jobFilters.status.length > 1} 
+							onClick={() => setJobFilters({...jobFilters, status: [200, 300, 400, 500, 600, 700]})}>
+							กำลังขนส่ง
+							<NumberOfJobs>{jobStatusCount[0]}</NumberOfJobs>
+						</TablItem>
+						<TablItem isActive={jobFilters.status[0] === 800} onClick={() => setJobFilters({...jobFilters, status: [800]})}>
+							ขนส่งเสร็จสิ้น
+							<NumberOfJobs>{jobStatusCount[800]}</NumberOfJobs>
+						</TablItem>
+					</TabContainer>
+					<TableContainer>
+						<TableComponent
+							columns={jobColumns}
+							tableStyle={{
+								width: "95%",
+								gap: "18px"
+							}}
+							RowStyle={TableRowStyle}
+							HeaderStyle={TableHeaderStyle}
+							PaginationStyle={TablePaginationStyle}
+							filterSelector={filterState}
+						/>
+					</TableContainer>
+				</ContentContainer>
+			</BreakpointLG>
 		</>
 	)
 }

@@ -1,4 +1,6 @@
 import { ReactElement } from 'react'
+import { RecoilState } from 'recoil';
+import { StyledComponent } from 'styled-components';
 import { DriverTable } from './driver';
 import { TruckTable } from './truck';
 
@@ -59,6 +61,15 @@ export interface TableComponentInterface {
 		label: string
 		align?: string
 		width?: string
+		sortable?: boolean
 		format?: (index: number, item?: (TruckTable | DriverTable)) => ReactElement
 	}[]
+	tableStyle?: {
+		width?: string,
+		gap: string
+	}
+	RowStyle?: StyledComponent<"tr", any, {}>
+	HeaderStyle?: StyledComponent<"tr", any, {}>
+	PaginationStyle?: StyledComponent<"div", any, {}>
+	filterSelector: RecoilState<any[]>
 }

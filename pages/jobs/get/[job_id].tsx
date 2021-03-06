@@ -14,6 +14,7 @@ import {
 	SecondaryButton,
 	FormActions,
 	PrimaryButton,
+	RadioButton,
 } from "../../../components/styles/GlobalComponents"
 import JobDetailsSection from "../../../components/common/JobDetailsSection"
 import Modal from "../../../components/common/Modal"
@@ -25,7 +26,7 @@ import { jobDetailsSelector, jobDetailsState } from '../../../store/atoms/jobDet
 import { useRecoilState } from 'recoil'
 import { getDriver, getJobDetailsByID, getTruck, pickJob } from "../../../components/utilities/apis"
 import { JobDocument } from "../../../entities/interface/job"
-import { filterWordState, tableDataState } from "../../../store/atoms/tableState"
+import { filterResourceState, filterWordState, tableDataState } from "../../../store/atoms/tableState"
 import { DriverDocument, DriverTable } from "../../../entities/interface/driver"
 import { TruckDocument, TruckTable } from '../../../entities/interface/truck'
 import { trucksState } from '../../../store/atoms/trucksState'
@@ -112,61 +113,6 @@ const ModalTitle = styled.div`
     color: hsl(212, 28%, 28%);
     font-weight: 600;
     font-size: 2rem;
-`;
-
-const RadioButton = styled.div`
-    position: relative;
-    width: 1.6rem;
-    height: 1.6rem;
-    border: 0.1rem solid hsl(16, 56%, 51%);
-    border-radius: 50%;
-    margin: auto;
-    transition: all 0.3s ease;
-
-    &:hover {
-        box-shadow: 0 0 0 6px hsl(16, 56%, 51%, 10%);
-    }
-
-    svg {
-        width: 2.7rem;
-        height: 2.7rem;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-
-        #circle {
-            display: none;
-        }
-
-        #check {
-            fill: transparent;
-        }
-    }
-
-    input {
-        position: absolute;
-        height: 1.6rem;
-        width: 1.6rem;
-        margin: 0;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
-        opacity: 0;
-
-        &:checked {
-            & ~ svg {
-                #check {
-                    fill: white;
-                }
-
-                #background {
-                    fill: hsl(16, 56%, 51%);
-                }
-            }
-        }
-    }
 `;
 
 const GetJobPage = () => {
@@ -391,6 +337,7 @@ const GetJobPage = () => {
 					/>
 					<TableComponent
 						columns={driverColumns}
+						filterSelector={filterResourceState}
 					/>
 					{!isRadioSelected && (
 						<Warning>กรุณาเลือกพนักงานขับรถ</Warning>
@@ -416,6 +363,7 @@ const GetJobPage = () => {
 					/>
 					<TableComponent
 						columns={truckColumns}
+						filterSelector={filterResourceState}
 					/>
 					{!isRadioSelected && <Warning>กรุณาเลือกรถบรรทุก</Warning>}
 					<FormActionsCustom>

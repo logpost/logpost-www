@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactElement } from 'react'
 import styled from "styled-components"
 import SearchBar from './SearchBar'
 import SelectComponent from './SelectComponent'
@@ -6,8 +6,10 @@ import TableComponent from './TableComponent'
 import { SecondaryButton } from '../styles/GlobalComponents'
 import { TableComponentInterface } from '../../entities/interface/common'
 import { FunctionComponent } from 'react'
-import { filterWordState, filterStatusState } from '../../store/atoms/tableState'
+import { filterWordState, filterStatusState, filterResourceState } from '../../store/atoms/tableState'
 import { useSetRecoilState } from 'recoil'
+import { TruckTable } from '../../entities/interface/truck'
+import { DriverTable } from '../../entities/interface/driver'
 
 const ResourceOverviewContainer = styled.div`
 	margin-top: 3.6rem;
@@ -65,7 +67,15 @@ const TableHeader = styled.div`
 	}
 `
 
-interface ResourceOverviewInterface extends TableComponentInterface {
+interface ResourceOverviewInterface {
+	columns: {
+		id: string
+		label: string
+		align?: string
+		width?: string
+		sortable?: boolean
+		format?: (index: number, item?: (TruckTable | DriverTable)) => ReactElement
+	}[]
 	headerTitle: string
 	headerButton: string
 	defaultSelect: string
@@ -81,7 +91,7 @@ const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) =
 
 	useEffect(() => {
 		const statusCode = Object.keys(statusList)[Object.values(statusList).indexOf(statusFilter)]
-		setFilterStatus(statusCode)
+		setFilterStatus([parseInt(statusCode)])
 	}, [statusFilter])
 
 	return (
@@ -103,6 +113,7 @@ const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) =
 			</TableHeader>
 			<TableComponent
 				columns={columns}
+				filterSelector={filterResourceState}
 			/>
 			{children}
 		</ResourceOverviewContainer>
