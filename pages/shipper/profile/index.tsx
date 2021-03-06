@@ -29,7 +29,7 @@ import SearchBar from "../../../components/common/SearchBar"
 import SelectComponent from "../../../components/common/SelectComponent"
 import { JOB_STATUS_CODE, PROVINCES } from "../../../data/jobs"
 import TableComponent from "../../../components/common/TableComponent"
-import { filterDropoffDateState, filterLocationState, filterPickupDateState, filterPriceState, filterState, filterStatusState, filterTruckState, filterWeightState, filterWordState, tableDataState } from "../../../store/atoms/tableState"
+import { jobFiltersState, filterState, filterWordState, tableDataState } from "../../../store/atoms/tableState"
 import { useRouter } from "next/router"
 import InputComponent from "../../../components/common/InputComponent"
 import DateAndTimePicker from "../../../components/common/DateAndTimePicker"
@@ -336,83 +336,24 @@ const FilterLabel = styled.div`
 const ShipperProfilePage = () => {
 	const shipperInfo = useRecoilValue(userInfoState)
 	const [jobStatusCount, setJobStatusCount] = useRecoilState<{ [key: number]: number }>(jobStatusCountState)
-	const [filters, setFilters] = useState({
-		search: "",
-		pickup_province: "ทั้งหมด",
-		dropoff_province: "ทั้งหมด",
-		status: [0],
-		pickup_date: {
-			isFilter: false,
-			start: new Date(new Date().setHours(0, 0, 0, 0)),
-			end: new Date(new Date().setHours(23, 59, 59, 999))
-		},
-		dropoff_date: {
-			isFilter: false,
-			start: new Date(new Date().setHours(0, 0, 0, 0)),
-			end: new Date(new Date().setHours(23, 59, 59, 999))
-		},
-		weight: undefined,
-		price: undefined,
-		truck: {
-			type: "ทั้งหมด",
-			option: "ตู้ทึบ",
-		}
-	})
 	const [jobTableData, setTableData] = useRecoilState(tableDataState)
 	const router = useRouter()
 	const filteredData = useRecoilValue(filterState)
 	const setFilterWord = useSetRecoilState(filterWordState)
-	const setFilterLocation = useSetRecoilState(filterLocationState)
-	const setFilterPickupDate = useSetRecoilState(filterPickupDateState)
-	const setFilterDropoffDate = useSetRecoilState(filterDropoffDateState)
-	const setFilterStatus = useSetRecoilState(filterStatusState)
-	const setFilterWeight = useSetRecoilState(filterWeightState)
-	const setFilterPrice = useSetRecoilState(filterPriceState)
-	const setFilterTruck = useSetRecoilState(filterTruckState)
+	const [jobFilters, setJobFilters] = useRecoilState(jobFiltersState)
 	const [showMoreFilter, setShowMoreFilter] = useState(false)
-
-	useEffect(() => {
-		setFilterStatus(filters.status)
-	}, [filters.status])
-
-	useEffect(() => {
-		setFilterLocation({
-			pickup: filters.pickup_province,
-			dropoff: filters.dropoff_province
-		})
-	}, [filters.pickup_province, filters.dropoff_province])
-
-	useEffect(() => {
-		setFilterPickupDate(filters.pickup_date)
-	}, [filters.pickup_date])
-
-	useEffect(() => {
-		setFilterDropoffDate(filters.dropoff_date)
-	}, [filters.dropoff_date])
-
-	useEffect(() => {
-		setFilterWeight(filters.weight)
-		console.log(parseInt(filters.weight))
-	}, [filters.weight])
-
-	useEffect(() => {
-		setFilterPrice(filters.price)
-	}, [filters.price])
-
-	useEffect(() => {
-		setFilterTruck(filters.truck)
-	}, [filters.truck])
 
 	const filterDate = (filterField: string, targetField: string, value: (Date | boolean)) => {
 		const updateFilterDate = {
-			...filters,
+			...jobFilters,
 			[filterField]: {
-				...filters[filterField],
+				...jobFilters[filterField],
 				[targetField]: value
 			}
 		}
-		setFilters(updateFilterDate)
+		setJobFilters(updateFilterDate)
 	}
+
  	// useEffect(() => {
 	// 	resourceStatusCount(filteredData, {
 	// 		0: 0,
@@ -589,8 +530,8 @@ const ShipperProfilePage = () => {
 										<span>ต้นทาง</span>
 									</FilterLabel>
 									<SelectComponent
-										value={filters.pickup_province}
-										setValue={(value: string) => setFilters({ ...filters, pickup_province: value })}
+										value={jobFilters.pickup_province}
+										setValue={(value: string) => setJobFilters({ ...jobFilters, pickup_province: value })}
 										menuList={["ทั้งหมด", ...PROVINCES]}
 									/>
 								</FilterContainer>
@@ -600,8 +541,8 @@ const ShipperProfilePage = () => {
 										<span>ปลายทาง</span>
 									</FilterLabel>
 									<SelectComponent
-										value={filters.dropoff_province}
-										setValue={(value: string) => setFilters({ ...filters, dropoff_province: value })}
+										value={jobFilters.dropoff_province}
+										setValue={(value: string) => setJobFilters({ ...jobFilters, dropoff_province: value })}
 										menuList={["ทั้งหมด", ...PROVINCES]}
 									/>
 								</FilterContainer>
@@ -639,19 +580,19 @@ const ShipperProfilePage = () => {
 								</div>
 							</RadioContainer>
 							<DateAndTimePicker 
-								dateAndTime={filters.pickup_date.start}
-								setDateAndTime={(value: Date) => setFilters({...filters, pickup_date: {...filters.pickup_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
+								dateAndTime={jobFilters.pickup_date.start}
+								setDateAndTime={(value: Date) => setJobFilters({...jobFilters, pickup_date: {...jobFilters.pickup_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
 								hideTime={true}
-								disabledDate={!filters.pickup_date.isFilter}
+								disabledDate={!jobFilters.pickup_date.isFilter}
 								minDate={new Date(2000)}
 							/>
 							<span>ถึง</span>
 							<DateAndTimePicker 
-								dateAndTime={filters.pickup_date.end < filters.pickup_date.start ? filters.pickup_date.start : filters.pickup_date.end}
-								setDateAndTime={(value: Date) => setFilters({...filters, pickup_date: {...filters.pickup_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
-								minDate={filters.pickup_date.start}
+								dateAndTime={jobFilters.pickup_date.end < jobFilters.pickup_date.start ? jobFilters.pickup_date.start : jobFilters.pickup_date.end}
+								setDateAndTime={(value: Date) => setJobFilters({...jobFilters, pickup_date: {...jobFilters.pickup_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
+								minDate={jobFilters.pickup_date.start}
 								hideTime={true}
-								disabledDate={!filters.pickup_date.isFilter}
+								disabledDate={!jobFilters.pickup_date.isFilter}
 							/>
 						</FilterContainer>
 						<FilterContainer>
@@ -685,19 +626,19 @@ const ShipperProfilePage = () => {
 								</div>
 							</RadioContainer>
 							<DateAndTimePicker 
-								dateAndTime={filters.dropoff_date.start}
-								setDateAndTime={(value: Date) => setFilters({...filters, dropoff_date: {...filters.dropoff_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
+								dateAndTime={jobFilters.dropoff_date.start}
+								setDateAndTime={(value: Date) => setJobFilters({...jobFilters, dropoff_date: {...jobFilters.dropoff_date, start: new Date(value.setHours(0, 0, 0, 0))}})}
 								hideTime={true}
-								disabledDate={!filters.dropoff_date.isFilter}
+								disabledDate={!jobFilters.dropoff_date.isFilter}
 								minDate={new Date(2000)}
 							/>
 							<span>ถึง</span>
 							<DateAndTimePicker 
-								dateAndTime={filters.dropoff_date.end < filters.dropoff_date.start ? filters.dropoff_date.start : filters.dropoff_date.end}
-								setDateAndTime={(value: Date) => setFilters({...filters, dropoff_date: {...filters.dropoff_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
-								minDate={filters.dropoff_date.start}
+								dateAndTime={jobFilters.dropoff_date.end < jobFilters.dropoff_date.start ? jobFilters.dropoff_date.start : jobFilters.dropoff_date.end}
+								setDateAndTime={(value: Date) => setJobFilters({...jobFilters, dropoff_date: {...jobFilters.dropoff_date, end: new Date(value.setHours(23, 59, 59, 999))}})}
+								minDate={jobFilters.dropoff_date.start}
 								hideTime={true}
-								disabledDate={!filters.dropoff_date.isFilter}
+								disabledDate={!jobFilters.dropoff_date.isFilter}
 							/>
 						</FilterContainer>
 						<FilterRow>
@@ -710,8 +651,8 @@ const ShipperProfilePage = () => {
 									type="number"
 									classifier="ตัน"
 									disableLabel={true}
-									value={filters.weight}
-									handleOnChange={(e) => setFilters({...filters, weight: e.target.value})}
+									value={jobFilters.weight}
+									handleOnChange={(e) => setJobFilters({...jobFilters, weight: e.target.value})}
 								/>
 							</FilterContainer>
 							<FilterContainer>
@@ -723,8 +664,8 @@ const ShipperProfilePage = () => {
 									type="number"
 									classifier="บาท"
 									disableLabel={true}
-									value={filters.price}
-									handleOnChange={(e) => setFilters({...filters, price: e.target.value})}
+									value={jobFilters.price}
+									handleOnChange={(e) => setJobFilters({...jobFilters, price: e.target.value})}
 								/>
 							</FilterContainer>
 						</FilterRow>
@@ -736,12 +677,12 @@ const ShipperProfilePage = () => {
 								</FilterLabel>
 								<SelectComponent
 									menuList={["ทั้งหมด", ...Object.keys(TRUCK_TYPE_LIST)]}
-									value={filters.truck.type}
-									setValue={(value: string) => setFilters({...filters, truck: {...filters.truck, type: value}})}
+									value={jobFilters.truck.type}
+									setValue={(value: string) => setJobFilters({...jobFilters, truck: {...jobFilters.truck, type: value}})}
 								/>
 							</FilterContainer>
 							{
-								filters.truck.type !== "ทั้งหมด" &&
+								jobFilters.truck.type !== "ทั้งหมด" &&
 								<FilterContainer id="option">
 									<FilterLabel>
 										<OptionIcon />
@@ -749,13 +690,13 @@ const ShipperProfilePage = () => {
 									</FilterLabel>
 									<ButtonGroupContainer>
 										{	
-											["ทั้งหมด", ...TRUCK_TYPE_LIST[filters.truck.type].option].map((option: string, index: number) => {
+											["ทั้งหมด", ...TRUCK_TYPE_LIST[jobFilters.truck.type].option].map((option: string, index: number) => {
 												return (
 													<ButtonItem
 														key={index}
-														onClick={() => setFilters({...filters, truck: {...filters.truck, option: option}})}
+														onClick={() => setJobFilters({...jobFilters, truck: {...jobFilters.truck, option: option}})}
 														name={option}
-														value={filters.truck.option}
+														value={jobFilters.truck.option}
 													>
 														{option}
 													</ButtonItem>
@@ -770,21 +711,21 @@ const ShipperProfilePage = () => {
 				</DesktopHeader>
 				<ContentContainer>
 					<TabContainer>
-						<TablItem isActive={filters.status[0] === 0} onClick={() => setFilters({...filters, status: [0]})}>
+						<TablItem isActive={jobFilters.status[0] === 0} onClick={() => setJobFilters({...jobFilters, status: [0]})}>
 							ทั้งหมด
 							<NumberOfJobs>{jobTableData.length}</NumberOfJobs>
 						</TablItem>
-						<TablItem isActive={filters.status[0] === 100} onClick={() => setFilters({...filters, status: [100]})}>
+						<TablItem isActive={jobFilters.status[0] === 100} onClick={() => setJobFilters({...jobFilters, status: [100]})}>
 							รอผู้รับงาน
 							<NumberOfJobs>{jobStatusCount[100]}</NumberOfJobs>
 						</TablItem>
 						<TablItem 
-							isActive={filters.status.length > 1} 
-							onClick={() => setFilters({...filters, status: [200, 300, 400, 500, 600, 700]})}>
+							isActive={jobFilters.status.length > 1} 
+							onClick={() => setJobFilters({...jobFilters, status: [200, 300, 400, 500, 600, 700]})}>
 							กำลังขนส่ง
 							<NumberOfJobs>{jobStatusCount[0]}</NumberOfJobs>
 						</TablItem>
-						<TablItem isActive={filters.status[0] === 800} onClick={() => setFilters({...filters, status: [800]})}>
+						<TablItem isActive={jobFilters.status[0] === 800} onClick={() => setJobFilters({...jobFilters, status: [800]})}>
 							ขนส่งเสร็จสิ้น
 							<NumberOfJobs>{jobStatusCount[800]}</NumberOfJobs>
 						</TablItem>

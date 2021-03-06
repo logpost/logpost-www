@@ -10,52 +10,29 @@ export const filterWordState = atom({
 	default: ""
 })
 
-export const filterStatusState = atom({
-	key: "filterStatusState",
-	default: [0]
-})
-
-export const filterLocationState = atom({
-	key: "filterLocationState",
+export const jobFiltersState = atom({
+	key: "jobFiltersState",
 	default: {
-		pickup: "ทั้งหมด",
-		dropoff: "ทั้งหมด"
-	}
-})
-
-export const filterPickupDateState = atom({
-	key: "filterPickupDateState",
-	default: {
-		isFilter: false,
-		start: new Date(),
-		end: new Date()
-	}
-})
-
-export const filterDropoffDateState = atom({
-	key: "filterDropoffDateState",
-	default: {
-		isFilter: false,
-		start: new Date(),
-		end: new Date()
-	}
-})
-
-export const filterWeightState = atom({
-	key: "filterWeightState",
-	default: undefined
-})
-
-export const filterPriceState = atom({
-	key: "filterPriceState",
-	default: undefined
-})
-
-export const filterTruckState = atom({
-	key: "filterTruckState",
-	default: {
-		type: "ทั้งหมด",
-		option: "ทั้งหมด",
+		search: "",
+		pickup_province: "ทั้งหมด",
+		dropoff_province: "ทั้งหมด",
+		status: [0],
+		pickup_date: {
+			isFilter: false,
+			start: new Date(new Date().setHours(0, 0, 0, 0)),
+			end: new Date(new Date().setHours(23, 59, 59, 999))
+		},
+		dropoff_date: {
+			isFilter: false,
+			start: new Date(new Date().setHours(0, 0, 0, 0)),
+			end: new Date(new Date().setHours(23, 59, 59, 999))
+		},
+		weight: undefined,
+		price: undefined,
+		truck: {
+			type: "ทั้งหมด",
+			option: "ทั้งหมด",
+		}
 	}
 })
 
@@ -63,13 +40,7 @@ export const filterState = selector({
 	key: "filterFunction",
 	get: ({get}) => {
 		const filterWord = get(filterWordState)
-		const filterStatus = get(filterStatusState)
-		const filterLocation = get(filterLocationState)
-		const filterPickupDate = get(filterPickupDateState)
-		const filterDropoffDate = get(filterDropoffDateState)
-		const filterWeight = get(filterWeightState)
-		const filterPrice = get(filterPriceState)
-		const filterTruck = get(filterTruckState)
+		const jobFilter = get(jobFiltersState)
 		let filteredData = get(tableDataState)
 		filteredData = filteredData.filter((item) => {
 			const {status, ...restItem} = item
@@ -81,48 +52,44 @@ export const filterState = selector({
 					return value.toLowerCase().includes(filterWord)
 				})
 		})
-		if (filterStatus[0] !== 0) {
+		if (jobFilter.status[0] !== 0) {
 			filteredData = filteredData.filter((item) => {
-				return filterStatus.includes(item.status)
+				return jobFilter.status.includes(item.status)
 			})
 		} 
-		if (filterLocation.pickup !== "ทั้งหมด") {
+		if (jobFilter.pickup_province !== "ทั้งหมด" || jobFilter.dropoff_province !== "ทั้งหมด") {
 			filteredData = filteredData.filter((item) => {
-				return filterLocation.pickup === item.pickup_location
+				return (jobFilter.pickup_province === "ทั้งหมด" ? true : (jobFilter.pickup_province === item.pickup_location))
+				&& (jobFilter.dropoff_province === "ทั้งหมด" ? true : (jobFilter.dropoff_province === item.dropoff_location))
 			})
 		} 
-		if (filterLocation.dropoff !== "ทั้งหมด") {
-			filteredData = filteredData.filter((item) => {
-				return filterLocation.dropoff === item.dropoff_location
-			})
-		} 
-		if (filterPickupDate.isFilter) {
+		if (jobFilter.pickup_date.isFilter) {
 			filteredData = filteredData.filter((item) => {
 				const pickup_date = new Date(item.pickup_date)
-				return (pickup_date >= filterPickupDate.start) && (pickup_date <= filterPickupDate.end)
+				return (pickup_date >= jobFilter.pickup_date.start) && (pickup_date <= jobFilter.pickup_date.end)
 			})
 		}
-		if (filterDropoffDate.isFilter) {
+		if (jobFilter.dropoff_date.isFilter) {
 			filteredData = filteredData.filter((item) => {
 				const dropoff_date = new Date(item.dropoff_date)
-				return (dropoff_date >= filterDropoffDate.start) && (dropoff_date <= filterDropoffDate.end)
+				return (dropoff_date >= jobFilter.dropoff_date.start) && (dropoff_date <= jobFilter.dropoff_date.end)
 			})
 		}
-		if (filterWeight) {
+		if (jobFilter.weight) {
 			filteredData = filteredData.filter((item) => {
-				return item.weight <= filterWeight
+				return item.weight <= jobFilter.weight
 			})
 		}
-		if (filterPrice) {
+		if (jobFilter.price) {
 			filteredData = filteredData.filter((item) => {
-				return filterPrice <= item.offer_price
+				return jobFilter.price <= item.offer_price
 			})
 		}
-		if (filterTruck.type !== "ทั้งหมด") {
+		if (jobFilter.truck.type !== "ทั้งหมด") {
 			filteredData = filteredData.filter((item) => {
 				const truckType = item.carrier_specification.truck.property
-				return (filterTruck.type === truckType.type) && 
-				(filterTruck.option === "ทั้งหมด" ? true : (filterTruck.option === truckType.option))
+				return (jobFilter.truck.type === truckType.type) && 
+				(jobFilter.truck.option === "ทั้งหมด" ? true : (jobFilter.truck.option === truckType.option))
 			})
 		}
 		return filteredData
