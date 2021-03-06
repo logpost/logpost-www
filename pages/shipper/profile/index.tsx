@@ -6,9 +6,12 @@ import {
 	EditIcon,
 	JobIcon,
 	JobSuccessIcon,
+	OptionIcon,
+	PriceIcon,
 	RightArrow,
 	TruckIcon,
 	UpArrowLine,
+	WeightIcon,
 } from "../../../components/common/Icons"
 import NavigationBar from "../../../components/common/NavigationBar"
 import Header from "../../../components/common/Header"
@@ -21,15 +24,16 @@ import { getMyJob } from "../../../components/utilities/apis"
 import { JobDocument } from '../../../entities/interface/job'
 import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoints"
 import DesktopHeader from "../../../components/common/DesktopHeader"
-import { HeaderTitle, NumberOfJobs, Pagination, PrimaryButton, RadioButton, TableRowActions, TextButton } from "../../../components/styles/GlobalComponents"
+import { ButtonGroupContainer, ButtonItem, HeaderTitle, NumberOfJobs, Pagination, PrimaryButton, RadioButton, TableRowActions, TextButton } from "../../../components/styles/GlobalComponents"
 import SearchBar from "../../../components/common/SearchBar"
 import SelectComponent from "../../../components/common/SelectComponent"
 import { JOB_STATUS_CODE, PROVINCES } from "../../../data/jobs"
 import TableComponent from "../../../components/common/TableComponent"
-import { filterDropoffDateState, filterLocationState, filterPickupDateState, filterState, filterStatusState, filterWordState, tableDataState } from "../../../store/atoms/tableState"
+import { filterDropoffDateState, filterLocationState, filterPickupDateState, filterPriceState, filterState, filterStatusState, filterTruckState, filterWeightState, filterWordState, tableDataState } from "../../../store/atoms/tableState"
 import { useRouter } from "next/router"
 import InputComponent from "../../../components/common/InputComponent"
 import DateAndTimePicker from "../../../components/common/DateAndTimePicker"
+import { TRUCK_TYPE_LIST } from "../../../data/carrier"
 
 interface TabItemInterface {
 	isActive: boolean;
@@ -59,16 +63,84 @@ const HeaderTitleContainer = styled.div`
 	}
 `
 
+const FilterContainer = styled.div`
+	font-size: 1.4rem;
+	display: flex;
+	align-items: center;
+	width: 50%;
+
+	&#option {
+		width: 100%;
+
+		> ${ButtonGroupContainer} {
+			width: 100%;
+			grid-template-columns: repeat(auto-fill, 8.5rem);
+
+			${ButtonItem} {
+				font-size: 1.4rem;
+				height: 3.2rem;
+				width: 8.2rem;
+				padding: 0;
+			}
+		}
+	}
+
+	input {
+		margin-top: 0;
+		font-size: 1.4rem;
+		height: 3.2rem;
+
+		& ~ div {
+			font-size: 1.4rem;
+			margin-left: 1.4rem;
+		}
+	}
+
+	> svg {
+		margin-right: 0.5rem;
+		min-height: 1.8rem;
+		min-width: 1.8rem;
+	}
+
+	> div {
+		margin-top: 0;
+
+		&.MuiInputBase-root {
+			width: 70%;
+			max-width: 17rem;
+			min-width: 12rem;
+			font-size: 1.4rem;
+			height: 2.8rem;
+
+			> svg {
+				height: 2.6rem;
+				width: 2.6rem;
+				padding: 0.9rem;
+			}
+		}
+		
+		.react-datepicker__input-container input {
+			font-size: 1.4rem;
+			margin-top: 0;
+			height: 3.2rem;
+		}
+	}
+
+	> span {
+		margin: 0 1.4rem;
+	}
+`
+
 const FilterRow = styled.div`
 	display: flex;
 	align-items: center;
 
+	${FilterContainer}:not(:first-child) {
+		margin-left: 1.4rem;
+	}
+
 	&:not(:first-child) {
 		justify-content: flex-start;
-
-		&:last-child {
-			grid-template-columns: repeat(auto-fit, minmax(24rem, max-content));
-		}
 
 		> div {
 			width: auto;
@@ -82,22 +154,17 @@ const FilterRow = styled.div`
 			display: flex;
 			width: 80%;
 
-			> div {
-				margin-right: 2%;
-
-				&:first-child {
-					border: 1px solid hsl(0, 0%, 66%);
+			> div:first-child {
+				border: 1px solid hsl(0, 0%, 66%);
+				background-color: white;
+				min-width: 15rem;
+				height: max-content;
+		
+				input {
 					background-color: white;
-					min-width: 15rem;
-					height: max-content;
-			
-					input {
-						background-color: white;
-					}
 				}
 			}
 		}
-
 
 		${TextButton} {
 			text-decoration: none;
@@ -124,52 +191,6 @@ const FiltersContainer = styled.div<FiltersContainerInterface>`
 		margin-top: 1.8rem;
 		opacity: ${(props) => props.isExpand ? 1 : 0};
 		transition: all 300ms ease-in-out;
-	}
-`
-
-const FilterContainer = styled.div`
-	font-size: 1.4rem;
-	display: flex;
-	align-items: center;
-	width: 80%;
-
-	&:last-child {
-		margin-left: 1.4rem;
-	}
-
-	input {
-		margin-top: 0;
-		font-size: 1.6rem;
-
-		& ~ div {
-			font-size: 1.4rem;
-			margin-left: 1.4rem;
-		}
-	}
-
-	> svg {
-		margin-right: 0.5rem;
-		min-height: 1.8rem;
-		min-width: 1.8rem;
-	}
-
-	> div {
-		margin-top: 0;
-
-		&.MuiInputBase-root {
-			width: 80%;
-			max-width: 17rem;
-			min-width: 12rem;
-
-		}
-		
-		.react-datepicker__input-container input {
-			margin-top: 0;
-		}
-	}
-
-	> span {
-		margin: 0 1.4rem;
 	}
 `
 
@@ -302,6 +323,13 @@ const FilterLabel = styled.div`
 
 	svg {
 		margin-right: 1rem;
+		height: 20px;
+		width: 20px; 
+		
+		#truck {
+			stroke: hsl(16, 56%, 51%);
+			stroke-width: 3px;
+		}
 	}
 `
 
@@ -323,6 +351,12 @@ const ShipperProfilePage = () => {
 			start: new Date(new Date().setHours(0, 0, 0, 0)),
 			end: new Date(new Date().setHours(23, 59, 59, 999))
 		},
+		weight: undefined,
+		price: undefined,
+		truck: {
+			type: "ทั้งหมด",
+			option: "ตู้ทึบ",
+		}
 	})
 	const [jobTableData, setTableData] = useRecoilState(tableDataState)
 	const router = useRouter()
@@ -332,6 +366,9 @@ const ShipperProfilePage = () => {
 	const setFilterPickupDate = useSetRecoilState(filterPickupDateState)
 	const setFilterDropoffDate = useSetRecoilState(filterDropoffDateState)
 	const setFilterStatus = useSetRecoilState(filterStatusState)
+	const setFilterWeight = useSetRecoilState(filterWeightState)
+	const setFilterPrice = useSetRecoilState(filterPriceState)
+	const setFilterTruck = useSetRecoilState(filterTruckState)
 	const [showMoreFilter, setShowMoreFilter] = useState(false)
 
 	useEffect(() => {
@@ -352,6 +389,19 @@ const ShipperProfilePage = () => {
 	useEffect(() => {
 		setFilterDropoffDate(filters.dropoff_date)
 	}, [filters.dropoff_date])
+
+	useEffect(() => {
+		setFilterWeight(filters.weight)
+		console.log(parseInt(filters.weight))
+	}, [filters.weight])
+
+	useEffect(() => {
+		setFilterPrice(filters.price)
+	}, [filters.price])
+
+	useEffect(() => {
+		setFilterTruck(filters.truck)
+	}, [filters.truck])
 
 	const filterDate = (filterField: string, targetField: string, value: (Date | boolean)) => {
 		const updateFilterDate = {
@@ -412,7 +462,10 @@ const ShipperProfilePage = () => {
 			id: "weight",
 			label: "น้ำหนัก",
 			width: "8%",
-			align: "left"
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{`${job.weight} ตัน`}</span>
+			)
 		},
 		{
 			id: "offer_price",
@@ -427,7 +480,10 @@ const ShipperProfilePage = () => {
 			id: "truck_type",
 			label: "ประเภทรถ",
 			width: "12%",
-			align: "left"
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{`${job.carrier_specification.truck.property.type} ${job.carrier_specification.truck.property.option}`}</span>
+			)
 		},
 		{
 			id: "status",
@@ -454,28 +510,11 @@ const ShipperProfilePage = () => {
 	const convertJobToTableFormat = (jobs: JobDocument[]) => {
 		const jobTableData = []
 		jobs.map((job) => {
-			const { 
-				job_id,
-				pickup_location, 
-				dropoff_location, 
-				pickup_date, 
-				dropoff_date, 
-				product_type, 
-				weight, 
-				offer_price, 
-				carrier_specification,
-				status } = job
+			const { pickup_location, dropoff_location } = job
 			jobTableData.push({
-				job_id,
+				...job, 
 				pickup_location: pickup_location.province,
 				dropoff_location: dropoff_location.province,
-				pickup_date,
-				dropoff_date, 
-				product_type,
-				weight: `${weight} ตัน`,
-				offer_price,
-				truck_type: `${carrier_specification.truck.property.type} ${carrier_specification.truck.property.option}`,
-				status
 			})
 		})
 		return jobTableData
@@ -664,30 +703,68 @@ const ShipperProfilePage = () => {
 						<FilterRow>
 							<FilterContainer>
 								<FilterLabel>
-									<DownArrowLine />
+									<WeightIcon />
 									<span>น้ำหนัก ไม่เกิน</span>
 								</FilterLabel>
 								<InputComponent
 									type="number"
 									classifier="ตัน"
 									disableLabel={true}
-									value={filters.pickup_province}
-									handleOnChange={() => {console.log("up")}}
+									value={filters.weight}
+									handleOnChange={(e) => setFilters({...filters, weight: e.target.value})}
 								/>
 							</FilterContainer>
 							<FilterContainer>
 								<FilterLabel>
-									<DownArrowLine />
+									<PriceIcon />
 									<span>ราคา ขั้นต่ำ</span>
 								</FilterLabel>
 								<InputComponent
 									type="number"
 									classifier="บาท"
 									disableLabel={true}
-									value={filters.pickup_province}
-									handleOnChange={() => {console.log("up")}}
+									value={filters.price}
+									handleOnChange={(e) => setFilters({...filters, price: e.target.value})}
 								/>
 							</FilterContainer>
+						</FilterRow>
+						<FilterRow>
+							<FilterContainer>
+								<FilterLabel>
+									<TruckIcon />
+									<span>ประเภทรถ</span>
+								</FilterLabel>
+								<SelectComponent
+									menuList={["ทั้งหมด", ...Object.keys(TRUCK_TYPE_LIST)]}
+									value={filters.truck.type}
+									setValue={(value: string) => setFilters({...filters, truck: {...filters.truck, type: value}})}
+								/>
+							</FilterContainer>
+							{
+								filters.truck.type !== "ทั้งหมด" &&
+								<FilterContainer id="option">
+									<FilterLabel>
+										<OptionIcon />
+										<span>ส่วนเสริม</span>
+									</FilterLabel>
+									<ButtonGroupContainer>
+										{	
+											["ทั้งหมด", ...TRUCK_TYPE_LIST[filters.truck.type].option].map((option: string, index: number) => {
+												return (
+													<ButtonItem
+														key={index}
+														onClick={() => setFilters({...filters, truck: {...filters.truck, option: option}})}
+														name={option}
+														value={filters.truck.option}
+													>
+														{option}
+													</ButtonItem>
+												)
+											})
+										}
+									</ButtonGroupContainer>
+								</FilterContainer>
+							}
 						</FilterRow>
 					</FiltersContainer>
 				</DesktopHeader>

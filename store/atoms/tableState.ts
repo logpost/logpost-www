@@ -41,6 +41,24 @@ export const filterDropoffDateState = atom({
 	}
 })
 
+export const filterWeightState = atom({
+	key: "filterWeightState",
+	default: undefined
+})
+
+export const filterPriceState = atom({
+	key: "filterPriceState",
+	default: undefined
+})
+
+export const filterTruckState = atom({
+	key: "filterTruckState",
+	default: {
+		type: "ทั้งหมด",
+		option: "ทั้งหมด",
+	}
+})
+
 export const filterState = selector({
 	key: "filterFunction",
 	get: ({get}) => {
@@ -49,6 +67,9 @@ export const filterState = selector({
 		const filterLocation = get(filterLocationState)
 		const filterPickupDate = get(filterPickupDateState)
 		const filterDropoffDate = get(filterDropoffDateState)
+		const filterWeight = get(filterWeightState)
+		const filterPrice = get(filterPriceState)
+		const filterTruck = get(filterTruckState)
 		let filteredData = get(tableDataState)
 		filteredData = filteredData.filter((item) => {
 			const {status, ...restItem} = item
@@ -85,6 +106,23 @@ export const filterState = selector({
 			filteredData = filteredData.filter((item) => {
 				const dropoff_date = new Date(item.dropoff_date)
 				return (dropoff_date >= filterDropoffDate.start) && (dropoff_date <= filterDropoffDate.end)
+			})
+		}
+		if (filterWeight) {
+			filteredData = filteredData.filter((item) => {
+				return item.weight <= filterWeight
+			})
+		}
+		if (filterPrice) {
+			filteredData = filteredData.filter((item) => {
+				return filterPrice <= item.offer_price
+			})
+		}
+		if (filterTruck.type !== "ทั้งหมด") {
+			filteredData = filteredData.filter((item) => {
+				const truckType = item.carrier_specification.truck.property
+				return (filterTruck.type === truckType.type) && 
+				(filterTruck.option === "ทั้งหมด" ? true : (filterTruck.option === truckType.option))
 			})
 		}
 		return filteredData
