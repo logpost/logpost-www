@@ -2,6 +2,7 @@ import { ReactElement } from 'react'
 import { RecoilState } from 'recoil';
 import { StyledComponent } from 'styled-components';
 import { DriverTable } from './driver';
+import { JobDetails } from './job';
 import { TruckTable } from './truck';
 
 export interface AuthInterface {
@@ -62,7 +63,7 @@ export interface TableComponentInterface {
 		align?: string
 		width?: string
 		sortable?: boolean
-		format?: (index: number, item?: (TruckTable | DriverTable)) => ReactElement
+		format?: (index: number, item?: (TruckTable | DriverTable | JobDetails)) => ReactElement
 	}[]
 	tableStyle?: {
 		width?: string,

@@ -14,6 +14,7 @@ import { getCarrierProfile, getMyJob } from "../../../components/utilities/apis"
 import { resourceStatusCount } from "../../../components/utilities/helper"
 import { driverStatusCountState, truckStatusCountState, jobStatusCountState, myJobsState } from "../../../store/atoms/carrierProfileState"
 import { JobDocument } from '../../../entities/interface/job'
+import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoints"
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
@@ -49,83 +50,88 @@ const CarrierProfilePage = () => {
 	return (
 		<>
 			<NavigationBar activeIndex={2} />
-			<Header enabledSetting={true}>
-				{carrierInfo.displayName}
-      		</Header>
-			<ProfileStatusContainer>
-				<ProfileStatus
-					title="รายการงาน"
-					buttonText="รายการทั้งหมด"
-					buttonLink="jobs?status=all"
-					type="button"
-					items={[
-						{
-							name: "รอผู้รับงาน",
-							onClickLink: "jobs?status=waiting",
-							icon: <JobIcon />,
-							noOfJobs: jobStatusCount[100],
-						},
-						{
-							name: "กำลังขนส่ง",
-							onClickLink: "jobs?status=shipping",
-							icon: <TruckIcon />,
-							noOfJobs: jobStatusCount[0],
-						},
-						{
-							name: "ขนส่งเสร็จสิ้น",
-							onClickLink: "jobs?status=finished",
-							icon: <JobSuccessIcon />,
-							noOfJobs: jobStatusCount[800],
-						},
-					]}
-				/>
-				<Line />
-				<ProfileStatus
-					title="รถบรรทุก"
-					buttonText="จัดการรถบรรทุก"
-					buttonLink="truck/overview"
-					type="metric"
-					items={[
-						{
-							name: "จอดว่าง",
-							metric: truckStatusCount[100],
-						},
-						{
-							name: "กำลังขนส่ง",
-							metric: truckStatusCount[200],
-						},
-						{
-							name: "ไม่รับงาน",
-							metric: truckStatusCount[300],
-						},
-					]}
-				/>
-				{
-				 carrierInfo.accountType === "business" && <>
-					<Line />
+			<BreakpointMD>
+				<Header enabledSetting={true}>
+					{carrierInfo.displayName}
+				</Header>
+				<ProfileStatusContainer>
 					<ProfileStatus
-						title="พนักงานขับรถ"
-						buttonText="จัดการพนักงาน"
-						buttonLink="driver/overview"
-						type="metric"
+						title="รายการงาน"
+						buttonText="รายการทั้งหมด"
+						buttonLink="jobs?status=all"
+						type="button"
 						items={[
 							{
-								name: "ว่าง",
-								metric: driverStatusCount[100],
+								name: "รอผู้รับงาน",
+								onClickLink: "jobs?status=waiting",
+								icon: <JobIcon />,
+								noOfJobs: jobStatusCount[100],
 							},
 							{
 								name: "กำลังขนส่ง",
-								metric: driverStatusCount[200],
+								onClickLink: "jobs?status=shipping",
+								icon: <TruckIcon />,
+								noOfJobs: jobStatusCount[0],
 							},
 							{
-								name: "ไม่รับงาน",
-								metric: driverStatusCount[300],
+								name: "ขนส่งเสร็จสิ้น",
+								onClickLink: "jobs?status=finished",
+								icon: <JobSuccessIcon />,
+								noOfJobs: jobStatusCount[800],
 							},
 						]}
 					/>
-					</>
-				}
-			</ProfileStatusContainer>
+					<Line />
+					<ProfileStatus
+						title="รถบรรทุก"
+						buttonText="จัดการรถบรรทุก"
+						buttonLink="truck/overview"
+						type="metric"
+						items={[
+							{
+								name: "จอดว่าง",
+								metric: truckStatusCount[100],
+							},
+							{
+								name: "กำลังขนส่ง",
+								metric: truckStatusCount[200],
+							},
+							{
+								name: "ไม่รับงาน",
+								metric: truckStatusCount[300],
+							},
+						]}
+					/>
+					{
+					carrierInfo.accountType === "business" && <>
+						<Line />
+						<ProfileStatus
+							title="พนักงานขับรถ"
+							buttonText="จัดการพนักงาน"
+							buttonLink="driver/overview"
+							type="metric"
+							items={[
+								{
+									name: "ว่าง",
+									metric: driverStatusCount[100],
+								},
+								{
+									name: "กำลังขนส่ง",
+									metric: driverStatusCount[200],
+								},
+								{
+									name: "ไม่รับงาน",
+									metric: driverStatusCount[300],
+								},
+							]}
+						/>
+						</>
+					}
+				</ProfileStatusContainer>
+			</BreakpointMD>
+			<BreakpointLG>
+					
+			</BreakpointLG>
 		</>
 	)
 }
