@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { RightArrow } from "./Icons"
 import { ProfileJobStatusInterface } from "../../entities/interface/common"
 import { useRouter } from 'next/router'
+import { SeeAllButton, StatusHeader } from "../styles/GlobalComponents"
 
 const StatusContainer = styled.div`
 	display: flex;
@@ -38,32 +39,6 @@ const StatusItem = styled.div<{type: string}>`
 
 	> svg {
 		margin-bottom: 0.4rem;
-	}
-`
-
-const StatusHeader = styled.div`
-	font-size: 2.4rem;
-	font-weight: 600;
-	margin-bottom: 1.4rem;
-	display: flex;
-	justify-content: space-between;
-
-	> span {
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		margin-right: 0.6rem;
-	}
-`
-
-const SeeAllButton = styled.button`
-	font-size: 1.8rem;
-	text-decoration: none;
-	font-weight: 500;
-	white-space: nowrap;
-
-	svg {
-		margin-left: 0.8rem;
 	}
 `
 

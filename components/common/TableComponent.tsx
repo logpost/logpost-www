@@ -3,14 +3,12 @@ import styled, { css } from "styled-components"
 import { TableComponentInterface } from "../../entities/interface/common"
 import { RightArrow, DoubleRightArrow, UpArrowLine, DownArrowLine } from "./Icons"
 import { useRecoilState } from 'recoil'
-import { filterState } from "../../store/atoms/tableState"
 import { TruckTable } from "../../entities/interface/truck"
 import { DriverTable } from "../../entities/interface/driver"
 import { Pagination } from "../styles/GlobalComponents"
 import { JobDetails } from "../../entities/interface/job"
 
 interface CellInterface {
-	width?: string
 	cellAlign?: string
 }
 
@@ -24,6 +22,7 @@ interface TableInterface {
 }
 
 interface HeaderInterface {
+	width?: string
 	sortActive?: boolean
 	cellAlign?: string
 }
@@ -31,15 +30,16 @@ interface HeaderInterface {
 const TableContainer = styled.div<TableContainerInterface>`
     height: 100%;
 	display: flex;
-	justify-content: center;
+	justify-content: flex-start;
+	overflow-x: scroll;
 	width: 100%;
-	min-height: 30rem;
 `
 
 const Table = styled.table<TableInterface>`
-	width: 100%;
 	-webkit-border-horizontal-spacing: 0;
+	table-layout: fixed;
 	width: ${props => props.width ? props.width : "100%"};
+	min-width: 96rem;
 
 	${props => props.gap && 
 		css`
@@ -61,7 +61,7 @@ const Row = styled.tr`
 const Header = styled.th<HeaderInterface>`
 	font-size: 1.6rem;
 	font-weight: bold;
-	padding: 0.8rem 0;
+	padding: 0.8rem 0.5rem;
 	white-space: nowrap;
 
 	> div {
@@ -76,8 +76,8 @@ const Header = styled.th<HeaderInterface>`
 			
 			svg {
 				margin-left: 0.4rem;
-				height: 1.8rem;
-				width: 1.8rem;
+				min-height: 1.8rem;
+				min-width: 1.8rem;
 
 				path {
 					fill: ${props => props.sortActive ? "hsl(16, 56%, 51%)" : "hsl(0, 0%, 80%)"};
@@ -123,7 +123,8 @@ const TableComponent = (props: TableComponentInterface) => {
 		RowStyle = Row,
 		HeaderStyle = HeaderRow,
 		PaginationStyle = Pagination,
-		filterSelector
+		filterSelector,
+		rowPerPage = 7
 	} = props
 	const [currentPage, setCurrentPage] = useState(1)
 	const [sortOrder, setSortOrder] = useState({
@@ -132,9 +133,8 @@ const TableComponent = (props: TableComponentInterface) => {
 	})
 	const [data, setData] = useRecoilState<Object[]>(filterSelector)
 	const numberOfRow = data.length
-	const maxRowPerPage = 7
-	const firstRowOfPage = (currentPage - 1)*maxRowPerPage
-	const LastRowOfPage = currentPage*maxRowPerPage
+	const firstRowOfPage = (currentPage - 1)*rowPerPage
+	const LastRowOfPage = currentPage*rowPerPage
 	let maxPage = Math.ceil(numberOfRow / 7)
 	const remainingRow = numberOfRow - firstRowOfPage
 
@@ -185,9 +185,9 @@ const TableComponent = (props: TableComponentInterface) => {
 						<HeaderStyle>
 							{columns.map((cell) => {
 								return (
-									<Header key={cell.id} sortActive={sortOrder.field === cell.id} cellAlign={cell.align}>
+									<Header key={cell.id} width={cell.width} sortActive={sortOrder.field === cell.id} cellAlign={cell.align}>
 										<div>
-											{cell.label}
+											<span>{cell.label}</span>
 											{
 												cell.sortable !== false &&
 												<button onClick={() => sortField(cell.id)}>
@@ -219,7 +219,7 @@ const TableComponent = (props: TableComponentInterface) => {
 				</Table>
 			</TableContainer>
 			<TableCaption>
-				<span>แสดง {remainingRow < maxRowPerPage ? numberOfRow : maxRowPerPage * currentPage} จาก {numberOfRow}</span>
+				<span>แสดง {remainingRow < rowPerPage ? numberOfRow : rowPerPage * currentPage} จาก {numberOfRow}</span>
 				<PaginationStyle>
 					<button disabled={currentPage <= 1} onClick={()=> setCurrentPage(1)}><DoubleRightArrow /></button>
 					<button disabled={currentPage <= 1} onClick={()=> setCurrentPage(currentPage - 1)}><RightArrow/></button>

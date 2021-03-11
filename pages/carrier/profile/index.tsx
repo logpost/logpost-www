@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import styled from "styled-components"
 import {
 	JobIcon,
 	JobSuccessIcon,
+	RightArrow,
 	TruckIcon,
 } from "../../../components/common/Icons"
 import NavigationBar from "../../../components/common/NavigationBar"
@@ -15,6 +16,11 @@ import { resourceStatusCount } from "../../../components/utilities/helper"
 import { driverStatusCountState, truckStatusCountState, jobStatusCountState, myJobsState } from "../../../store/atoms/carrierProfileState"
 import { JobDocument } from '../../../entities/interface/job'
 import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoints"
+import DesktopHeader from "../../../components/common/DesktopHeader"
+import DesktopJobTable from "../../../components/common/DesktopJobTable"
+import { HeaderTitle, HeaderTitleContainer, PrimaryButton, SeeAllButton, StatusHeader } from "../../../components/styles/GlobalComponents"
+import { useRouter } from "next/router"
+import { tableDataState } from "../../../store/atoms/tableState"
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
@@ -27,12 +33,57 @@ const Line = styled.div`
 	margin: 1.4rem 0;
 `
 
+const MetricsContainer = styled.div`
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+    grid-gap: 3.2rem;
+	padding: 3rem;
+
+	> div {
+		background-color: white;
+		padding: 1.8rem 3.6rem;
+		border-radius: 8px;
+	}
+`
+
+const JobTableContainer = styled.div`
+	background: white;
+	padding: 1.8rem 0;
+	margin: 0 3rem 3rem;
+	border-radius: 8px;
+
+	${StatusHeader}, > div:last-child > div:first-child {
+		margin-left: 3rem;
+		margin-right: 3rem;
+	}
+`
+
+const BreakpointLGCustom = styled(BreakpointLG)`
+	background-color: hsla(228, 24%, 96%);
+`
+
 const CarrierProfilePage = () => {
+	const router = useRouter()
 	const carrierInfo = useRecoilValue(userInfoState)
 	const [driverStatusCount, setDriverStatusCount] = useRecoilState<{[key: number]: number}>(driverStatusCountState)
 	const [truckStatusCount, setTruckStatusCount] = useRecoilState<{[key: number]: number}>(truckStatusCountState)
 	const [jobStatusCount, setJobStatusCount] = useRecoilState<{[key: number]: number}>(jobStatusCountState)
-	const setMyJobs = useSetRecoilState(myJobsState)
+	// const setMyJobs = useSetRecoilState(myJobsState)
+	const setTableData = useSetRecoilState(tableDataState)
+
+	const convertJobToTableFormat = (jobs: JobDocument[]) => {
+		const jobTableData = []
+		jobs.map((job) => {
+			const { pickup_location, dropoff_location } = job
+			jobTableData.push({
+				...job, 
+				pickup_location: pickup_location.province,
+				dropoff_location: dropoff_location.province,
+				truck_type: `${job.carrier_specification.truck.property.type} ${job.carrier_specification.truck.property.option}`
+			})
+		})
+		return jobTableData
+	}
 
 	useEffect(() => {
 		if (carrierInfo.username) {
@@ -41,8 +92,10 @@ const CarrierProfilePage = () => {
 				resourceStatusCount(carrierProfile.trucks, truckStatusCount, setTruckStatusCount)
 			})
 			getMyJob((jobs: JobDocument[]) => {
+				const jobTableData = convertJobToTableFormat(jobs)
+				setTableData(jobTableData)
 				resourceStatusCount(jobs, jobStatusCount, setJobStatusCount)
-				setMyJobs(jobs)
+				// setMyJobs(jobs)
 			})
 		}
 	}, [carrierInfo])
@@ -129,9 +182,71 @@ const CarrierProfilePage = () => {
 					}
 				</ProfileStatusContainer>
 			</BreakpointMD>
-			<BreakpointLG>
-					
-			</BreakpointLG>
+			<BreakpointLGCustom>
+				<DesktopHeader>
+					<HeaderTitleContainer>
+						<HeaderTitle>ภาพรวม</HeaderTitle>
+						<PrimaryButton onClick={() => router.push("/jobs")}>ค้นหางาน</PrimaryButton>
+					</HeaderTitleContainer>
+				</DesktopHeader>
+				<MetricsContainer>
+					<ProfileStatus
+						title="รถบรรทุก"
+						buttonText="จัดการรถบรรทุก"
+						buttonLink="truck/overview"
+						type="metric"
+						items={[
+							{
+								name: "จอดว่าง",
+								metric: truckStatusCount[100],
+							},
+							{
+								name: "กำลังขนส่ง",
+								metric: truckStatusCount[200],
+							},
+							{
+								name: "ไม่รับงาน",
+								metric: truckStatusCount[300],
+							},
+						]}
+					/>
+					{carrierInfo.accountType === "business" && <>
+						<ProfileStatus
+							title="พนักงานขับรถ"
+							buttonText="จัดการพนักงาน"
+							buttonLink="driver/overview"
+							type="metric"
+							items={[
+								{
+									name: "ว่าง",
+									metric: driverStatusCount[100],
+								},
+								{
+									name: "กำลังขนส่ง",
+									metric: driverStatusCount[200],
+								},
+								{
+									name: "ไม่รับงาน",
+									metric: driverStatusCount[300],
+								},
+							]}
+						/>
+						</>
+					}
+				</MetricsContainer>
+				<JobTableContainer>
+					<StatusHeader>
+						<span>งานล่าสุด</span>
+						<SeeAllButton onClick={() => router.push("")}>
+							ดูงานทั้งหมด
+							<RightArrow />
+						</SeeAllButton >
+					</StatusHeader>
+					<DesktopJobTable 
+						rowPerPage={5}
+					/>
+				</JobTableContainer>
+			</BreakpointLGCustom>
 		</>
 	)
 }

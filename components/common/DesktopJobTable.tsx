@@ -18,21 +18,22 @@ interface TabItemInterface {
 }
 
 const ContentContainer = styled.div`
-	background-color: hsla(211, 28%, 28%, 0.06);
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	padding: 3rem; 
+	align-items: flex-start;
+	width: 100%;
 `
 
 const TableContainer = styled.div`
 	background-color: white;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
+	align-items: flex-start;
 	width: 100%;
 	border-radius: 0 8px 8px 8px;
 	padding-bottom: 1.8rem;
+	border-left: 3rem solid transparent;
+	border-right: 3rem solid transparent;
 `
 
 const TableRowStyle = styled.tr`
@@ -56,10 +57,6 @@ const TableRowStyle = styled.tr`
 const TableHeaderStyle = styled.tr`
 	background-color: transparent;
 	box-shadow: none;
-
-	> th {
-		padding: 0;
-	}
 `
 
 const TablePaginationStyle = styled(Pagination)`
@@ -83,6 +80,7 @@ const TabContainer = styled.div`
 	align-self: flex-start;
 	border-radius: 8px 8px 0 0;
 	background-color: transparent;
+	background-color: hsla(228, 24%, 96%);
 `
 
 const TablItem = styled.button<TabItemInterface>`
@@ -117,7 +115,11 @@ const TablItem = styled.button<TabItemInterface>`
 	}
 `
 
-const DesktopJobTable = () => {
+interface JobTableInterface {
+	rowPerPage?: number
+}
+
+const DesktopJobTable = (props: JobTableInterface) => {
 	const router = useRouter()
 	const [jobFilters, setJobFilters] = useRecoilState(jobFiltersState)
     const jobTableData = useRecoilValue(tableDataState)
@@ -234,13 +236,13 @@ const DesktopJobTable = () => {
 				<TableComponent
 					columns={jobColumns}
 					tableStyle={{
-						width: "95%",
 						gap: "18px"
 					}}
 					RowStyle={TableRowStyle}
 					HeaderStyle={TableHeaderStyle}
 					PaginationStyle={TablePaginationStyle}
 					filterSelector={filterState}
+					{...props}
 				/>
 			</TableContainer>
 		</ContentContainer>

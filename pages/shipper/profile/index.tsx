@@ -18,27 +18,19 @@ import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoin
 import { tableDataState } from "../../../store/atoms/tableState"
 import DesktopJobTable from "../../../components/common/DesktopJobTable"
 import DesktopHeader from "../../../components/common/DesktopHeader"
-import { HeaderTitle, PrimaryButton } from "../../../components/styles/GlobalComponents"
+import { HeaderTitle, HeaderTitleContainer, PrimaryButton } from "../../../components/styles/GlobalComponents"
 import JobFilters from "../../../components/common/JobFilters"
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
 `
 
-const HeaderTitleContainer = styled.div`
-	display: flex;
-	justify-content: space-between;
+const BreakpointLGCustom = styled(BreakpointLG)`
+	background-color: hsla(228, 24%, 96%);
+`
 
-	${HeaderTitle} {
-		color: hsl(212, 28%, 28%);
-        font-weight: 600;
-	}
-
-	${PrimaryButton} {
-		background-color: hsl(212, 28%, 28%);
-		padding: 0.6rem 1.6rem;
-		border-radius: 6px;
-	}
+const JobTableContainer = styled.div`
+	padding: 3rem;
 `
 
 const ShipperProfilePage = () => {
@@ -73,11 +65,7 @@ const ShipperProfilePage = () => {
 			getMyJob((jobs: JobDocument[]) => {
 				const jobTableData = convertJobToTableFormat(jobs)
 				setTableData(jobTableData)
-				resourceStatusCount(jobTableData, {
-					0: 0,
-					100: 0,
-					800: 0
-				}, setJobStatusCount)
+				resourceStatusCount(jobTableData, jobStatusCount, setJobStatusCount)
 			})
 		}
 	}, [shipperInfo])
@@ -118,7 +106,7 @@ const ShipperProfilePage = () => {
 					/>
 				</ProfileStatusContainer>
 			</BreakpointMD>
-			<BreakpointLG>
+			<BreakpointLGCustom>
 				<DesktopHeader>
 					<HeaderTitleContainer>
 						<HeaderTitle>รายการงาน</HeaderTitle>
@@ -126,8 +114,10 @@ const ShipperProfilePage = () => {
 					</HeaderTitleContainer>
 					<JobFilters />
 				</DesktopHeader>
-				<DesktopJobTable />
-			</BreakpointLG>
+				<JobTableContainer>
+					<DesktopJobTable />
+				</JobTableContainer>
+			</BreakpointLGCustom>
 		</>
 	)
 }

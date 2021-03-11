@@ -73,4 +73,5 @@ export interface TableComponentInterface {
 	HeaderStyle?: StyledComponent<"tr", any, {}>
 	PaginationStyle?: StyledComponent<"div", any, {}>
 	filterSelector: RecoilState<any[]>
+	rowPerPage?: number
 }

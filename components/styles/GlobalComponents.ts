@@ -405,3 +405,51 @@ export const RadioButton = styled.div`
         }
     }
 `;
+
+export const HeaderTitleContainer = styled.div`
+	display: flex;
+	justify-content: space-between;
+
+	${HeaderTitle} {
+		color: hsl(212, 28%, 28%);
+        font-weight: 600;
+	}
+
+	${PrimaryButton} {
+		background-color: hsl(212, 28%, 28%);
+		padding: 0.6rem 1.6rem;
+		border-radius: 6px;
+	}
+`
+
+export const StatusHeader = styled.div`
+	font-size: 2.4rem;
+	font-weight: 600;
+	margin-bottom: 1.4rem;
+	display: flex;
+	justify-content: space-between;
+
+	> span {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-right: 0.6rem;
+	}
+`
+
+export const SeeAllButton = styled.button`
+	font-size: 1.8rem;
+	text-decoration: none;
+	font-weight: 500;
+	white-space: nowrap;
+
+	svg {
+		margin-left: 0.8rem;
+	}
+
+	${breakpointGenerator({
+		large: css`
+			font-size: 1.6rem;
+		`
+	})}
+`
