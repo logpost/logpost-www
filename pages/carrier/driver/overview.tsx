@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import styled from "styled-components"
 import NavigationBar from '../../../components/common/NavigationBar'
-import { FormActions, PrimaryButton, SecondaryButton, TableRowActions } from '../../../components/styles/GlobalComponents'
+import { FormActions, HeaderTitle, HeaderTitleContainer, PrimaryButton, SecondaryButton, TableRowActions } from '../../../components/styles/GlobalComponents'
 import { useRouter } from "next/router"
 import { WarningIcon, CancelIcon, EditIcon } from '../../../components/common/Icons'
 import Modal from '../../../components/common/Modal'
@@ -9,10 +9,11 @@ import { DRIVER_STATUS_LIST } from '../../../data/carrier'
 import ResourceOverview from '../../../components/common/ResourceOverview'
 import { getDriver, deleteDriver } from '../../../components/utilities/apis'
 import { DriverDocument, DriverTable } from '../../../entities/interface/driver'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { tableDataState } from '../../../store/atoms/tableState'
 import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
 import Alert from '../../../components/common/Alert'
+import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
 
 const ModalContent = styled.div`
 	display: flex;
@@ -38,6 +39,10 @@ const ModalContent = styled.div`
 			font-weight: 500;
 		}
 	}
+`
+
+const BreakpointLGCustom = styled(BreakpointLG)`
+	background-color: hsla(228, 24%, 96%);
 `
 
 const OverviewDriverPage = () => {

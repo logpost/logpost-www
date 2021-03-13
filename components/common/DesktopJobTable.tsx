@@ -1,9 +1,7 @@
 import React, { ReactElement } from 'react'
 import styled, { css } from 'styled-components'
 import { HeaderTitle, NumberOfJobs, Pagination, PrimaryButton, TableRowActions } from '../styles/GlobalComponents'
-import DesktopHeader from './DesktopHeader'
 import TableComponent from './TableComponent'
-import JobFilters from './JobFilters'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { filterState, jobFiltersState, tableDataState } from '../../store/atoms/tableState'
 import { jobStatusCountState } from '../../store/atoms/carrierProfileState'
@@ -177,7 +175,7 @@ const DesktopJobTable = (props: JobTableInterface) => {
 			width: "8%",
 			align: "left",
 			format: (_: number, job: JobDetails): ReactElement => (
-				<span>{job.offer_price.toLocaleString()}</span>
+				<span>{job.offer_price?.toLocaleString()}</span>
 			)
 		},
 		{

@@ -59,6 +59,7 @@ const JobTableContainer = styled.div`
 `
 
 const BreakpointLGCustom = styled(BreakpointLG)`
+	width: calc(100% - 7rem);
 	background-color: hsla(228, 24%, 96%);
 `
 

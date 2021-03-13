@@ -25,7 +25,7 @@ export const BreakpointMD = styled.div`
 `
 
 export const BreakpointLG = styled.div`
-    width: calc(100% - 7rem);
+    width: 100%;
 
     @media screen and (max-width: ${breakpointSize.medium}px) {
         display: none;
