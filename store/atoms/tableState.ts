@@ -74,7 +74,6 @@ export const filterTruckState = selector({
 	},
 	get: ({get}) => {
 		const filterWord = get(filterWordState)
-		const filterStatus = get(filterStatusState)
 		const truckFilters = get(truckFiltersState)
 		let filteredData = get(tableDataState)
 		filteredData = filteredData.filter((item) => {
@@ -89,7 +88,7 @@ export const filterTruckState = selector({
 		})
 		if (truckFilters.status[0] !== 0) {
 			filteredData = filteredData.filter((item) => {
-				return filterStatus.includes(item.status)
+				return truckFilters.status.includes(item.status)
 			})
 		} 
 		if (truckFilters.truck.type !== "ทั้งหมด") {
