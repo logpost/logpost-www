@@ -1,10 +1,28 @@
 import React from 'react'
+import styled, { css } from 'styled-components'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { GASOLINE_LIST, TRUCK_TYPE_LIST } from '../../data/carrier'
 import { truckDetailsState, truckPropertySelector, truckWeightSelector } from '../../store/atoms/truckDetailsState'
 import { ButtonGroupContainer, ButtonItem } from '../styles/GlobalComponents'
 import InputComponent from './InputComponent'
 import SelectComponent from './SelectComponent'
+import breakpointGenerator from '../utilities/breakpoint'
+
+const TruckFormContainer = styled.div`
+    display: grid;
+    grid-gap: 2rem 8.6rem;
+
+    > div > div:not(:first-child) {
+        margin-top: 2rem;
+    }
+
+    ${breakpointGenerator({
+        large: css`
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        `
+    })}
+`
 
 const TruckForm = () => {
     const [truckDetails, setTruckDetails] = useRecoilState(truckDetailsState)
@@ -43,116 +61,120 @@ const TruckForm = () => {
     }
     
     return (
-        <>
-            <InputComponent labelTH="ประเภทรถ" labelEN="Truck Type" type="other">
-                <SelectComponent
-                    menuList={Object.keys(TRUCK_TYPE_LIST)}
-                    value={truckProperty.type}
-                    setValue={(value: string) => handlePropertyOnChange("type", value)}
-                />
-            </InputComponent>
-            <InputComponent labelTH="ส่วนเสริม" labelEN="Option" type="other">
-                <ButtonGroupContainer>
-                    {
-                        TRUCK_TYPE_LIST[truckProperty.type].option.map((option: string, index: number) => {
-                            return (
-                                <ButtonItem
-                                    key={index}
-                                    onClick={() => handlePropertyOnChange("option", option)}
-                                    name={option}
-                                    value={truckProperty.option}
-                                >
-                                    {option}
-                                </ButtonItem>
-                            )
-                        })
-                    }
-                </ButtonGroupContainer>
-            </InputComponent>
-            {
-                TRUCK_TYPE_LIST[truckProperty.type].chassis && 
-                <InputComponent labelTH="จำนวนเพลา" labelEN="Chassis" type="other">
+        <TruckFormContainer>
+            <div>
+                <InputComponent labelTH="ประเภทรถ" labelEN="Truck Type" type="other">
+                    <SelectComponent
+                        menuList={Object.keys(TRUCK_TYPE_LIST)}
+                        value={truckProperty.type}
+                        setValue={(value: string) => handlePropertyOnChange("type", value)}
+                    />
+                </InputComponent>
+                <InputComponent labelTH="ส่วนเสริม" labelEN="Option" type="other">
                     <ButtonGroupContainer>
                         {
-                            TRUCK_TYPE_LIST[truckProperty.type].chassis.map((chassis: number, index: number) => {
+                            TRUCK_TYPE_LIST[truckProperty.type].option.map((option: string, index: number) => {
                                 return (
                                     <ButtonItem
                                         key={index}
-                                        onClick={() => handlePropertyOnChange("chassis", chassis)}
-                                        name={String(chassis)}
-                                        value={String(truckProperty.chassis)}
+                                        onClick={() => handlePropertyOnChange("option", option)}
+                                        name={option}
+                                        value={truckProperty.option}
                                     >
-                                        {`${chassis} เพลา`}
+                                        {option}
                                     </ButtonItem>
                                 )
                             })
                         }
                     </ButtonGroupContainer>
                 </InputComponent>
-            }
-            <div>
-                <InputComponent 
-                    labelTH="น้ำหนักบรรทุก" 
-                    labelEN="Load Weight"
-                    subLabel="ต่ำสุด" 
-                    type="number" 
-                    description="1 ตัน = 1,000 กิโลกรัม"
-                    classifier="ตัน"
-                    name="min"
-                    value={truckWeight.min}
-                    handleOnChange={handleWeightOnChange}/>
-                <InputComponent 
-                    disableLabel={true}
-                    subLabel="สูงสุด" 
-                    type="number" 
-                    classifier="ตัน"
-                    name="max"
-                    value={truckWeight.max}
-                    handleOnChange={handleWeightOnChange}/>
+                {
+                    TRUCK_TYPE_LIST[truckProperty.type].chassis && 
+                    <InputComponent labelTH="จำนวนเพลา" labelEN="Chassis" type="other">
+                        <ButtonGroupContainer>
+                            {
+                                TRUCK_TYPE_LIST[truckProperty.type].chassis.map((chassis: number, index: number) => {
+                                    return (
+                                        <ButtonItem
+                                            key={index}
+                                            onClick={() => handlePropertyOnChange("chassis", chassis)}
+                                            name={String(chassis)}
+                                            value={String(truckProperty.chassis)}
+                                        >
+                                            {`${chassis} เพลา`}
+                                        </ButtonItem>
+                                    )
+                                })
+                            }
+                        </ButtonGroupContainer>
+                    </InputComponent>
+                }
+                <div>
+                    <InputComponent 
+                        labelTH="น้ำหนักบรรทุก" 
+                        labelEN="Load Weight"
+                        subLabel="ต่ำสุด" 
+                        type="number" 
+                        description="1 ตัน = 1,000 กิโลกรัม"
+                        classifier="ตัน"
+                        name="min"
+                        value={truckWeight.min}
+                        handleOnChange={handleWeightOnChange}/>
+                    <InputComponent 
+                        disableLabel={true}
+                        subLabel="สูงสุด" 
+                        type="number" 
+                        classifier="ตัน"
+                        name="max"
+                        value={truckWeight.max}
+                        handleOnChange={handleWeightOnChange}/>
+                </div>
             </div>
-            <InputComponent labelTH="น้ำมันรถ" labelEN="Gasoline" type="other">
-                <SelectComponent
-                    menuList={GASOLINE_LIST}
-                    value={truckDetails.gasoline}
-                    setValue={(value: string) => setTruckDetails({ ...truckDetails, gasoline: value })}
+            <div>
+                <InputComponent labelTH="น้ำมันรถ" labelEN="Gasoline" type="other">
+                    <SelectComponent
+                        menuList={GASOLINE_LIST}
+                        value={truckDetails.gasoline}
+                        setValue={(value: string) => setTruckDetails({ ...truckDetails, gasoline: value })}
+                    />
+                </InputComponent>
+                <InputComponent 
+                    name="license_number" 
+                    labelTH="เลขทะเบียน" 
+                    labelEN="License Number" 
+                    type="short" 
+                    value={truckDetails.license_number}
+                    handleOnChange={handleOnChange} 
                 />
-            </InputComponent>
-            <InputComponent 
-                name="license_number" 
-                labelTH="เลขทะเบียน" 
-                labelEN="License Number" 
-                type="short" 
-                value={truckDetails.license_number}
-                handleOnChange={handleOnChange} 
-            />
-            <InputComponent 
-                name="age" 
-                labelTH="อายุรถบรรทุก" 
-                labelEN="Truck Age" 
-                type="number" 
-                classifier="ปี" 
-                required={false} 
-                value={truckDetails.age}
-                handleOnChange={handleOnChange} />
-            <InputComponent labelTH="ประกันภัย" labelEN="Insurance" type="other" required={false}>
-                <ButtonGroupContainer>
-                    <ButtonItem
-                        onClick={() => setTruckDetails({ ...truckDetails, is_insure: true })}
-                        name="true"
-                        value={String(truckDetails.is_insure)}
-                    >
-                        มีประกัน
-                    </ButtonItem>
-                    <ButtonItem
-                        onClick={() => setTruckDetails({ ...truckDetails, is_insure: false })}
-                        name="false"
-                        value={String(truckDetails.is_insure)}
-                    >
-                        ไม่มีประกัน
-                    </ButtonItem>
-                </ButtonGroupContainer>
-            </InputComponent>
-        </>
+                <InputComponent 
+                    name="age" 
+                    labelTH="อายุรถบรรทุก" 
+                    labelEN="Truck Age" 
+                    type="number" 
+                    classifier="ปี" 
+                    required={false} 
+                    value={truckDetails.age}
+                    handleOnChange={handleOnChange} />
+                <InputComponent labelTH="ประกันภัย" labelEN="Insurance" type="other" required={false}>
+                    <ButtonGroupContainer>
+                        <ButtonItem
+                            onClick={() => setTruckDetails({ ...truckDetails, is_insure: true })}
+                            name="true"
+                            value={String(truckDetails.is_insure)}
+                        >
+                            มีประกัน
+                        </ButtonItem>
+                        <ButtonItem
+                            onClick={() => setTruckDetails({ ...truckDetails, is_insure: false })}
+                            name="false"
+                            value={String(truckDetails.is_insure)}
+                        >
+                            ไม่มีประกัน
+                        </ButtonItem>
+                    </ButtonGroupContainer>
+                </InputComponent>
+            </div>
+        </TruckFormContainer>
     )
 }
 

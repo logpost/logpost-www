@@ -31,7 +31,10 @@ export interface TruckAddInterface {
 export interface TruckTable {
 	truck_id?: string
 	license_number: string
-	type: string
-	option?: string
+	truck_type: TruckPropertyInterface
 	status?: number
+	weight?: TruckWeightInterface
+	is_insure?: boolean
+	age?: number
+	gasoline: string
 }

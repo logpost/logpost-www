@@ -2,6 +2,7 @@ import { SHORT_MONTHS } from "../../data/jobs"
 import { DriverDetails, DriverDocument } from "../../entities/interface/driver"
 import { TruckDocument } from "../../entities/interface/truck"
 import { JobDocument, JobFormField, LocationInterface } from '../../entities/interface/job'
+import { SetterOrUpdater } from "recoil"
 
 export const filterData = (
 	data: Object[],
@@ -91,15 +92,16 @@ export const getAddressFromPlace = (place: google.maps.places.PlaceResult | goog
 
 export const resourceStatusCount = (
 	resources: (DriverDocument | TruckDocument | JobDocument)[], 
-	initialValue: {[key: number]: number},
-	setValue: (value: {[key: number]: number}) => void) => {
+	initialValue: {[key: number]: number, other?: number},
+	setValue: SetterOrUpdater<{[key: number]: number}>) => {
 	const countStatus = initialValue
 	if (resources.length > 0) {
 		resources.map((item) => {
+			countStatus[0] += 1
 			if (countStatus[item.status] !== undefined) {
 				countStatus[item.status] += 1
 			} else {
-				countStatus[0] += 1
+				countStatus.other += 1
 			}
 		})
 	}

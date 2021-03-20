@@ -1,18 +1,36 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import SearchBar from './SearchBar'
 import SelectComponent from './SelectComponent'
 import TableComponent from './TableComponent'
-import { SecondaryButton } from '../styles/GlobalComponents'
-import { TableComponentInterface } from '../../entities/interface/common'
+import { HeaderTitle, HeaderTitleContainer, PrimaryButton, SecondaryButton } from '../styles/GlobalComponents'
 import { FunctionComponent } from 'react'
-import { filterWordState, filterStatusState, filterResourceState } from '../../store/atoms/tableState'
-import { useSetRecoilState } from 'recoil'
+import { filterWordState, filterStatusState, filterResourceState, jobFiltersState } from '../../store/atoms/tableState'
+import { RecoilState, useSetRecoilState } from 'recoil'
 import { TruckTable } from '../../entities/interface/truck'
 import { DriverTable } from '../../entities/interface/driver'
+import { BreakpointLG, BreakpointMD } from '../styles/Breakpoints'
+import DesktopHeader from './DesktopHeader'
+import { useRouter } from 'next/router'
+import breakpointGenerator from '../utilities/breakpoint'
+import FiltersComponent from './FiltersComponent'
+import { Filter } from '../../entities/interface/common'
+import DesktopTable from './DesktopTable'
+
+const ResourcesTableContainer = styled.div`
+	padding: 3rem;
+`
 
 const ResourceOverviewContainer = styled.div`
 	margin-top: 3.6rem;
+
+	${breakpointGenerator({
+		medium: css`
+		`,
+		large: css`
+			margin-top: 0;
+		`
+	})}
 `
 
 const Header = styled.div`
@@ -79,12 +97,33 @@ interface ResourceOverviewInterface {
 	headerTitle: string
 	headerButton: string
 	defaultSelect: string
-	statusList: Object
+	statusList?: Object
+	filterList?: {
+		[key: number]: Filter[]
+	}
+	filterState?: RecoilState<{
+		status?: number[]
+	}>
+	filteredData?: RecoilState<any[]>
 	buttonOnClick: () => void
+	tabsList?: {
+		code: number[]
+		title: string 
+	}[]
+	tabCountState?: RecoilState<{
+		[key: number]: number,
+		other?: number
+	}>
 }
 
 const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) => {
-	const { headerTitle, headerButton, statusList, defaultSelect, columns, buttonOnClick, children } = props
+	const { headerTitle, headerButton, statusList, defaultSelect, columns, buttonOnClick, children, 
+		filterList = {}, 
+		filterState = jobFiltersState, 
+		filteredData = filterResourceState,
+		tabsList = [],
+		tabCountState
+	} = props
 	const setFilterWord = useSetRecoilState(filterWordState)
 	const setFilterStatus = useSetRecoilState(filterStatusState)
 	const [statusFilter, setStatusFilter] = useState(defaultSelect)
@@ -96,26 +135,46 @@ const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) =
 
 	return (
 		<ResourceOverviewContainer>
-			<Header>
-				{headerTitle}
-				<SecondaryButton onClick={buttonOnClick}>{headerButton}</SecondaryButton>
-			</Header>
-			<TableHeader>
-				<SearchBar
-					placeholder="ค้นหา"
-					setValue={setFilterWord}
+			<BreakpointMD>
+				<Header>
+					{headerTitle}
+					<SecondaryButton onClick={buttonOnClick}>{headerButton}</SecondaryButton>
+				</Header>
+				<TableHeader>
+					<SearchBar
+						placeholder="ค้นหา"
+						setValue={setFilterWord}
+					/>
+					<SelectComponent
+						menuList={Object.values(statusList)}
+						value={statusFilter}
+						setValue={(value: string) => setStatusFilter(value)}
+					/>
+				</TableHeader>
+				<TableComponent
+					columns={columns}
+					filterSelector={filterResourceState}
 				/>
-				<SelectComponent
-					menuList={Object.values(statusList)}
-					value={statusFilter}
-					setValue={(value: string) => setStatusFilter(value)}
-				/>
-			</TableHeader>
-			<TableComponent
-				columns={columns}
-				filterSelector={filterResourceState}
-			/>
-			{children}
+				{children}
+			</BreakpointMD>
+			<BreakpointLG>
+				<DesktopHeader>
+					<HeaderTitleContainer>
+						<HeaderTitle>{headerTitle}</HeaderTitle>
+						<PrimaryButton onClick={buttonOnClick}>{headerButton}</PrimaryButton>
+					</HeaderTitleContainer>
+					<FiltersComponent filterList={filterList} />
+				</DesktopHeader>
+				<ResourcesTableContainer>
+					<DesktopTable
+						tabsList={tabsList}
+						tabCountState={tabCountState}
+						columns={columns}
+						filterSelector={filteredData}
+						filterState={filterState}
+					/>
+				</ResourcesTableContainer>
+			</BreakpointLG>
 		</ResourceOverviewContainer>
 	)
 }

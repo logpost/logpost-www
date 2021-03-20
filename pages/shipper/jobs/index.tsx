@@ -3,7 +3,7 @@ import JobStatus from "../../../components/common/JobStatus"
 
 const JobStatusPage = () => {
 	return (
-		<JobStatus />
+		<JobStatus role="shipper" />
 	)
 }
 
