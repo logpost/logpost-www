@@ -1,5 +1,5 @@
-import { ReactElement } from 'react'
-import { RecoilState } from 'recoil';
+import { ChangeEvent, ReactElement } from 'react'
+import { RecoilState, SetterOrUpdater } from 'recoil';
 import { StyledComponent } from 'styled-components';
 import { DriverTable } from './driver';
 import { JobDetails } from './job';
@@ -56,6 +56,10 @@ export interface ToggleComponentInterface {
 	setToggle: (toggle: boolean) => void
 }
 
+export interface FilterSelector {
+	status: number[]
+}
+
 export interface TableComponentInterface {
 	columns: {
 		id: string
@@ -72,6 +76,43 @@ export interface TableComponentInterface {
 	RowStyle?: StyledComponent<"tr", any, {}>
 	HeaderStyle?: StyledComponent<"tr", any, {}>
 	PaginationStyle?: StyledComponent<"div", any, {}>
-	filterSelector: RecoilState<any[]>
+	filterSelector: RecoilState<FilterSelector[]>
 	rowPerPage?: number
+}
+
+export interface DateFilter {
+    isFilter: boolean
+    start: Date
+    end: Date
+}
+
+export interface RangeFilter {
+	from: string
+	to: string
+}
+
+export interface Filter {
+    type: string
+    name?: string
+    inputType?: string
+    label?: string
+    value?: string | DateFilter | RangeFilter
+    classifier?: string
+    placeholder?: string
+    list?: string[]
+    icon?: () => JSX.Element
+    onChange?: ((
+		value: string | number | ChangeEvent<HTMLInputElement>,
+		target?: string
+	) => void) | SetterOrUpdater<string>
+    setEnabled?: (value: boolean) => void
+    setStart?: (value: Date) => void
+    setEnd?: (value: Date) => void
+    enabled?: boolean
+}
+
+export interface FilterComponentInterface {
+    filterList: {
+        [key: number]: Filter[]
+    }
 }

@@ -1,7 +1,9 @@
-import React, { ChangeEvent, useEffect } from "react"
+import React, { ChangeEvent, ReactElement, useEffect } from "react"
 import styled from "styled-components"
 import {
+	CancelIcon,
 	DownArrowLine,
+	EditIcon,
 	JobIcon,
 	JobSuccessIcon,
 	OptionIcon,
@@ -16,17 +18,18 @@ import ProfileStatus from "../../../components/common/ProfileStatus"
 import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil'
 import { userInfoState } from "../../../store/atoms/userInfoState"
 import { jobStatusCountState } from "../../../store/atoms/carrierProfileState"
-import { resourceStatusCount } from "../../../components/utilities/helper"
+import { dateFormatter, resourceStatusCount, timeFormatter } from "../../../components/utilities/helper"
 import { getMyJob } from "../../../components/utilities/apis"
-import { JobDocument } from '../../../entities/interface/job'
+import { JobDetails, JobDocument } from '../../../entities/interface/job'
 import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoints"
-import { tableDataState, jobFiltersState, filterWordState } from "../../../store/atoms/tableState"
-import DesktopJobTable from "../../../components/common/DesktopJobTable"
+import { tableDataState, jobFiltersState, filterWordState, filterState } from "../../../store/atoms/tableState"
+import DesktopTable from "../../../components/common/DesktopTable"
 import DesktopHeader from "../../../components/common/DesktopHeader"
-import { HeaderTitle, HeaderTitleContainer, PrimaryButton } from "../../../components/styles/GlobalComponents"
+import { HeaderTitle, HeaderTitleContainer, PrimaryButton, TableRowActions } from "../../../components/styles/GlobalComponents"
 import FiltersComponent from "../../../components/common/FiltersComponent"
 import { TRUCK_TYPE_LIST } from "../../../data/carrier"
-import { PROVINCES } from "../../../data/jobs"
+import { JOB_STATUS_CODE, PROVINCES } from "../../../data/jobs"
+import { useRouter } from "next/router"
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
@@ -42,6 +45,7 @@ const JobTableContainer = styled.div`
 `
 
 const ShipperProfilePage = () => {
+	const router = useRouter()
 	const shipperInfo = useRecoilValue(userInfoState)
 	const [jobStatusCount, setJobStatusCount] = useRecoilState<{ [key: number]: number }>(jobStatusCountState)
 	const setTableData = useSetRecoilState(tableDataState)
@@ -140,6 +144,91 @@ const ShipperProfilePage = () => {
 		]
 	}
 
+	const jobColumns = [
+		{
+			id: "pickup_location",
+			label: "ขึ้นสินค้า",
+			width: "10%",
+			align: "left"
+		},
+		{
+			id: "dropoff_location",
+			label: "ลงสินค้า",
+			width: "10%",
+			align: "left"
+		},
+		{
+			id: "pickup_date",
+			label: "วันขึ้นสินค้า",
+			width: "14%",
+			align: "left",
+			format: (_: number, job: JobDetails): ReactElement => (
+				<span>{`${dateFormatter(job.pickup_date)} ${timeFormatter(job.pickup_date)}`.slice(0, -3)}</span>
+			)
+		},
+		{
+			id: "dropoff_date",
+			label: "วันลงสินค้า",
+			width: "14%",
+			align: "left",
+			format: (_: number, job: JobDetails): ReactElement => (
+				<span>{`${dateFormatter(job.dropoff_date)} ${timeFormatter(job.dropoff_date)}`.slice(0, -3)}</span>
+			)
+		},
+		{
+			id: "product_type",
+			label: "สินค้า",
+			width: "8%",
+			align: "left"
+		},
+		{
+			id: "weight",
+			label: "น้ำหนัก",
+			width: "8%",
+			align: "left",
+			format: (_: number, job: JobDetails): ReactElement => (
+				<span>{`${job.weight} ตัน`}</span>
+			)
+		},
+		{
+			id: "offer_price",
+			label: "ราคา",
+			width: "8%",
+			align: "left",
+			format: (_: number, job: JobDetails): ReactElement => (
+				<span>{job.offer_price?.toLocaleString()}</span>
+			)
+		},
+		{
+			id: "truck_type",
+			label: "ประเภทรถ",
+			width: "12%",
+			align: "left",
+		},
+		{
+			id: "status",
+			label: "สถานะ",
+			width: "8%",
+			align: "left",
+			format: (_: number, job): ReactElement => (
+				<span>{JOB_STATUS_CODE[job.status].status_name}</span>
+			)
+		},
+		{
+			id: "actions",
+			label: "เลือก",
+			width: "8%",
+			sortable: false,
+			align: "center",
+			format: (_: number, job): ReactElement => (
+				<TableRowActions>
+					<button onClick={() => router.push(`/jobs/edit/${job.job_id}`)}><EditIcon /></button>
+					<button ><CancelIcon /></button>
+				</TableRowActions>
+			),
+		},
+	]
+
  	// useEffect(() => {
 	// 	resourceStatusCount(filteredData, {
 	// 		0: 0,
@@ -217,7 +306,11 @@ const ShipperProfilePage = () => {
 					<FiltersComponent filterList={filterList} />
 				</DesktopHeader>
 				<JobTableContainer>
-					<DesktopJobTable />
+					<DesktopTable 
+						columns={jobColumns}
+						filterSelector={filterState}
+						filterState={jobFiltersState}
+					/>
 				</JobTableContainer>
 			</BreakpointLGCustom>
 		</>

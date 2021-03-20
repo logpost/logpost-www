@@ -6,7 +6,7 @@ import TableComponent from './TableComponent'
 import { HeaderTitle, HeaderTitleContainer, PrimaryButton, SecondaryButton } from '../styles/GlobalComponents'
 import { FunctionComponent } from 'react'
 import { filterWordState, filterStatusState, filterResourceState } from '../../store/atoms/tableState'
-import { useSetRecoilState } from 'recoil'
+import { RecoilState, useSetRecoilState } from 'recoil'
 import { TruckTable } from '../../entities/interface/truck'
 import { DriverTable } from '../../entities/interface/driver'
 import { BreakpointLG, BreakpointMD } from '../styles/Breakpoints'
@@ -14,6 +14,12 @@ import DesktopHeader from './DesktopHeader'
 import { useRouter } from 'next/router'
 import breakpointGenerator from '../utilities/breakpoint'
 import FiltersComponent from './FiltersComponent'
+import { Filter } from '../../entities/interface/common'
+import DesktopTable from './DesktopTable'
+
+const ResourcesTableContainer = styled.div`
+	padding: 3rem;
+`
 
 const ResourceOverviewContainer = styled.div`
 	margin-top: 3.6rem;
@@ -92,16 +98,24 @@ interface ResourceOverviewInterface {
 	headerButton: string
 	defaultSelect: string
 	statusList: Object
+	filterList?: {
+		[key: number]: Filter[]
+	}
+	filterState?: RecoilState<{
+		status?: number[]
+	}>
+	filteredData?: RecoilState<any[]>
 	buttonOnClick: () => void
 }
 
 const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) => {
 	const router = useRouter()
-	const { headerTitle, headerButton, statusList, defaultSelect, columns, buttonOnClick, children } = props
+	const { headerTitle, headerButton, statusList, defaultSelect, columns, buttonOnClick, children, filterList, filterState, 
+		filteredData = filterResourceState
+	} = props
 	const setFilterWord = useSetRecoilState(filterWordState)
 	const setFilterStatus = useSetRecoilState(filterStatusState)
 	const [statusFilter, setStatusFilter] = useState(defaultSelect)
-	const filterList = {}
 
 	useEffect(() => {
 		const statusCode = Object.keys(statusList)[Object.values(statusList).indexOf(statusFilter)]
@@ -140,10 +154,13 @@ const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) =
 					</HeaderTitleContainer>
 					<FiltersComponent filterList={filterList} />
 				</DesktopHeader>
-				<TableComponent
-					columns={columns}
-					filterSelector={filterResourceState}
-				/>
+				<ResourcesTableContainer>
+					<DesktopTable
+						columns={columns}
+						filterSelector={filteredData}
+						filterState={filterState}
+					/>
+				</ResourcesTableContainer>
 			</BreakpointLG>
 		</ResourceOverviewContainer>
 	)

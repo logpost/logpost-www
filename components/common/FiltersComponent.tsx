@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from 'react'
-import { SetterOrUpdater } from 'recoil'
 import styled from 'styled-components'
+import { Filter, FilterComponentInterface, DateFilter, RangeFilter } from '../../entities/interface/common'
 import { ButtonGroupContainer, ButtonItem, RadioButton, TextButton } from '../styles/GlobalComponents'
 import DateAndTimePicker from './DateAndTimePicker'
 import { JobSuccessIcon, RightArrow } from './Icons'
@@ -182,35 +182,6 @@ const FilterLabel = styled.div`
 	}
 `
 
-interface DateFilter {
-    isFilter: boolean
-    start: Date
-    end: Date
-}
-
-interface Filter {
-    type: string
-    name?: string
-    inputType?: string
-    label?: string
-    value?: string | DateFilter
-    classifier?: string
-    placeholder?: string
-    list?: string[]
-    icon?: () => JSX.Element
-    onChange?: ((value: string | number | ChangeEvent) => void) | SetterOrUpdater<string>
-    setEnabled?: (value: boolean) => void
-    setStart?: (value: Date) => void
-    setEnd?: (value: Date) => void
-    enabled?: boolean
-}
-
-interface FilterComponentInterface {
-    filterList: {
-        [key: number]: Filter[]
-    }
-}
-
 const FiltersComponent = (props: FilterComponentInterface) => {
     const { filterList } = props
     const [showMoreFilter, setShowMoreFilter] = useState(false)
@@ -224,7 +195,7 @@ const FiltersComponent = (props: FilterComponentInterface) => {
                     setValue={filter.onChange}
                 />
             } else if (filter.enabled !== false) {
-                return <FilterContainer key={`${filter.type}-${index}`} id={filter.type === "selector" && "option"}>
+                return <FilterContainer key={`${filter.type}-${index}`} id={filter.type === "selector" ? "option" : ""}>
                     <FilterLabel>
                         <filter.icon />
                         <span>{filter.label}</span>
@@ -263,6 +234,22 @@ const FiltersComponent = (props: FilterComponentInterface) => {
                         }
                         </ButtonGroupContainer>
                     }
+					{(filter.type === "inputrange") && <>
+						<InputComponent
+                            type={filter.inputType}
+                            disableLabel={true}
+                            value={(filter.value as RangeFilter).from}
+							handleOnChange={(e: ChangeEvent<HTMLInputElement>) => filter.onChange(e.target.value, "min")}
+                        />
+						<span>ถึง</span>
+						<InputComponent
+                            type={filter.inputType}
+                            classifier={filter.classifier}
+                            disableLabel={true}
+                            value={(filter.value as RangeFilter).to}
+							handleOnChange={(e: ChangeEvent<HTMLInputElement>) => filter.onChange(e.target.value, "max")}
+                        />
+					</>}
                     {(filter.type === "date") && <>
                         <RadioContainer>
                             <div>
@@ -314,20 +301,22 @@ const FiltersComponent = (props: FilterComponentInterface) => {
         <FiltersContainer isExpand={showMoreFilter}>
             {
                 Object.keys(filterList).map((row: string) => {
-                    return (
-                        row === "0" ?
-                            <FilterRow key={row}>
-                                <div>{generateFilter(row)}</div>
-                                <TextButton onClick={() => setShowMoreFilter(!showMoreFilter)}>
-                                    <span>แสดงตัวกรองอื่น ๆ</span>
-                                    <RightArrow/>
-                                </TextButton>
-                            </FilterRow>
-                        : showMoreFilter && 
-                        <FilterRow key={row}>
-                            {generateFilter(row)}
-                        </FilterRow>
-                    )})
+					if (filterList[row][0].enabled !== false) {
+						return (
+							row === "0" ?
+								<FilterRow key={row}>
+									<div>{generateFilter(row)}</div>
+									<TextButton onClick={() => setShowMoreFilter(!showMoreFilter)}>
+										<span>แสดงตัวกรองอื่น ๆ</span>
+										<RightArrow/>
+									</TextButton>
+								</FilterRow>
+							: showMoreFilter && 
+							<FilterRow key={row}>
+								{generateFilter(row)}
+							</FilterRow>
+						)}
+					})
                 }
         </FiltersContainer>
     )

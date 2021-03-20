@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import styled, { css } from "styled-components"
-import { TableComponentInterface } from "../../entities/interface/common"
+import { FilterSelector, TableComponentInterface } from "../../entities/interface/common"
 import { RightArrow, DoubleRightArrow, UpArrowLine, DownArrowLine } from "./Icons"
 import { useRecoilState } from 'recoil'
 import { TruckTable } from "../../entities/interface/truck"
