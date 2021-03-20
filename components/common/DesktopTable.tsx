@@ -2,8 +2,7 @@ import React, { ReactElement } from 'react'
 import styled, { css } from 'styled-components'
 import { NumberOfJobs, Pagination } from '../styles/GlobalComponents'
 import TableComponent from './TableComponent'
-import { RecoilState, useRecoilState, useRecoilValue, RecoilValue, DefaultValue } from 'recoil'
-import { tableDataState } from '../../store/atoms/tableState'
+import { RecoilState, useRecoilState, useRecoilValue } from 'recoil'
 import { jobStatusCountState } from '../../store/atoms/carrierProfileState'
 import { JobDetails } from '../../entities/interface/job'
 import { TruckTable } from '../../entities/interface/truck'
@@ -79,7 +78,7 @@ const TabContainer = styled.div`
 	background-color: hsla(228, 24%, 96%);
 `
 
-const TablItem = styled.button<TabItemInterface>`
+const TabItem = styled.button<TabItemInterface>`
 	padding: 1rem 2rem;
 	font-size: 1.7rem;
 	display: flex;
@@ -125,35 +124,32 @@ interface JobTableInterface {
 	filterState: RecoilState<{
 		status?: number[]
 	}>
+	tabsList?: {
+		code: number[]
+		title: string 
+	}[]
+	tabCountState?: RecoilState<{
+		[key: number]: number,
+		other?: number
+	}>
 }
 
 const DesktopTable = (props: JobTableInterface) => {
-	const { filterState } = props
+	const { filterState, tabsList, tabCountState = jobStatusCountState } = props
 	const [filter, setFilter] = useRecoilState(filterState)
-    const jobTableData = useRecoilValue(tableDataState)
-    const jobStatusCount = useRecoilValue<{ [key: number]: number }>(jobStatusCountState)
+    const statusCount = useRecoilValue(tabCountState)
 
     return (
 		<ContentContainer>
 			<TabContainer>
-				<TablItem isActive={filter.status[0] === 0} onClick={() => setFilter({...filter, status: [0]})}>
-					ทั้งหมด
-					<NumberOfJobs>{jobTableData.length}</NumberOfJobs>
-				</TablItem>
-				<TablItem isActive={filter.status[0] === 100} onClick={() => setFilter({...filter, status: [100]})}>
-					รอผู้รับงาน
-					<NumberOfJobs>{jobStatusCount[100]}</NumberOfJobs>
-				</TablItem>
-				<TablItem 
-					isActive={filter.status.length > 1} 
-					onClick={() => setFilter({...filter, status: [200, 300, 400, 500, 600, 700]})}>
-					กำลังขนส่ง
-					<NumberOfJobs>{jobStatusCount[0]}</NumberOfJobs>
-				</TablItem>
-				<TablItem isActive={filter.status[0] === 800} onClick={() => setFilter({...filter, status: [800]})}>
-					ขนส่งเสร็จสิ้น
-					<NumberOfJobs>{jobStatusCount[800]}</NumberOfJobs>
-				</TablItem>
+				{tabsList.map((tab, index) => {
+					return (
+						<TabItem key={`${tab.title}-${index}`} isActive={filter.status[0] === tab.code[0]} onClick={() => setFilter({...filter, status: tab.code})}>
+							{tab.title}
+							<NumberOfJobs>{tab.code.length > 1 ? statusCount.other : statusCount[tab.code[0]]}</NumberOfJobs>
+						</TabItem>
+					)
+				})}
 			</TabContainer>
 			<TableContainer>
 				<TableComponent

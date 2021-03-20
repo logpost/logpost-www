@@ -306,10 +306,13 @@ const FiltersComponent = (props: FilterComponentInterface) => {
 							row === "0" ?
 								<FilterRow key={row}>
 									<div>{generateFilter(row)}</div>
-									<TextButton onClick={() => setShowMoreFilter(!showMoreFilter)}>
-										<span>แสดงตัวกรองอื่น ๆ</span>
-										<RightArrow/>
-									</TextButton>
+									{
+										filterList[1] &&
+										<TextButton onClick={() => setShowMoreFilter(!showMoreFilter)}>
+											<span>แสดงตัวกรองอื่น ๆ</span>
+											<RightArrow/>
+										</TextButton>
+									}
 								</FilterRow>
 							: showMoreFilter && 
 							<FilterRow key={row}>

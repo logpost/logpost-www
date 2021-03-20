@@ -15,6 +15,8 @@ import { filterResourceState, filterTruckState, filterWordState, tableDataState,
 import Alert from '../../../components/common/Alert'
 import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
 import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
+import { truckStatusCountState } from '../../../store/atoms/carrierProfileState'
+import { resourceStatusCount } from '../../../components/utilities/helper'
 
 const ModalContent = styled.div`
 	display: flex;
@@ -55,6 +57,7 @@ const OverviewTruckPage = () => {
 	const setFilterWord = useSetRecoilState(filterWordState)
 	const alertStatus = useRecoilValue(alertPropertyState)
 	const [truckTableData, setTruckTableData] = useRecoilState(tableDataState)
+	const [truckStatusCount, setTruckStatusCount] = useRecoilState(truckStatusCountState)
 	const router = useRouter()
 
 	const toggleDeleteModal = (truck: TruckTable) => {
@@ -118,7 +121,7 @@ const OverviewTruckPage = () => {
 			label: "ประเภทรถ",
 			width: "12%",
 			format: (_: number, truck: TruckTable): ReactElement => (
-				<span>{truck.truck_type.type}</span>
+				<span>{truck.truck_type?.type}</span>
 			)
 		},
 		{
@@ -269,6 +272,7 @@ const OverviewTruckPage = () => {
 		getTruck((trucks: TruckDocument[]) => {
 			setTrucks(trucks)
 			setTruckTableData(convertToTableFormat(trucks))
+			resourceStatusCount(trucks, truckStatusCount, setTruckStatusCount)
 		})
 	}, [])
 
@@ -286,7 +290,6 @@ const OverviewTruckPage = () => {
 					defaultSelect={"ทุกสถานะ"}
 					statusList={TRUCK_STATUS_LIST}
 					columns={truckColumns}
-					filterList={filterList}
 					filterState={truckFiltersState}
 				>
 					<Modal toggle={toggleModal} setToggle={setToggleModal}>
@@ -304,10 +307,29 @@ const OverviewTruckPage = () => {
 			<BreakpointLGCustom>
 				<ResourceOverview 
 					headerTitle={"รถบรรทุก"}
-					headerButton={"เพิ่มรถ"}
+					headerButton={"เพิ่มรถบรรทุก"}
 					buttonOnClick={navigateToAddTruckPage}
 					defaultSelect={"ทุกสถานะ"}
 					statusList={TRUCK_STATUS_LIST}
+					tabsList={[
+						{
+							code: [0],
+							title: "ทุกสถานะ",
+						},
+						{
+							code: [100],
+							title: "จอดว่าง",
+						},
+						{
+							code: [200],
+							title: "กำลังขนส่ง",
+						},
+						{
+							code: [300],
+							title: "ซ่อมบำรุง",
+						},
+					]}
+					tabCountState={truckStatusCountState}
 					columns={truckDesktopColumns}
 					filterList={filterList}
 					filterState={truckFiltersState}

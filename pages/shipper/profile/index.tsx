@@ -306,7 +306,25 @@ const ShipperProfilePage = () => {
 					<FiltersComponent filterList={filterList} />
 				</DesktopHeader>
 				<JobTableContainer>
-					<DesktopTable 
+					<DesktopTable
+						tabsList={[
+							{
+								code: [0],
+								title: "ทุกสถานะ",
+							},
+							{
+								code: [100],
+								title: "รอผู้รับงาน",
+							},
+							{
+								code: [200, 300, 400, 500, 600, 700],
+								title: "กำลังขนส่ง",
+							},
+							{
+								code: [800],
+								title: "ขนส่งเสร็จสิ้น",
+							},
+						]}
 						columns={jobColumns}
 						filterSelector={filterState}
 						filterState={jobFiltersState}

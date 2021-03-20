@@ -5,7 +5,7 @@ import SelectComponent from './SelectComponent'
 import TableComponent from './TableComponent'
 import { HeaderTitle, HeaderTitleContainer, PrimaryButton, SecondaryButton } from '../styles/GlobalComponents'
 import { FunctionComponent } from 'react'
-import { filterWordState, filterStatusState, filterResourceState } from '../../store/atoms/tableState'
+import { filterWordState, filterStatusState, filterResourceState, jobFiltersState } from '../../store/atoms/tableState'
 import { RecoilState, useSetRecoilState } from 'recoil'
 import { TruckTable } from '../../entities/interface/truck'
 import { DriverTable } from '../../entities/interface/driver'
@@ -97,7 +97,7 @@ interface ResourceOverviewInterface {
 	headerTitle: string
 	headerButton: string
 	defaultSelect: string
-	statusList: Object
+	statusList?: Object
 	filterList?: {
 		[key: number]: Filter[]
 	}
@@ -106,12 +106,23 @@ interface ResourceOverviewInterface {
 	}>
 	filteredData?: RecoilState<any[]>
 	buttonOnClick: () => void
+	tabsList?: {
+		code: number[]
+		title: string 
+	}[]
+	tabCountState?: RecoilState<{
+		[key: number]: number,
+		other?: number
+	}>
 }
 
 const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) => {
-	const router = useRouter()
-	const { headerTitle, headerButton, statusList, defaultSelect, columns, buttonOnClick, children, filterList, filterState, 
-		filteredData = filterResourceState
+	const { headerTitle, headerButton, statusList, defaultSelect, columns, buttonOnClick, children, 
+		filterList = {}, 
+		filterState = jobFiltersState, 
+		filteredData = filterResourceState,
+		tabsList = [],
+		tabCountState
 	} = props
 	const setFilterWord = useSetRecoilState(filterWordState)
 	const setFilterStatus = useSetRecoilState(filterStatusState)
@@ -149,13 +160,15 @@ const ResourceOverview: FunctionComponent<ResourceOverviewInterface> = (props) =
 			<BreakpointLG>
 				<DesktopHeader>
 					<HeaderTitleContainer>
-						<HeaderTitle>ภาพรวม</HeaderTitle>
-						<PrimaryButton onClick={() => router.push("/jobs")}>ค้นหางาน</PrimaryButton>
+						<HeaderTitle>{headerTitle}</HeaderTitle>
+						<PrimaryButton onClick={buttonOnClick}>{headerButton}</PrimaryButton>
 					</HeaderTitleContainer>
 					<FiltersComponent filterList={filterList} />
 				</DesktopHeader>
 				<ResourcesTableContainer>
 					<DesktopTable
+						tabsList={tabsList}
+						tabCountState={tabCountState}
 						columns={columns}
 						filterSelector={filteredData}
 						filterState={filterState}

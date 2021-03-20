@@ -41,7 +41,7 @@ export const jobFiltersState = atom({
 })
 
 export const truckFiltersState = atom({
-	key: "truckFilterState",
+	key: "truckFiltersState",
 	default: {
 		status: [0],
 		weight: {
@@ -55,6 +55,15 @@ export const truckFiltersState = atom({
 			type: "ทั้งหมด",
 			option: "ทั้งหมด",
 		}
+	}
+})
+
+export const driverFiltersState = atom({
+	key: "driverFiltersState",
+	default: {
+		status: [0],
+		driver_license_type: "ทั้งหมด",
+		age: undefined
 	}
 })
 
@@ -207,3 +216,41 @@ export const filterState = selector({
 		return filteredData
 	}
 });
+
+export const filterDriverState = selector({
+	key: "filterDriverState",
+	set: ({set}, newValue: Object[]) => {
+		set(tableDataState, newValue)
+	},
+	get: ({get}) => {
+		const filterWord = get(filterWordState)
+		const driverFilters = get(driverFiltersState) 
+		let filteredData = get(tableDataState)
+		filteredData = filteredData.filter((item) => {
+			const {status, ...restItem} = item
+			return Object.values(restItem)
+				.map((value) => {
+					return String(value)
+				})
+				.find((value) => {
+					return value.toLowerCase().includes(filterWord)
+				})
+		})
+		if (driverFilters.status[0] !== 0) {
+			filteredData = filteredData.filter((item) => {
+				return driverFilters.status.includes(item.status)
+			})
+		} 
+		if (driverFilters.driver_license_type !== "ทั้งหมด") {
+			filteredData = filteredData.filter((item) => {
+				return (item.driver_license_type === driverFilters.driver_license_type) 
+			})
+		}
+		if (driverFilters.age) {
+			filteredData = filteredData.filter((item) => {
+				return item.age <= driverFilters.age
+			})
+		}
+		return filteredData
+	}
+})
