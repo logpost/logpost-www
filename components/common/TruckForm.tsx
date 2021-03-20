@@ -9,21 +9,17 @@ import SelectComponent from './SelectComponent'
 import breakpointGenerator from '../utilities/breakpoint'
 
 const TruckFormContainer = styled.div`
-    > div {
-        &:not(:first-child) {
-		    margin-top: 2rem;
-        }
+    display: grid;
+    grid-gap: 2rem 8.6rem;
 
-        > div:not(:first-child) {
-    		margin-top: 2rem;
-	    }
+    > div > div:not(:first-child) {
+        margin-top: 2rem;
     }
 
     ${breakpointGenerator({
         large: css`
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-gap: 8.6rem;
         `
     })}
 `

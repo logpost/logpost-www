@@ -18,6 +18,7 @@ const Input = styled.input<Input>`
 	margin-top: 1rem;
 	font-size: 1.6rem;
 	padding: 1.2rem;
+	max-width: 30rem;
 
 	&[type=number] {
 		&::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
