@@ -326,7 +326,7 @@ const CarrierProfilePage = () => {
 				<JobTableContainer>
 					<StatusHeader>
 						<span>งานล่าสุด</span>
-						<SeeAllButton onClick={() => router.push("")}>
+						<SeeAllButton onClick={() => router.push("jobs?status=all")}>
 							ดูงานทั้งหมด
 							<RightArrow />
 						</SeeAllButton >
