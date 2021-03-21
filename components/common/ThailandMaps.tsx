@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 import { countJobInProvinceState } from '../../store/atoms/jobDocumentState'
 import { NumberOfJobs } from '../styles/GlobalComponents'
-import { Amnatcharoen, Angthong, Bangkok, Buengkan, Buriram, Chachoengsao, Chainat, Chaiyaphum, Chanthaburi, Chiangmai, Chiangrai, Chonburi, Kalasin, Kamphaengphet, Kanchanaburi, Khonkaen, Lampang, Lamphun, Loei, Lopburi, Maehongson, Mahasarakham, Mukdahan, Nakhonnayok, Nakhonpathom, Nakhonphanom, Nakhonratchasima, Nakhonsawan, Nan, Nongbualamphu, Nongkhai, Nonthaburi, Pathumthani, Phayao, Phetchabun, Phetchaburi, Phichit, Phitsanulok, Phrae, Phranakhonsiayutthaya, Prachinburi, Prachuapkhirikhan, Ratchaburi, Rayong, Roiet, Sakaeo, Sakonnakhon, Samutprakan, Samutsakhon, Samutsongkhram, Saraburi, Singburi, Sisaket, Sukhothai, Suphanburi, Surin, Tak, Trat, Ubonratchathani, Udonthani, Uthaithani, Uttaradit, Yasothon } from './ProvincesIcon'
+import { Amnatcharoen, Angthong, Bangkok, Buengkan, Buriram, Chachoengsao, Chainat, Chaiyaphum, Chanthaburi, Chiangmai, Chiangrai, Chonburi, Chumphon, Kalasin, Kamphaengphet, Kanchanaburi, Khonkaen, Krabi, Lampang, Lamphun, Loei, Lopburi, Maehongson, Mahasarakham, Mukdahan, Nakhonnayok, Nakhonpathom, Nakhonphanom, Nakhonratchasima, Nakhonsawan, Nakhonsithammarat, Nan, Narathiwat, Nongbualamphu, Nongkhai, Nonthaburi, Pathumthani, Pattani, Phangnga, Phatthalung, Phayao, Phetchabun, Phetchaburi, Phichit, Phitsanulok, Phrae, Phranakhonsiayutthaya, Phuket, Prachinburi, Prachuapkhirikhan, Ranong, Ratchaburi, Rayong, Roiet, Sakaeo, Sakonnakhon, Samutprakan, Samutsakhon, Samutsongkhram, Saraburi, Satun, Singburi, Sisaket, Songkhla, Sukhothai, Suphanburi, Suratthani, Surin, Tak, Trang, Trat, Ubonratchathani, Udonthani, Uthaithani, Uttaradit, Yala, Yasothon } from './ProvincesIcon'
 
 const Thailand = styled.div`
     ${NumberOfJobs} {
@@ -382,6 +382,82 @@ const Northeast = styled.div`
     }
 `
 
+const Southern = styled.div`
+    position: relative;
+    left: 120px;
+    top: 560px;
+
+    #chumphon {
+        left: 44.04px;
+        top: 2.52px;
+    }
+
+    #krabi {
+        left: 30px;
+        top: 147.6px;
+    }
+
+    #nakhonsithammarat {
+        left: 82px;
+        top: 110px;
+    }
+
+    #narathiwat {
+        left: 232.73px;
+        top: 260.6px;
+    }
+
+    #phangnga {
+        left: 6.4px;
+        top: 90.44px;
+    }
+
+    #phatthalung {
+        left: 113.17px;
+        top: 194.2px;
+    }
+
+    #pattani {
+        left: 189.51px;
+        top: 232px;
+    }
+
+    #phuket {
+        left: 3.77px;
+        top: 156.59px;
+    }
+
+    #ranong {
+        left: 20.23px;
+        top: 8.61px;
+    }
+
+    #satun {
+        left: 102.35px;
+        top: 243.23px;
+    }
+
+    #songkhla {
+        left: 136.51px;
+        top: 232px;
+    }
+
+    #suratthani {
+        left: 35.8px;
+        top: 78.6px;
+    }
+
+    #trang {
+        left: 71.27px;
+        top: 191.64px;
+    }
+
+    #yala {
+        left: 191.62px;
+        top: 264.14px;
+    }
+`
+
 const THAILAND_PROVINCES = [
     {
         name: Northern,
@@ -721,6 +797,81 @@ const THAILAND_PROVINCES = [
                 id: "yasothon",
                 nameTH: "ยโสธร",
                 icon: Yasothon
+            },
+        ]
+    },
+    {
+        name: Southern,
+        provinces: [
+            {
+                id: "chumphon",
+                nameTH: "ชุมพร",
+                icon: Chumphon
+            },
+            {
+                id: "krabi",
+                nameTH: "กระบี่",
+                icon: Krabi
+            },
+            {
+                id: "nakhonsithammarat",
+                nameTH: "นครศรีธรรมราช",
+                icon: Nakhonsithammarat
+            },
+            {
+                id: "narathiwat",
+                nameTH: "นราธิวาส",
+                icon: Narathiwat
+            },
+            {
+                id: "phangnga",
+                nameTH: "พังงา",
+                icon: Phangnga
+            },
+            {
+                id: "phatthalung",
+                nameTH: "พัทลุง",
+                icon: Phatthalung
+            },
+            {
+                id: "pattani",
+                nameTH: "ปัตตานี",
+                icon: Pattani
+            },
+            {
+                id: "phuket",
+                nameTH: "ภูเก็ต",
+                icon: Phuket
+            },
+            {
+                id: "ranong",
+                nameTH: "ระนอง",
+                icon: Ranong
+            },
+            {
+                id: "satun",
+                nameTH: "สตูล",
+                icon: Satun
+            },
+            {
+                id: "songkhla",
+                nameTH: "สงขลา",
+                icon: Songkhla
+            },
+            {
+                id: "suratthani",
+                nameTH: "สุราษฎร์ธานี",
+                icon: Suratthani
+            },
+            {
+                id: "trang",
+                nameTH: "ตรัง",
+                icon: Trang
+            },
+            {
+                id: "yala",
+                nameTH: "ยะลา",
+                icon: Yala
             },
         ]
     }
