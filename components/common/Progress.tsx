@@ -11,17 +11,17 @@ interface ProgressInterface extends ProgressCircleInterface {
 	label?: string
 }
 
-const CIRCLE_SIZE="2.6rem"
+const CIRCLE_SIZE="26px"
 
 const ProgressContainer = styled.div`
 	display: flex;
-	align-items: center
+	align-items: center;
 `
 
 const CircularProgress = styled.svg`
 	transform: rotate(270deg);
-	width: 6rem;
-	height: 6rem;
+	width: 60px;
+	height: 60px;
 
 	circle {
 		position: absolute;
@@ -42,9 +42,9 @@ const BackgroundCircle = styled.circle`
 `
 
 const StepContainer = styled.div`
-	margin-left: 2rem;
-	padding: 0.9rem 0;
-	font-size: 2.2rem;
+	margin-left: 10px;
+	padding: 9px 0;
+	font-size: 22px;
 	font-weight: 500;
 	color: hsl(217, 16%, 16%);
 

@@ -213,6 +213,21 @@ const updateJob = async (jobID: string, data: Object) => {
 	})
 }
 
+const deleteJob = async (jobID: string) => {
+	return await authorizationHandler(async () => {
+		try {
+			const body = {
+				job_id: jobID,
+			}
+			const res = await axios.put(`${JOB_URL}/delete`, body,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			return res.status
+		} catch (error) {
+			throw error	
+		}
+	})
+}
+
 const updateShipperProfile = async (data: Object) => {
 	return await authorizationHandler(async () => {
 		try {
@@ -450,5 +465,6 @@ export {
 	getDriverByID,
 	updateDriverByID,
 	deleteDriver,
-	deleteTruck
+	deleteTruck,
+	deleteJob
 }
