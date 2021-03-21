@@ -64,4 +64,10 @@ export interface JobFormField {
 export interface JobFormInterface {
 	changedField?: JobFormField
 	setChangedField?: (changedField: JobFormField) => void
+	mapID?: {
+		pickupMapID: string,
+		dropoffMapID: string,
+		pickupAutoCompleteID: string,
+		dropoffAutoCompleteID: string
+	} 
 }

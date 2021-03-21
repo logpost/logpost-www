@@ -73,7 +73,14 @@ const JobAddStepOne = () => {
 				/>
 			</FormHeader>
 			<Map id="route-map" />
-			<JobFormStepOne />
+			<JobFormStepOne 
+				mapID={{
+					pickupMapID: "pickup-map-mobile",
+					dropoffMapID: "dropoff-map-mobile",
+					pickupAutoCompleteID: "pickup-atc-mobile",
+					dropoffAutoCompleteID: "dropoff-atc-mobile"
+				}} 
+			/>
 			<FormActionsCustom>
 				<SecondaryButton onClick={() => router.push("/jobs")}>ยกเลิก</SecondaryButton>
 				<PrimaryButton onClick={nextPage}>ส่วนถัดไป</PrimaryButton>
