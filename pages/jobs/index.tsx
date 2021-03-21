@@ -3,21 +3,23 @@ import { useRouter } from "next/router"
 import styled from "styled-components"
 import JobCard from "../../components/common/JobCard"
 import { DownArrowLine, FilterIcon, OptionIcon, PlusIcon, PriceIcon, SearchIcon, TruckIcon, UpArrowLine, WeightIcon } from "../../components/common/Icons"
-import { FilterContainer, HeaderTitle, PrimaryButton } from "../../components/styles/GlobalComponents"
+import { FilterContainer, HeaderTitle, PrimaryButton, HeaderTitleContainer } from "../../components/styles/GlobalComponents"
 import NavigationBar from "../../components/common/NavigationBar"
 import { getAllJobs } from "../../components/utilities/apis"
-import { JobDocument } from "../../entities/interface/job"
+import { CountProvinceInterface, JobDocument } from "../../entities/interface/job"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { alertPropertyState } from "../../store/atoms/alertPropertyState"
 import Alert from "../../components/common/Alert"
 import { userInfoState } from '../../store/atoms/userInfoState'
-import { BreakpointLG } from "../../components/styles/Breakpoints"
+import { BreakpointLG, BreakpointMD } from "../../components/styles/Breakpoints"
 import DesktopHeader from "../../components/common/DesktopHeader"
 import FiltersComponent from "../../components/common/FiltersComponent"
 import { filterWordState, jobFiltersState, filterState } from "../../store/atoms/tableState"
 import { TRUCK_TYPE_LIST } from "../../data/carrier"
-import { PROVINCES } from "../../data/jobs"
+import { PROVINCES, PROVINCES_OBJECT } from "../../data/jobs"
 import SelectComponent from "../../components/common/SelectComponent"
+import ThailandMaps from "../../components/common/ThailandMaps"
+import { countJobInProvinceState } from "../../store/atoms/jobDocumentState"
 
 interface FilterContainerInterface {
 	expand: boolean
@@ -124,7 +126,7 @@ const JobsPage = () => {
 	const alertStatus = useRecoilValue(alertPropertyState)
 	const setFilterWord = useSetRecoilState(filterWordState)
 	const [jobFilters, setJobFilters] = useRecoilState(jobFiltersState)
-
+	const setCountJobInProvince = useSetRecoilState(countJobInProvinceState)
 
 	const filterList = {
 		0: [
@@ -217,8 +219,12 @@ const JobsPage = () => {
 
 	const convertJobToCardFormat = (jobs: JobDocument[]) => {
 		const jobTableData = []
+		const countPickupProvince = {...PROVINCES_OBJECT}
+		const countDropoffProvince = {...PROVINCES_OBJECT}
 		jobs.map((job) => {
 			const { pickup_location, dropoff_location } = job
+			countPickupProvince[pickup_location.province] += 1
+			countDropoffProvince[dropoff_location.province] += 1
 			jobTableData.push({
 				...job, 
 				pickup_location: pickup_location.province,
@@ -226,13 +232,17 @@ const JobsPage = () => {
 				truck_type: `${job.carrier_specification.truck.property.type} ${job.carrier_specification.truck.property.option}`
 			})
 		})
-		return jobTableData
+		return [jobTableData, countPickupProvince, countDropoffProvince]
 	}
 
 	useEffect(() => {
 		getAllJobs((jobs: JobDocument[]) => {
-			const jobCardData = convertJobToCardFormat(jobs)
-			setJobs(jobCardData)
+			const [jobCardData, countPickupProvince, countDropoffProvince] = convertJobToCardFormat(jobs)
+			setJobs(jobCardData as JobDocument[])
+			setCountJobInProvince({
+				pickup: countPickupProvince as CountProvinceInterface,
+				dropoff: countDropoffProvince as CountProvinceInterface
+			})
 		})
 	},[])
 
@@ -242,44 +252,60 @@ const JobsPage = () => {
 				{alertStatus.type === "success" ? "เพิ่มงานสำเร็จ" : "เพิ่มงานสำเร็จ"}
 			</Alert>
 			<NavigationBar activeIndex={1} />
-			{
-				userInfo?.role === "shipper" && 
-					<AddJob onClick={() => router.push("/jobs/add/1")}>
-						<PlusIcon />
-						สร้างงานใหม่
-					</AddJob>
-			}
-			<Header>
-				<SearchBarContainer>
-					<SearchIcon />
-					<SearchBar 
-						onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterWord(e.target.value)} 
-						placeholder="ค้นหา" 
-					/>
-				</SearchBarContainer>
-				<PrimaryButton onClick={() => setShowMoreFilter(!showMoreFilter)}>
-					<FilterIcon />
-					ตัวกรอง
-				</PrimaryButton>
-			</Header>
-			{
-				showMoreFilter &&
-				<FiltersContainer expand={showMoreFilter}>
-					<FiltersComponent filterList={filterList} alwaysExpand={true} />
-				</FiltersContainer>
-			}
-			{/* <BreakpointLG>
+			<BreakpointMD>
+				{
+					userInfo?.role === "shipper" && 
+						<AddJob onClick={() => router.push("/jobs/add/1")}>
+							<PlusIcon />
+							สร้างงานใหม่
+						</AddJob>
+				}
+				<Header>
+					<SearchBarContainer>
+						<SearchIcon />
+						<SearchBar 
+							onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterWord(e.target.value)} 
+							placeholder="ค้นหา" 
+						/>
+					</SearchBarContainer>
+					<PrimaryButton onClick={() => setShowMoreFilter(!showMoreFilter)}>
+						<FilterIcon />
+						ตัวกรอง
+					</PrimaryButton>
+				</Header>
+				{
+					showMoreFilter &&
+					<FiltersContainer expand={showMoreFilter}>
+						<FiltersComponent filterList={filterList} alwaysExpand={true} />
+					</FiltersContainer>
+				}
+			</BreakpointMD>
+			<BreakpointLG>
                 <DesktopHeader>
-                    <HeaderTitle>
-                        งานทั้งหมด
-                    </HeaderTitle>
+					<HeaderTitleContainer>
+						<HeaderTitle>
+							งานทั้งหมด
+						</HeaderTitle>
+					<PrimaryButton onClick={() => router.push("/jobs/add")}>สร้างงานใหม่</PrimaryButton>
+					</HeaderTitleContainer>
+					<FiltersComponent 
+						filterList={{
+							...filterList,
+							0: [{
+								type: "searchbar",
+								placeholder: "ค้นหาจังหวัด สินค้า ประเภทรถ ฯลฯ",
+								onChange: setFilterWord
+							}, ...filterList[0]]
+						}} 
+					/>
 				</DesktopHeader>
-            </BreakpointLG> */}
-			<JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
+				<ThailandMaps />
+            </BreakpointLG>
+			{/* <JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
 				{jobs.map((job, index) => {
 					return <JobCard key={index} origin="jobs-page" details={job} />
 				})}
-			</JobCardContainer>
+			</JobCardContainer> */}
 		</>
 	)
 }

@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { DEFAULT_JOB } from '../../data/jobs';
+import { DEFAULT_JOB, PROVINCES_OBJECT } from '../../data/jobs';
 
 export const jobDocumentState = atom({
 	key: 'jobDocument',
@@ -14,3 +14,11 @@ export const jobDocumentState = atom({
 		...DEFAULT_JOB
 	}, 
 });
+
+export const countJobInProvinceState = atom({
+	key: 'countJobInProvince',
+	default: {
+		pickup: PROVINCES_OBJECT,
+		dropoff: PROVINCES_OBJECT
+	}
+})
