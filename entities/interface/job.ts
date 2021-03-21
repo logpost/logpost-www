@@ -39,6 +39,7 @@ export interface JobDocument extends JobDetails {
 	driver_name?: string,
 	license_number?: string,
 	status?: number
+	truck_type?: string
 	created_at?: Date
 	updated_at?: Date
 }

@@ -115,4 +115,5 @@ export interface FilterComponentInterface {
     filterList: {
         [key: number]: Filter[]
     }
+	alwaysExpand?: boolean
 }

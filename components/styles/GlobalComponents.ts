@@ -453,3 +453,103 @@ export const SeeAllButton = styled.button`
 		`
 	})}
 `
+
+export const FilterContainer = styled.div`
+	font-size: 1.4rem;
+	display: flex;
+	align-items: center;
+	width: 50%;
+
+	&#date {
+		flex-direction: column;
+		align-items: flex-start;
+		width: 100%;
+
+		${breakpointGenerator({
+			large: css`
+				align-items: center;
+				flex-direction: row;
+			`
+		})}
+	}
+
+	&#option {
+		width: 100%;
+
+		> ${ButtonGroupContainer} {
+			width: 100%;
+			grid-template-columns: repeat(auto-fill, 8.5rem);
+
+			${ButtonItem} {
+				font-size: 1.4rem;
+				height: 3.2rem;
+				width: 8.2rem;
+				padding: 0;
+			}
+		}
+	}
+
+	input {
+		margin-top: 0;
+		font-size: 1.4rem;
+		height: 3.2rem;
+
+		& ~ div {
+			font-size: 1.4rem;
+			margin-left: 1.4rem;
+		}
+	}
+
+	> svg {
+		margin-right: 0.5rem;
+		min-height: 1.8rem;
+		min-width: 1.8rem;
+	}
+
+	> div {
+		margin-top: 0;
+
+		&.MuiInputBase-root {
+			width: 70%;
+			max-width: 17rem;
+			min-width: 12rem;
+			font-size: 1.4rem;
+			height: 2.8rem;
+
+			> svg {
+				height: 2.6rem;
+				width: 2.6rem;
+				padding: 0.9rem;
+			}
+		}
+		
+		.react-datepicker__input-container input {
+			font-size: 1.4rem;
+			margin-top: 0;
+			height: 3.2rem;
+		}
+	}
+
+	> span {
+		margin: 0 1.4rem;
+	}
+`
+
+export const FilterLabel = styled.div`
+white-space: nowrap;
+display: flex;
+margin-right: 2rem;
+
+svg {
+	margin-right: 10%;
+	min-height: 20px;
+	min-width: 20px; 
+	height: 20px;
+	width: 20px; 
+	
+	#truck {
+		stroke: hsl(16, 56%, 51%);
+		stroke-width: 3px;
+	}
+}
+`
