@@ -186,7 +186,7 @@ const JobDesktopTable = (props: JobDesktopTableInterface) => {
 			width: "8%",
 			align: "left",
 			format: (_: number, job): ReactElement => (
-				<span>{JOB_STATUS_CODE[job.status].status_name}</span>
+				<span>{JOB_STATUS_CODE[job.status]?.status_name}</span>
 			)
 		},
 		{

@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
 import { countJobInProvinceState } from '../../store/atoms/jobDocumentState'
 import { NumberOfJobs } from '../styles/GlobalComponents'
-import { Chiangmai, Chiangrai, Kamphaengphet, Kanchanaburi, Lampang, Lamphun, Maehongson, Nakhonsawan, Nan, Phayao, Phetchabun, Phetchaburi, Phichit, Phitsanulok, Phrae, Prachuapkhirikhan, Ratchaburi, Sukhothai, Tak, Uttaradit } from './ProvincesIcon'
+import { Amnatcharoen, Angthong, Bangkok, Buengkan, Buriram, Chachoengsao, Chainat, Chaiyaphum, Chanthaburi, Chiangmai, Chiangrai, Chonburi, Kalasin, Kamphaengphet, Kanchanaburi, Khonkaen, Lampang, Lamphun, Loei, Lopburi, Maehongson, Mahasarakham, Mukdahan, Nakhonnayok, Nakhonpathom, Nakhonphanom, Nakhonratchasima, Nakhonsawan, Nan, Nongbualamphu, Nongkhai, Nonthaburi, Pathumthani, Phayao, Phetchabun, Phetchaburi, Phichit, Phitsanulok, Phrae, Phranakhonsiayutthaya, Prachinburi, Prachuapkhirikhan, Ratchaburi, Rayong, Roiet, Sakaeo, Sakonnakhon, Samutprakan, Samutsakhon, Samutsongkhram, Saraburi, Singburi, Sisaket, Sukhothai, Suphanburi, Surin, Tak, Trat, Ubonratchathani, Udonthani, Uthaithani, Uttaradit, Yasothon } from './ProvincesIcon'
 
 const Thailand = styled.div`
     ${NumberOfJobs} {
@@ -13,6 +13,8 @@ const Thailand = styled.div`
     }
 
     button {
+        position: absolute;
+
         &:hover {
             svg path {
                 stroke: hsl(16, 56%, 51%);
@@ -81,45 +83,119 @@ const Northern = styled.div`
     }
 `
 
-const LowerNorthern = styled.div`
+const Central = styled.div`
     position: relative;
-    left: 87px;
+    left: 140px;
     top: 214px;
 
     #sukhothai {
-        position: absolute;
-        left: 87.69px;
-        top: 3px;
+        left: 68px;
+        top: 1.43px;
     }
 
     #kamphaengphet {
-        position: absolute;
-        left: 75.69px;
-        top: 43px;
+        left: 56px;
+        top: 41.43px;
     }
 
     #nakhonsawan {
-        position: absolute;
-        left: 73.63px;
-        top: 84.03px;
+        left: 53.93px;
+        top: 82.46px;
     }
 
     #phitsanulok {
-        position: absolute;
-        left: 123.69px;
-        top: 1.57px;
+        left: 104px;
+        top: 0px;
     }
 
     #phichit {
-        position: absolute;
-        left: 123.69px;
-        top: 55px;
+        left: 104px;
+        top: 53.43px;
     }
 
     #phetchabun {
-        position: absolute;
-        left: 159.69px;
-        top: 33px;
+        left: 140px;
+        top: 31.43px;
+    }
+
+    #angthong {
+        left: 106.95px;
+        top: 169.58px;
+    }
+
+    #phranakhonsiayutthaya {
+        left: 116.46px;
+        top: 199.91px;
+    }
+
+    #bangkok {
+        left: 121px;
+        top: 271.43px;
+    }
+
+    #chainat {
+        left: 43.66px;
+        top: 119.93px;
+    }
+
+    #lopburi {
+        left: 138px;
+        top: 110.43px;
+    }
+
+    #nakhonnayok {
+        left: 176.03px;
+        top: 187.74px;
+    }
+
+    #nakhonpathom {
+        left: 58.69px;
+        top: 222.78px;
+    }
+
+    #nonthaburi {
+        left: 113.19px;
+        top: 242.72px;
+    }
+
+    #pathumthani {
+        left: 143.74px;
+        top: 237.28px;
+    }
+
+    #samutprakan {
+        left: 154px;
+        top: 302.43px;
+    }
+
+    #samutsakhon {
+        left: 71.05px;
+        top: 264.03px;
+    }
+
+    #samutsongkhram {
+        left: 38.13px;
+        top: 276.68px;
+    }
+
+    #saraburi {
+        left: 154px;
+        top: 143.43px;
+    }
+
+    #singburi {
+        left: 102.16px;
+        top: 129.16px;
+    }
+
+    #suphanburi {
+        left: 37.21px;
+        top: 159.5px;
+    }
+
+    #uthaithani {
+        left: 0.64px;
+        top: 91.28px;
     }
 `
 
@@ -156,6 +232,153 @@ const Western = styled.div`
         position: absolute;
         left: 34.91px;
         top: 172.86px;
+    }
+`
+
+const Eastern = styled.div`
+    position: relative;
+    left: 400px;
+    top: 460px;
+
+    #chachoengsao {
+        left: 1px;
+        top: 30.52px;
+    }
+
+    #chanthaburi {
+        left: 53.85px;
+        top: 66.12px;
+    }
+
+    #chonburi {
+        left: 0;
+        top: 60.5px;
+    }
+
+    #prachinburi {
+        left: 7px;
+        top: 0;
+    }
+
+    #rayong {
+        left: 18px;
+        top: 92px;
+    }
+
+    #sakaeo {
+        left: 60.16px;
+        top: 13.11px;
+    }
+
+    #trat {
+        left: 90px;
+        top: 97.6px;
+    }
+`
+
+const Northeast = styled.div`
+    position: relative;
+    left: 360px;
+    top: 140px;
+
+    #amnatcharoen {
+        left: 221.36px;
+        top: 138.96px;
+    }
+
+    #buengkan {
+        left: 127px;
+        top: 1.81px;
+    }
+
+    #buriram {
+        left: 84.3px;
+        top: 180.25px;
+    }
+
+    #chaiyaphum {
+        left: 9.77px;
+        top: 124.46px;
+    }
+
+    #kalasin {
+        left: 124.23px;
+        top: 92.4px;
+    }
+
+    #khonkaen {
+        left: 50px;
+        top: 100.81px;
+    }
+
+    #loei {
+        left: 0;
+        top: 16.81px;
+    }
+
+    #mahasarakham {
+        left: 111.09px;
+        top: 137.51px;
+    }
+
+    #mukdahan {
+        left: 173.19px;
+        top: 90.81px;
+    }
+
+    #nakhonphanom {
+        left: 159.67px;
+        top: 30.78px;
+    }
+
+    #nakhonratchasima {
+        left: 14.68px;
+        top: 176.75px;
+    }
+
+    #nongbualamphu {
+        left: 2px;
+        top: 84.81px;
+    }
+
+    #nongkhai {
+        left: 49.13px;
+        top: 1.33px;
+    }
+
+    #roiet {
+        left: 143.86px;
+        top: 129.82px;
+    }
+
+    #sakonnakhon {
+        left: 121px;
+        top: 36.14px;
+    }
+
+    #sisaket {
+        left: 192.52px;
+        top: 183.12px;
+    }
+
+    #surin {
+        left: 140.33px;
+        top: 182.53px;
+    }
+
+    #ubonratchathani {
+        left: 224.83px;
+        top: 162.89px;
+    }
+
+    #udonthani {
+        left: 46.86px;
+        top: 40.51px;
+    }
+
+    #yasothon {
+        left: 190.24px;
+        top: 132.17px;
     }
 `
 
@@ -241,7 +464,7 @@ const THAILAND_PROVINCES = [
         ]
     },
     {
-        name: LowerNorthern,
+        name: Central,
         provinces: [
             {
                 id: "sukhothai",
@@ -272,9 +495,235 @@ const THAILAND_PROVINCES = [
                 id: "kamphaengphet",
                 nameTH: "กำแพงเพชร",
                 icon: Kamphaengphet
-            }
+            },
+            {
+                id: "angthong",
+                nameTH: "อ่างทอง",
+                icon: Angthong
+            },
+            {
+                id: "phranakhonsiayutthaya",
+                nameTH: "พระนครศรีอยุธยา",
+                icon: Phranakhonsiayutthaya
+            },
+            {
+                id: "bangkok",
+                nameTH: "กรุงเทพมหานคร",
+                icon: Bangkok
+            },
+            {
+                id: "chainat",
+                nameTH: "ชัยนาท",
+                icon: Chainat
+            },
+            {
+                id: "lopburi",
+                nameTH: "ลพบุรี",
+                icon: Lopburi
+            },
+            {
+                id: "nakhonnayok",
+                nameTH: "นครนายก",
+                icon: Nakhonnayok
+            },
+            {
+                id: "nakhonpathom",
+                nameTH: "นครปฐม",
+                icon: Nakhonpathom
+            },
+            {
+                id: "nonthaburi",
+                nameTH: "นนทบุรี",
+                icon: Nonthaburi
+            },
+            {
+                id: "pathumthani",
+                nameTH: "ปทุมธานี",
+                icon: Pathumthani
+            },
+            {
+                id: "samutprakan",
+                nameTH: "สมุทรปราการ",
+                icon: Samutprakan
+            },
+            {
+                id: "samutsakhon",
+                nameTH: "สมุทรสาคร",
+                icon: Samutsakhon
+            },
+            {
+                id: "samutsongkhram",
+                nameTH: "สมุทรสงคราม",
+                icon: Samutsongkhram
+            },
+            {
+                id: "saraburi",
+                nameTH: "สระบุรี",
+                icon: Saraburi
+            },
+            {
+                id: "singburi",
+                nameTH: "สิงห์บุรี",
+                icon: Singburi
+            },
+            {
+                id: "suphanburi",
+                nameTH: "สุพรรณบุรี",
+                icon: Suphanburi
+            },
+            {
+                id: "uthaithani",
+                nameTH: "อุทัยธานี",
+                icon: Uthaithani
+            },
+
         ]
     },
+    {
+        name: Eastern,
+        provinces: [
+            {
+                id: "chachoengsao",
+                nameTH: "ฉะเชิงเทรา",
+                icon: Chachoengsao
+            },
+            {
+                id: "chanthaburi",
+                nameTH: "จันทบุรี",
+                icon: Chanthaburi
+            },
+            {
+                id: "chonburi",
+                nameTH: "ชลบุรี",
+                icon: Chonburi
+            },
+            {
+                id: "prachinburi",
+                nameTH: "ปราจีนบุรี",
+                icon: Prachinburi
+            },
+            {
+                id: "rayong",
+                nameTH: "ระยอง",
+                icon: Rayong
+            },
+            {
+                id: "sakaeo",
+                nameTH: "สระแก้ว",
+                icon: Sakaeo
+            },
+            {
+                id: "trat",
+                nameTH: "ตราด",
+                icon: Trat
+            },
+        ]
+    },
+    {
+        name: Northeast,
+        provinces: [
+            {
+                id: "amnatcharoen",
+                nameTH: "อำนาจเจริญ",
+                icon: Amnatcharoen
+            },
+            {
+                id: "buengkan",
+                nameTH: "บึงกาฬ",
+                icon: Buengkan
+            },
+            {
+                id: "buriram",
+                nameTH: "บุรีรัมย์",
+                icon: Buriram
+            },
+            {
+                id: "chaiyaphum",
+                nameTH: "ชัยภูมิ",
+                icon: Chaiyaphum
+            },
+            {
+                id: "kalasin",
+                nameTH: "กาฬสินธุ์",
+                icon: Kalasin
+            },
+            {
+                id: "khonkaen",
+                nameTH: "ขอนแก่น",
+                icon: Khonkaen
+            },
+            {
+                id: "loei",
+                nameTH: "เลย",
+                icon: Loei
+            },
+            {
+                id: "mahasarakham",
+                nameTH: "มหาสารคาม",
+                icon: Mahasarakham
+            },
+            {
+                id: "mukdahan",
+                nameTH: "มุกดาหาร",
+                icon: Mukdahan
+            },
+            {
+                id: "nakhonphanom",
+                nameTH: "นครพนม",
+                icon: Nakhonphanom
+            },
+            {
+                id: "nakhonratchasima",
+                nameTH: "นครราชสีมา",
+                icon: Nakhonratchasima
+            },
+            {
+                id: "nongbualamphu",
+                nameTH: "หนองบัวลำภู",
+                icon: Nongbualamphu
+            },
+            {
+                id: "nongkhai",
+                nameTH: "หนองคาย",
+                icon: Nongkhai
+            },
+            {
+                id: "roiet",
+                nameTH: "ร้อยเอ็ด",
+                icon: Roiet
+            },
+            {
+                id: "sakonnakhon",
+                nameTH: "สกลนคร",
+                icon: Sakonnakhon
+            },
+            {
+                id: "sisaket",
+                nameTH: "ศรีสะเกษ",
+                icon: Sisaket
+            },
+            {
+                id: "surin",
+                nameTH: "สุรินทร์",
+                icon: Surin
+            },
+            {
+                id: "ubonratchathani",
+                nameTH: "อุบลราชธานี",
+                icon: Ubonratchathani
+            },
+            {
+                id: "udonthani",
+                nameTH: "อุดรธานี",
+                icon: Udonthani
+            },
+            {
+                id: "yasothon",
+                nameTH: "ยโสธร",
+                icon: Yasothon
+            },
+        ]
+    }
 ]
 
 const ThailandMaps = () => {
