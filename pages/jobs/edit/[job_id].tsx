@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { useRouter } from 'next/router'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { jobDetailsSelector, jobDetailsState } from '../../../store/atoms/jobDetailsState'
@@ -8,7 +8,7 @@ import { JobDocument, JobFormField } from '../../../entities/interface/job'
 import JobFormStepOne from '../../../components/common/JobFormStepOne'
 import JobFormStepTwo from '../../../components/common/JobFormStepTwo'
 import JobFormStepThree from '../../../components/common/JobFormStepThree'
-import { FormActions, JobTitle, PrimaryButton, SecondaryButton } from '../../../components/styles/GlobalComponents'
+import { FormActions, HeaderTitle, JobTitle, PrimaryButton, SecondaryButton } from '../../../components/styles/GlobalComponents'
 import Header from '../../../components/common/Header'
 import { RightArrowLine } from '../../../components/common/Icons'
 import JobDetailsSection from '../../../components/common/JobDetailsSection'
@@ -16,10 +16,32 @@ import { MapInterface } from '../../../entities/interface/googlemaps'
 import { initMap, route } from '../../../components/utilities/googlemaps'
 import { costCalculator } from '../../../components/utilities/costCalculater'
 import useAlert from '../../../hooks/useAlert'
+import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
+import DesktopHeader from '../../../components/common/DesktopHeader'
+import breakpointGenerator from '../../../components/utilities/breakpoint'
+
+const EditJobContainer = styled.div`
+    width: 100%;
+`
+
+const MapContainer = styled.div`
+    ${breakpointGenerator({
+        large: css`
+            padding: 1.8rem 2.6rem 0;
+	        max-width: 110rem;
+        `
+    })}
+`
 
 const Map = styled.div`
 	height: 45rem;
 	width: 100%;
+
+    ${breakpointGenerator({
+        large: css`
+            border-radius: 14px;
+        `
+    })}
 
 	&#route-map {
 		height: 19rem;
@@ -58,6 +80,34 @@ const JobDetailsContainer = styled.div`
     margin: 1.8rem 2rem;
 `;
 
+const HeaderTitleCustom = styled(HeaderTitle)`
+    color: hsl(212, 28%, 28%);
+
+    > span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-left: 0.8rem;
+    }
+
+    svg {
+        margin: 0 1.4rem;
+
+        path {
+            fill: hsl(212, 28%, 28%);
+        }
+    }
+`
+
+const JobFormContainer = styled.div`
+    ${breakpointGenerator({
+        large: css`
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 2rem;
+            max-width: 110rem;
+        `
+    })}
+`
 
 const EditJobPage = () => {
     const router = useRouter()
@@ -78,7 +128,6 @@ const EditJobPage = () => {
 	}, [])
 
     useEffect(() => {
-        console.log("geocoder effect")
 		const setRouteDetails = (distance: number, duration: number) => setJobDetails({...jobDetails, distance, duration})
         if (jobDetails.pickup_location.latitude && jobDetails.dropoff_location.latitude && routeMap.map) {
 			const pickupLatLng = {
@@ -122,47 +171,75 @@ const EditJobPage = () => {
     }, [router.query])
 
     return (
-        <div>
-            <Header>
-				<JobTitle>
-					แก้ไขงาน <span>{jobDetails.pickup_location.province}</span>
-					<RightArrowLine />
-					<span>{jobDetails.dropoff_location.province}</span>
-				</JobTitle>
-			</Header>
-                {currentPage === "edit" ? 
-                    <>
-			            <Map id="route-map" />
-                        <JobFormStepOne changedField={changedField} setChangedField={setChangedField} />
-                        <SectionHeader>
-                            <div>ข้อมูลสินค้า</div> <Line />
-                        </SectionHeader>
-                        <JobFormStepTwo changedField={changedField} setChangedField={setChangedField} />
-                        <SectionHeader>
-                            <div>ข้อมูลรถบรรทุก</div> <Line />
-                        </SectionHeader>
-                        <JobFormStepThree changedField={changedField} setChangedField={setChangedField} />
-                        <FormActionsCustom>
-                            <SecondaryButton onClick={() => router.back()}>
-                                ยกเลิก
-                            </SecondaryButton>
-                            <PrimaryButton onClick={() => setCurrentPage("sample")}>ดูตัวอย่างงาน</PrimaryButton>
-			            </FormActionsCustom>
-                    </> :
-                    <JobDetailsContainer>
-                        <JobDetailsSection 
-                            isShowCarrierDetails={false}
-                            isShowAutoPrice={false}
-                        />
-                        <FormActions>
-                            <SecondaryButton onClick={() => setCurrentPage("edit")}>
-                                กลับไปแก้ไข
-                            </SecondaryButton>
-                            <PrimaryButton onClick={handleUpdateJob}>ยืนยันแก้ไขงาน</PrimaryButton>
-                        </FormActions>
-                    </JobDetailsContainer> 
-                } 
-        </div>
+        <EditJobContainer>
+            <BreakpointMD>
+                <Header>
+                    <JobTitle>
+                        แก้ไขงาน <span>{jobDetails.pickup_location.province}</span>
+                        <RightArrowLine />
+                        <span>{jobDetails.dropoff_location.province}</span>
+                    </JobTitle>
+                </Header>
+            </BreakpointMD>
+            <BreakpointLG>
+                <DesktopHeader>
+                    <HeaderTitleCustom>
+                        งาน <span>{jobDetails.pickup_location.province}</span>
+                        <RightArrowLine />
+                        <span>{jobDetails.dropoff_location.province}</span>
+                    </HeaderTitleCustom>
+				</DesktopHeader>
+            </BreakpointLG>
+            <MapContainer>
+                <Map id="route-map" />
+            </MapContainer>
+            {currentPage === "edit" ? 
+                <>
+                    <JobFormStepOne 
+                        changedField={changedField} 
+                        setChangedField={setChangedField} 
+                        mapID={{
+                            pickupMapID: "pickup-map-desktop",
+                            dropoffMapID: "dropoff-map-desktop",
+                            pickupAutoCompleteID: "pickup-atc-desktop",
+                            dropoffAutoCompleteID: "dropoff-atc-desktop"
+                        }}  
+                    />
+                    <JobFormContainer>
+                        <div>
+                            <SectionHeader>
+                                <div>ข้อมูลสินค้า</div> <Line />
+                            </SectionHeader>
+                            <JobFormStepTwo changedField={changedField} setChangedField={setChangedField} />
+                        </div>
+                        <div>
+                            <SectionHeader>
+                                <div>ข้อมูลรถบรรทุก</div> <Line />
+                            </SectionHeader>
+                            <JobFormStepThree changedField={changedField} setChangedField={setChangedField} />
+                            <FormActionsCustom>
+                                <SecondaryButton onClick={() => router.back()}>
+                                    ยกเลิก
+                                </SecondaryButton>
+                                <PrimaryButton onClick={() => setCurrentPage("sample")}>ดูตัวอย่างงาน</PrimaryButton>
+                            </FormActionsCustom>
+                        </div>
+                    </JobFormContainer>
+                </> :
+                <JobDetailsContainer>
+                    <JobDetailsSection 
+                        isShowCarrierDetails={false}
+                        isShowAutoPrice={false}
+                    />
+                    <FormActions>
+                        <SecondaryButton onClick={() => setCurrentPage("edit")}>
+                            กลับไปแก้ไข
+                        </SecondaryButton>
+                        <PrimaryButton onClick={handleUpdateJob}>ยืนยันแก้ไขงาน</PrimaryButton>
+                    </FormActions>
+                </JobDetailsContainer> 
+            } 
+        </EditJobContainer>
     )
 }
 

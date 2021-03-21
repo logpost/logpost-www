@@ -13,12 +13,8 @@ import { JobFormInterface } from '../../entities/interface/job';
 import breakpointGenerator from '../utilities/breakpoint';
 
 const FormInputContainerCustom = styled(FormInputContainer)`
-	> div {
-		padding-top: 1.8rem;
-
-		> div:not(:first-child) {
-			margin-top: 2rem;
-		}
+	> div > div:not(:first-child) {
+		margin-top: 2rem;
 	}
 
 	${breakpointGenerator({
@@ -29,7 +25,7 @@ const FormInputContainerCustom = styled(FormInputContainer)`
 			max-width: 110rem;
 
 			> div:not(:first-child) {
-				padding: 1.8rem 2.6rem;
+				padding: 0 2.6rem;
 			}
 
 			> div:last-child {
