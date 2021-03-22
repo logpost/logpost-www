@@ -154,7 +154,8 @@ const DesktopTable = (props: JobTableInterface) => {
 			<TableContainer>
 				<TableComponent
 					tableStyle={{
-						gap: "18px"
+						gap: "18px",
+						minWidth: "96rem"
 					}}
 					RowStyle={TableRowStyle}
 					HeaderStyle={TableHeaderStyle}

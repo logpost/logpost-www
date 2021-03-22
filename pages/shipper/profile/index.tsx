@@ -74,7 +74,7 @@ const ShipperProfilePage = () => {
 			<NavigationBar activeIndex={2} />
 			<BreakpointMD>
 				<Header enabledSetting={true}>
-					{shipperInfo.displayName}
+					{shipperInfo?.displayName}
 				</Header>
 				<ProfileStatusContainer>
 					<ProfileStatus

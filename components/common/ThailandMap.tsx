@@ -1029,7 +1029,7 @@ const ThailandMap = (props: ThailandMapInterface) => {
             </MapOption>
             {
                 THAILAND_PROVINCES.map((zone) => (
-                    <zone.name>
+                    <zone.name key={zone.name}>
                         {
                             zone.provinces.map((province) => {
                                 const noOfJob = jobInProvince[showJob][province.nameTH]
@@ -1038,9 +1038,11 @@ const ThailandMap = (props: ThailandMapInterface) => {
                                 const isProvincePickupDropoff = (isProvincePickup && isProvinceDropoff)
                                 return (
                                     <TooltipCustom 
+                                        key={province.nameTH}
                                         title={ isProvincePickupDropoff ? "ต้นทาง / ปลายทาง" : (isProvincePickup ? "ต้นทาง" : (isProvinceDropoff ? "ปลายทาง" : province.nameTH))} 
                                         open={isProvincePickup || isProvinceDropoff || province.nameTH === hoverProvince}
-                                        arrow>
+                                        arrow
+                                    >
                                         <Province 
                                             id={province.id} 
                                             onClick={() => handleSelectProvince(province.nameTH)} 

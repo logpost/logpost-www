@@ -70,8 +70,9 @@ export interface TableComponentInterface {
 		format?: (index: number, item?: (TruckTable | DriverTable | JobDetails)) => ReactElement
 	}[]
 	tableStyle?: {
-		width?: string,
-		gap: string
+		minWidth?: string
+		width?: string
+		gap?: string
 	}
 	RowStyle?: StyledComponent<"tr", any, {}>
 	HeaderStyle?: StyledComponent<"tr", any, {}>

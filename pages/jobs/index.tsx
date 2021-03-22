@@ -109,6 +109,7 @@ const AddJob = styled.button`
 const JobCardContainer = styled.div<JobCardContainerInterface>`
 	margin-top: ${props => props.expand ? 0 : "6rem"};
 	margin-bottom: ${(props) => props.isFloat ? "6.2rem" : 0};
+	height: fit-content;
 
 	${breakpointGenerator({
 		large: css`
@@ -270,7 +271,6 @@ const JobsPage = () => {
 			countPickupProvince[pickup_location] += 1
 			countDropoffProvince[dropoff_location] += 1
 		})
-		console.log(countPickupProvince, countDropoffProvince)
 		setCountJobInProvince({
 			pickup: countPickupProvince,
 			dropoff: countDropoffProvince

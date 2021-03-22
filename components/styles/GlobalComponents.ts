@@ -196,6 +196,12 @@ export const DetailRow = styled.div`
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(16.2rem, 1fr));
 	grid-gap: 1.6rem;
+
+	${breakpointGenerator({
+		large: css`
+			grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+		`
+	})}
 `
 
 export const Detail = styled.div`

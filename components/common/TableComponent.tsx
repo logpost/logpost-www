@@ -19,6 +19,7 @@ interface TableContainerInterface {
 interface TableInterface {
 	width?: string,
 	gap?: string
+	minWidth?: string
 }
 
 interface HeaderInterface {
@@ -39,7 +40,7 @@ const Table = styled.table<TableInterface>`
 	-webkit-border-horizontal-spacing: 0;
 	table-layout: fixed;
 	width: ${props => props.width ? props.width : "100%"};
-	min-width: 96rem;
+	min-width: ${props => props.minWidth ? props.minWidth : 0};
 
 	${props => props.gap && 
 		css`

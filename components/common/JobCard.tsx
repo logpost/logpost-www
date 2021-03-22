@@ -31,6 +31,7 @@ const CardContainer = styled.div`
 	font-size: 14px;
 	font-weight: 500;
     overflow: hidden;
+	height: fit-content;
 
 	&:nth-child(even) {
 		background-color: hsl(220, 27%, 96%);

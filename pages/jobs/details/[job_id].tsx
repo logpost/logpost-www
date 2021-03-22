@@ -34,14 +34,18 @@ import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoin
 import breakpointGenerator from '../../../components/utilities/breakpoint';
 
 const MapContainer = styled.div`
-	padding: 1.8rem 2.6rem 0;
-	max-width: 110rem;
+	${breakpointGenerator({
+		large: css`
+			padding: 1.8rem 2.6rem 0;
+			max-width: 110rem;
+		`
+	})}
 `
 
 const ContentContainer = styled.div`
 	${HeaderTitle} {
 		color: hsl(212, 28%, 28%);
-
+		
 		> span {
 			overflow: hidden;
 			text-overflow: ellipsis;
@@ -99,7 +103,8 @@ const ModalContent = styled.div`
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	white-space: nowrap;
+	text-align: center;
+	/* white-space: nowrap; */
 	padding: 0 2rem;
 
 	> *:not(:last-child) {
@@ -112,12 +117,13 @@ const ModalContent = styled.div`
 	}
 
 	${FormActions} {
-		${SecondaryButton}, ${PrimaryButton}	{
+		${SecondaryButton}, ${PrimaryButton} {
 			font-size: 1.8rem;
 			box-shadow: none;
 			height: fit-content;
 			font-weight: 500;
-			padding: 0.4rem 2rem;
+			padding: 0.8rem 2rem;
+			border-radius: 6px;
 		}
 	}
 `
@@ -238,12 +244,12 @@ const JobDetailPage = () => {
                 setJobDetails(jobDocument)
 				initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
 					const pickupLatLng = {
-						latitude: jobDetails.pickup_location.latitude,
-						longitude: jobDetails.pickup_location.longitude
+						latitude: jobDocument.pickup_location.latitude,
+						longitude: jobDocument.pickup_location.longitude
 					}
 					const dropoffLatLng = {
-						latitude: jobDetails.dropoff_location.latitude,
-						longitude: jobDetails.dropoff_location.longitude
+						latitude: jobDocument.dropoff_location.latitude,
+						longitude: jobDocument.dropoff_location.longitude
 					} 
 					route(pickupLatLng, dropoffLatLng, routeMap)
 				})
@@ -281,16 +287,16 @@ const JobDetailPage = () => {
 					</URLContainer>
 				</DriverURLContainer>
 			)}
+			<BreakpointMD>
+				<Header>
+					<JobTitle>
+						งาน <span>{jobDetails.pickup_location.province}</span>
+						<RightArrowLine />
+						<span>{jobDetails.dropoff_location.province}</span>
+					</JobTitle>
+				</Header>
+			</BreakpointMD>
 			<ContentContainer>
-				<BreakpointMD>
-					<Header>
-						<JobTitle>
-							งาน <span>{jobDetails.pickup_location.province}</span>
-							<RightArrowLine />
-							<span>{jobDetails.dropoff_location.province}</span>
-						</JobTitle>
-					</Header>
-				</BreakpointMD>
 				<BreakpointLG>
 					<DesktopHeader>
 						<HeaderTitle>
@@ -337,17 +343,6 @@ const JobDetailPage = () => {
 										<PrimaryButton onClick={handleDeleteJob}>ยืนยันลบงาน</PrimaryButton>
 									</FormActions>
 								</>}
-								{toggleModal === "pick-job" && <>
-									<WarningIcon />
-									<span>
-										ยืนยันรับงาน
-										<b>{jobDetails.pickup_location.province} ไป {jobDetails.dropoff_location.province} หรือไม่ ?</b>
-									</span>
-									<FormActions>
-										<SecondaryButton onClick={() => setToggleModal("")}>ย้อนกลับ</SecondaryButton>
-										<PrimaryButton onClick={() => router.push(`/jobs/get/${jobID}`)}>ยืนยันรับงาน</PrimaryButton>
-									</FormActions>
-								</>}
 							</ModalContent>
 						</Modal>
 						{isShipperCanEditDetails && (
@@ -367,7 +362,7 @@ const JobDetailPage = () => {
 						)}
 						{isCarrierCanGetJob && (
 							<ButtonContainer>
-								<PrimaryButtonCustom onClick={() => setToggleModal("pick-job")}>
+								<PrimaryButtonCustom onClick={() => router.push(`/jobs/get/${jobID}`)}>
 									รับงาน
 								</PrimaryButtonCustom>
 							</ButtonContainer>

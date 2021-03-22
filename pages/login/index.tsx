@@ -16,6 +16,8 @@ import breakpointGenerator from "../../components/utilities/breakpoint";
 import { BreakpointLG, BreakpointMD } from "../../components/styles/Breakpoints";
 
 const BackgroundCustom = styled(Background)`
+    width: 100%;
+
     ${
         breakpointGenerator({
             large: css`

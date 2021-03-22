@@ -31,7 +31,8 @@ const ModalContent = styled.div`
 	border-radius: 6px;
 	font-size: 1.8rem;
 	max-width: 40rem;
-	height: 90%;
+	/* height: 90%; */
+	height: fit-content;
 	width: 86%;
 `
 
