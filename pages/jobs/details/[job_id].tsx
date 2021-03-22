@@ -32,6 +32,7 @@ import {
 import DesktopHeader from '../../../components/common/DesktopHeader';
 import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints';
 import breakpointGenerator from '../../../components/utilities/breakpoint';
+import JobSuggestion from '../../../components/common/JobSuggestion';
 
 const MapContainer = styled.div`
 	${breakpointGenerator({
@@ -65,7 +66,7 @@ const ContentContainer = styled.div`
 		large: css`
 			margin-left: 7rem;
 
-			> div:last-child {
+			> div:first-child > div:last-child {
 				display: grid;
 				grid-template-columns: 1fr 1fr;
 				max-width: 110rem;
@@ -297,78 +298,83 @@ const JobDetailPage = () => {
 				</Header>
 			</BreakpointMD>
 			<ContentContainer>
-				<BreakpointLG>
-					<DesktopHeader>
-						<HeaderTitle>
-							งาน <span>{jobDetails.pickup_location.province}</span>
-							<RightArrowLine />
-							<span>{jobDetails.dropoff_location.province}</span>
-						</HeaderTitle>
-					</DesktopHeader>
-				</BreakpointLG>
 				<div>
-					<MapContainer>
-						<Map id="route-map" />
-					</MapContainer>
-					<JobDetailsContainer>
-						{jobDetails.status && (
-							<Progress
-								currentStep={JOB_STATUS_CODE[jobDetails.status]?.status_name}
-								nextStep={JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}
-								percent={JOB_STATUS_CODE[jobDetails.status]?.progress / 6}
-								label="สถานะ"
+					<BreakpointLG>
+						<DesktopHeader>
+							<HeaderTitle>
+								งาน <span>{jobDetails.pickup_location.province}</span>
+								<RightArrowLine />
+								<span>{jobDetails.dropoff_location.province}</span>
+							</HeaderTitle>
+						</DesktopHeader>
+					</BreakpointLG>
+					<div>
+						<MapContainer>
+							<Map id="route-map" />
+						</MapContainer>
+						<JobDetailsContainer>
+							{jobDetails.status && (
+								<Progress
+									currentStep={JOB_STATUS_CODE[jobDetails.status]?.status_name}
+									nextStep={JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}
+									percent={JOB_STATUS_CODE[jobDetails.status]?.progress / 6}
+									label="สถานะ"
+								/>
+							)}
+							<JobDetailsSection 
+								isShowCarrierDetails={jobDetails.status > 100}
+								isShowAutoPrice={userInfo?.role === "carrier"}
 							/>
-						)}
-						<JobDetailsSection 
-							isShowCarrierDetails={jobDetails.status > 100}
-							isShowAutoPrice={userInfo?.role === "carrier"}
-						/>
-						<Modal toggle={toggleModal !== ""} setToggle={() => setToggleModal("")}>
-							<ModalContent>
-								{toggleModal === "start-job" && <>
-									<WarningIcon />
-									<span>เมื่อเริ่มงานแล้วจะ<b>ไม่สามารถ</b><br />- แก้ไขพนักงานขับรถ<br />- ยกเลิกงาน<br /></span>
-									<b>ยืนยันเริ่มงานหรือไม่ ?</b>
-									<FormActions>
-										<SecondaryButton onClick={() => setToggleModal("")}>ย้อนกลับ</SecondaryButton>
-										<PrimaryButton onClick={startJob}>ยืนยันเริ่มงาน</PrimaryButton>
-									</FormActions>
-								</>}
-								{toggleModal === "delete-job" && <>
-									<WarningIcon />
-									<span>เมื่อลบงานแล้วจะ<b>ไม่สามารถย้อนกลับได้</b></span>
-									<b>ยืนยันลบงาน {jobDetails.pickup_location.province} ไป {jobDetails.dropoff_location.province} หรือไม่ ?</b>
-									<FormActions>
-										<SecondaryButton onClick={() => setToggleModal("")}>ย้อนกลับ</SecondaryButton>
-										<PrimaryButton onClick={handleDeleteJob}>ยืนยันลบงาน</PrimaryButton>
-									</FormActions>
-								</>}
-							</ModalContent>
-						</Modal>
-						{isShipperCanEditDetails && (
-							<ButtonContainer>
-								<SecondaryButtonCustom onClick={() => setToggleModal("delete-job")}>ลบงาน</SecondaryButtonCustom>
-								<SecondaryButtonCustom onClick={() => router.push(`/jobs/edit/${jobDetails.job_id}`)}>แก้ไขงาน</SecondaryButtonCustom>
-							</ButtonContainer>
-						)}
-						{isCarrierCanEditDetails && (
-							<ButtonContainer>
-								<SecondaryButtonCustom>ยกเลิก</SecondaryButtonCustom>
-								<SecondaryButtonCustom>แก้ไข</SecondaryButtonCustom>
-								<PrimaryButtonCustom onClick={() => setToggleModal("start-job")}>
-									เริ่มงาน
-								</PrimaryButtonCustom>
-							</ButtonContainer>
-						)}
-						{isCarrierCanGetJob && (
-							<ButtonContainer>
-								<PrimaryButtonCustom onClick={() => router.push(`/jobs/get/${jobID}`)}>
-									รับงาน
-								</PrimaryButtonCustom>
-							</ButtonContainer>
-						)}
-					</JobDetailsContainer>
+							<Modal toggle={toggleModal !== ""} setToggle={() => setToggleModal("")}>
+								<ModalContent>
+									{toggleModal === "start-job" && <>
+										<WarningIcon />
+										<span>เมื่อเริ่มงานแล้วจะ<b>ไม่สามารถ</b><br />- แก้ไขพนักงานขับรถ<br />- ยกเลิกงาน<br /></span>
+										<b>ยืนยันเริ่มงานหรือไม่ ?</b>
+										<FormActions>
+											<SecondaryButton onClick={() => setToggleModal("")}>ย้อนกลับ</SecondaryButton>
+											<PrimaryButton onClick={startJob}>ยืนยันเริ่มงาน</PrimaryButton>
+										</FormActions>
+									</>}
+									{toggleModal === "delete-job" && <>
+										<WarningIcon />
+										<span>เมื่อลบงานแล้วจะ<b>ไม่สามารถย้อนกลับได้</b></span>
+										<b>ยืนยันลบงาน {jobDetails.pickup_location.province} ไป {jobDetails.dropoff_location.province} หรือไม่ ?</b>
+										<FormActions>
+											<SecondaryButton onClick={() => setToggleModal("")}>ย้อนกลับ</SecondaryButton>
+											<PrimaryButton onClick={handleDeleteJob}>ยืนยันลบงาน</PrimaryButton>
+										</FormActions>
+									</>}
+								</ModalContent>
+							</Modal>
+							{isShipperCanEditDetails && (
+								<ButtonContainer>
+									<SecondaryButtonCustom onClick={() => setToggleModal("delete-job")}>ลบงาน</SecondaryButtonCustom>
+									<SecondaryButtonCustom onClick={() => router.push(`/jobs/edit/${jobDetails.job_id}`)}>แก้ไขงาน</SecondaryButtonCustom>
+								</ButtonContainer>
+							)}
+							{isCarrierCanEditDetails && (
+								<ButtonContainer>
+									<SecondaryButtonCustom>ยกเลิก</SecondaryButtonCustom>
+									<SecondaryButtonCustom>แก้ไข</SecondaryButtonCustom>
+									<PrimaryButtonCustom onClick={() => setToggleModal("start-job")}>
+										เริ่มงาน
+									</PrimaryButtonCustom>
+								</ButtonContainer>
+							)}
+							{isCarrierCanGetJob && (
+								<ButtonContainer>
+									<PrimaryButtonCustom onClick={() => router.push(`/jobs/get/${jobID}`)}>
+										รับงานนี้
+									</PrimaryButtonCustom>
+								</ButtonContainer>
+							)}
+						</JobDetailsContainer>
+					</div>
 				</div>
+				{jobID &&
+					<JobSuggestion selectedJobID={jobID} />
+				}
 			</ContentContainer>
 		</PageContainer>
 	)
