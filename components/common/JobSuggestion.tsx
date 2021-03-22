@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import { Detail, DetailRow, FilterContainer, FilterLabel, FormActions, JobTitle, NumberOfJobs, PrimaryButton, SecondaryButton } from '../styles/GlobalComponents'
@@ -5,6 +6,7 @@ import { selectPositionOnMap } from '../utilities/googlemaps'
 import { dateFormatter, timeFormatter } from '../utilities/helper'
 import { DownArrowLine, ProductIcon, RightArrow, RightArrowLine, UpArrowLine, WeightIcon } from './Icons'
 import InputComponent from './InputComponent'
+import JobSequence from './JobSequence'
 import Modal from './Modal'
 
 const MOCKUP_SUGGEST = {
@@ -277,96 +279,8 @@ const Map = styled.div`
 	width: 100%;
 `
 
-const Number = styled.div`
-    min-width: 2.6rem;
-    min-height: 2.6rem;
-    width: 2.6rem;
-    height: 2.6rem;
-    font-size: 1.4rem;
-    color: white;
-    background: hsl(212, 28%, 28%);
-    border-radius: 40rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`
-
 const SuggestContainer = styled.div`
     display: grid;
-`
-
-const JobHeader = styled.div`
-    display: flex;
-
-    > div:last-child {
-        margin-left: 1.4rem;
-        font-weight: 700;
-        color: hsl(16, 56%, 51%);
-        border: 2px solid hsl(16, 56%, 51%);
-        border-radius: 4px;
-        padding: 0.4rem 1.2rem;
-        width: fit-content;
-        font-size: 1.4rem;
-        white-space: nowrap;
-    }
-
-    ${JobTitle} {
-        font-size: 1.6rem;
-        margin-left: 1rem;
-
-        svg {
-            height: 18px;
-            width: 18px;
-
-            path {
-                fill: hsl(212, 28%, 28%);
-            }
-        }
-    }
-`
-
-const JobContent = styled.div`
-    margin: 1rem 0;
-    padding: 0 2rem;
-
-    &:first-child {
-        ${Number} {
-            background: hsl(16, 56%, 51%);
-        }
-    }
-
-    ${DetailRow} {
-        margin-top: 1rem;
-        margin-left: 4rem;
-        max-width: 48rem;
-        grid-template-columns: repeat(auto-fit, minmax(22rem,1fr));
-        grid-gap: 1rem;
-    }
-
-    ${Detail} {
-        white-space: nowrap;
-        display: flex;
-        align-items: center;
-
-        span {
-            margin: 0 1.2rem;
-            color: hsl(212, 28%, 28%);
-        }
-        
-        svg {
-            margin-right: 1ch;
-            min-height: 20px;
-            min-width: 20px;
-        }
-
-        span:nth-child(2) {
-            color: hsl(212, 28%, 28%);
-        } 
-    }
-`
-
-const SuggestJob = styled.div`
-
 `
 
 const Collapsible = styled.div`
@@ -431,14 +345,6 @@ const VerticalLine = styled.div`
     margin: 0 0.4rem;
 `;
 
-const HorizontalLine = styled.div`
-	height: 0.2rem;
-	border-radius: 10rem;
-	background-color: hsl(212, 28%, 88%);
-	width: 100%;
-    margin-top: 1rem;
-`
-
 const ButtonContainer = styled.div`
     display: flex;
     justify-content: space-around;
@@ -469,6 +375,7 @@ interface JobSuggestion {
 
 const JobSuggestion = (props) => {
     const { selectedJobID } = props
+    const router = useRouter()
     const [hop, setHop] = useState(2)
     const [toggleOriginModal, setToggleOriginModal] = useState(false)
     const [originLocation, setOriginLocation] = useState({
@@ -477,69 +384,6 @@ const JobSuggestion = (props) => {
     })
     const [tempLocation, setTempLocation] = useState<google.maps.places.PlaceResult | google.maps.GeocoderResult>()
     const [collapsible, setCollapsible] = useState({})
-
-    const getJobSequence = (noSequence: number) => {
-        const temp = Array(noSequence).fill(0).map((_, index) => {
-            const job = MOCKUP_SUGGEST.history[index]
-            return (
-                <JobContent>
-                    <JobHeader>
-                        <Number>{index + 1}</Number>
-                        <JobTitle>
-                            <span>{job.pickup_location.province}</span>
-                            <RightArrowLine />
-                            <span>{job.dropoff_location.province}</span>
-                        </JobTitle>
-                        {index === 0 && <div>งานที่กำลังดู</div>}
-                    </JobHeader>
-                    <>
-						<DetailRow>
-                            <Detail>
-                                <UpArrowLine /> ขึ้นสินค้า <span>{job.pickup_location.province}</span>
-                            </Detail>
-                            <Detail>
-                                เวลา <span>{dateFormatter(job.pickup_date)} {timeFormatter(job.pickup_date)}</span>
-                            </Detail>
-                        </DetailRow>
-                        <DetailRow>
-                            <Detail>
-                                <DownArrowLine /> ลงสินค้า <span>{job.dropoff_location.province}</span> 
-                            </Detail>
-                            <Detail>
-                                เวลา <span> {dateFormatter(job.dropoff_date)} {timeFormatter(job.dropoff_date)}</span>
-                            </Detail>
-                        </DetailRow>
-						<DetailRow>
-							<Detail>
-								<ProductIcon /> สินค้า <span>{job.product_type}</span>
-							</Detail>
-							<Detail>
-								<WeightIcon /> น้ำหนัก <span>{job.weight}</span> ตัน
-							</Detail>
-						</DetailRow>
-						{
-							job.waiting_time > 0 && 
-							<Detail>
-								ขึ้นลงสินค้า <span>{job.waiting_time}</span> <span>ชั่วโมง</span>
-							</Detail>
-						}
-						{
-							job.description && 
-							<Detail>
-								คำอธิบาย <span>{job.description}</span>
-							</Detail>
-						}
-					</>
-                    <HorizontalLine />
-                </JobContent>
-            )
-        })
-        return (
-            <SuggestJob>
-                {temp}
-            </SuggestJob>
-        )
-    }
 
     const initOriginMap = () => {
         setToggleOriginModal(true)
@@ -599,6 +443,7 @@ const JobSuggestion = (props) => {
                         const endDate = new Date(summarySequence.end_date)
                         const startDate = new Date(summarySequence.start_date)
                         const diffDay = Math.ceil(Math.abs((endDate as any) - (startDate as any)) / (1000 * 60 * 60 * 24))
+                        const groupJob = []
                         if (noOfJob !== 1) {
                             return (
                                 <Collapsible>
@@ -607,7 +452,16 @@ const JobSuggestion = (props) => {
                                         <RightArrow />
                                     </Header>
                                     {collapsible[index] && <>
-                                        {getJobSequence(noOfJob)}
+                                        {
+                                            Array(noOfJob).fill(0).map((_, index) => {
+                                                const job = MOCKUP_SUGGEST.history[index]
+                                                groupJob.push(job.job_id)
+                                                return (<JobSequence 
+                                                    index={index}
+                                                    job={job}
+                                                />)
+                                            })
+                                        }
                                         <PriceDetailsContainer>
                                             <PriceItem>
                                                 ราคาเสนอ
@@ -636,7 +490,7 @@ const JobSuggestion = (props) => {
                                                 <span>เดินทางรวม {diffDay} วัน</span>
                                                 <span>กำไรเพิ่มขึ้น {Math.floor(summarySequence.profit - MOCKUP_SUGGEST.summary[0].profit).toLocaleString()} บาท!</span>
                                             </div>
-                                            <PrimaryButton>
+                                            <PrimaryButton onClick={() => router.push(`/jobs/get/${groupJob}`)}>
                                                 รับ {noOfJob} งานนี้
                                             </PrimaryButton>
                                         </ButtonContainer>

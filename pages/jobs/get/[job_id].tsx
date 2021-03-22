@@ -36,6 +36,7 @@ import useAlert from "../../../hooks/useAlert";
 import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoints";
 import DesktopHeader from "../../../components/common/DesktopHeader";
 import breakpointGenerator from "../../../components/utilities/breakpoint";
+import id from "date-fns/esm/locale/id/index.js";
 
 const FormActionsCustom = styled(FormActions)`
     ${PrimaryButton}, ${SecondaryButton} {
@@ -53,6 +54,11 @@ const FormActionsCustom = styled(FormActions)`
 const JobDetails = styled.div`
     padding: 0 2rem;
     margin-bottom: 8rem;
+
+	> div:first-child {
+		display: flex;
+		flex-direction: column;
+	}
 
     ${Detail} {
         white-space: nowrap;
@@ -160,7 +166,8 @@ const ContentContainer = styled.div`
 const GetJobPage = () => {
 	const router = useRouter()
 	const jobID = router.query.job_id as string
-	const [jobDetails, setJobDetails] = useRecoilState(jobDetailsSelector)
+	const [jobDetails, setJobDetails] = useState([])
+	// const [jobDetails, setJobDetails] = useRecoilState(jobDetailsSelector)
 	const [trucks, setTrucks] = useRecoilState(trucksState)
 	const [drivers, setDrivers] = useRecoilState(driversState)
 	const [toggleDriverModal, setToggleDriverModal] = useState(false)
@@ -173,6 +180,8 @@ const GetJobPage = () => {
 		driver: null,
 	})
 	const { setAlert } = useAlert()
+
+	console.log(jobDetails)
 
 	const driverColumns = [
 		{
@@ -245,7 +254,7 @@ const GetJobPage = () => {
 		const validDrivers = []
 		drivers.map((driver) => {
 			const { name, driver_license_type, status } = driver
-			const matchDriverLicenseType = (driver_license_type === jobDetails.carrier_specification.driver.driver_license_type)
+			const matchDriverLicenseType = (driver_license_type === jobDetails[0].carrier_specification.driver.driver_license_type)
 			if (matchDriverLicenseType && (status === 100)) {
 				driverTableData.push({
 					name,
@@ -263,8 +272,8 @@ const GetJobPage = () => {
 		const validTrucks = []
 		trucks.map((truck) => {
 			const { license_number, property, status } = truck
-			const matchType = (property.type === jobDetails.carrier_specification.truck.property.type) 
-			const matchOption = (property.option === jobDetails.carrier_specification.truck.property.option)
+			const matchType = (property.type === jobDetails[0].carrier_specification.truck.property.type) 
+			const matchOption = (property.option === jobDetails[0].carrier_specification.truck.property.option)
 			if (matchType && matchOption && (status === 100)) {
 				truckTableData.push({
 					license_number,
@@ -289,9 +298,11 @@ const GetJobPage = () => {
 	}
 
 	useEffect(() => {
-		if (jobID && !Boolean(jobDetails.shipper_id)) {
-			getJobDetailsByID(jobID, (jobDetails: JobDocument) => {
-				setJobDetails(jobDetails)
+		if (jobID && !Boolean(jobDetails[0]?.shipper_id)) {
+			jobID.split(",").map((job) => {
+				getJobDetailsByID(job, (jobDocument: JobDocument) => {
+					jobDetails.push(jobDocument)
+				})
 			})
 		}
 		getDriver((drivers: DriverDocument[]) => {
@@ -322,9 +333,15 @@ const GetJobPage = () => {
 			<BreakpointMD>
 				<Header>
 					<JobTitle>
-						รับงาน <span>{jobDetails.pickup_location.province}</span>
-						<RightArrowLine />
-						<span>{jobDetails.dropoff_location.province}</span>
+						{
+							jobDetails.length === 1 ? <> 
+								รับงาน <span>{jobDetails[0].pickup_location.province}</span>
+								<RightArrowLine />
+								<span>{jobDetails[0].dropoff_location.province}</span>
+							</> : <>
+								รับงาน {jobDetails.length} งาน
+							</>
+						}
 					</JobTitle>
 				</Header>
 			</BreakpointMD>
@@ -332,18 +349,37 @@ const GetJobPage = () => {
 				<BreakpointLG>
 					<DesktopHeader>
 						<HeaderTitle>
-							รับงาน <span>{jobDetails.pickup_location.province}</span>
-							<RightArrowLine />
-							<span>{jobDetails.dropoff_location.province}</span>
+							{
+								jobDetails.length === 1 ? <> 
+									รับงาน <span>{jobDetails[0].pickup_location.province}</span>
+									<RightArrowLine />
+									<span>{jobDetails[0].dropoff_location.province}</span>
+								</> : <>
+									รับงาน {jobDetails.length} งาน
+								</>
+							}
 						</HeaderTitle>
 					</DesktopHeader>
 				</BreakpointLG>
 				<JobDetails>
-					<JobDetailsSection
-						isShowCarrierDetails={false}
-						isShowAutoPrice={false}
-						isShowFooterDetails={false}
-					/>
+					<div>
+					{
+						jobDetails.map((job, index) => {
+							let isShowTruckDetails = false
+							if (index + 1 === jobDetails.length) {
+								isShowTruckDetails = true
+							}
+							return (<JobDetailsSection
+								number={index + 1}
+								jobDetails={job}
+								isShowCarrierDetails={false}
+								isShowAutoPrice={false}
+								isShowFooterDetails={false}
+								isShowTruckDetails={isShowTruckDetails}
+							/>)
+						})
+					}
+					</div>
 					<div>
 						<Warning>เลือกพนักงานและรถที่ใช้รับงาน</Warning>
 						<CarrierDetailsContainer>
