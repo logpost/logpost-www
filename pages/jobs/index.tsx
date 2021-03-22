@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import JobCard from "../../components/common/JobCard"
 import { DownArrowLine, FilterIcon, OptionIcon, PlusIcon, PriceIcon, SearchIcon, TruckIcon, UpArrowLine, WeightIcon } from "../../components/common/Icons"
 import { FilterContainer, HeaderTitle, PrimaryButton, HeaderTitleContainer } from "../../components/styles/GlobalComponents"
@@ -21,6 +21,7 @@ import SelectComponent from "../../components/common/SelectComponent"
 import ThailandMaps from "../../components/common/ThailandMap"
 import { countJobInProvinceState } from "../../store/atoms/jobDocumentState"
 import ThailandMap from "../../components/common/ThailandMap"
+import breakpointGenerator from "../../components/utilities/breakpoint"
 
 interface FilterContainerInterface {
 	expand: boolean
@@ -108,6 +109,17 @@ const AddJob = styled.button`
 const JobCardContainer = styled.div<JobCardContainerInterface>`
 	margin-top: ${props => props.expand ? 0 : "6rem"};
 	margin-bottom: ${(props) => props.isFloat ? "6.2rem" : 0};
+
+	${breakpointGenerator({
+		large: css`
+			margin: 2rem 0;
+			display: grid;
+			grid-gap: 2.5rem;
+			padding: 1rem 4rem 0 2rem;
+			max-height: 66rem;
+			overflow-y: scroll;
+		`
+	})}
 `
 
 const FiltersContainer = styled.div<FilterContainerInterface>`
@@ -120,12 +132,17 @@ const FiltersContainer = styled.div<FilterContainerInterface>`
 `
 
 const AllJobContainer = styled.div`
-	width: 100%;
+	background: hsl(228, 24%, 96%);
 `
 
 const ContentContainer = styled.div`
 	display: grid;
-	grid-template-columns: 48rem 1fr;
+	height: 100%;
+	grid-template-columns: 45rem 1fr;
+`
+
+const BreakpointLGCustom = styled(BreakpointLG)`
+	width: calc(100% - 7rem);
 `
 
 const JobsPage = () => {
@@ -304,47 +321,54 @@ const JobsPage = () => {
 						<FiltersComponent filterList={filterList} alwaysExpand={true} />
 					</FiltersContainer>
 				}
+				<JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
+					{jobs.map((job, index) => {
+						return <JobCard key={index} origin="jobs-page" details={job} />
+					})}
+				</JobCardContainer>	
 			</BreakpointMD>
-			<AllJobContainer>
-				<DesktopHeader>
-					<HeaderTitleContainer>
-						<HeaderTitle>
-							งานทั้งหมด
-						</HeaderTitle>
-					<PrimaryButton onClick={() => router.push("/jobs/add")}>สร้างงานใหม่</PrimaryButton>
-					</HeaderTitleContainer>
-					<FiltersComponent 
-						filterList={{
-							...filterList,
-							0: [{
-								type: "searchbar",
-								placeholder: "ค้นหาจังหวัด สินค้า ประเภทรถ ฯลฯ",
-								onChange: setFilterWord
-							}, ...filterList[0]]
-						}} 
-					/>
-				</DesktopHeader>
-				<ContentContainer>
-					<ThailandMap
-						provinceFilter={{
-							pickup: jobFilters.pickup_province,
-							dropoff: jobFilters.dropoff_province
-						}} 
-						setProvinceFilter={(value: {
-							pickup: string,
-							dropoff: string
-						}) => setJobFilters({...jobFilters, 
-							pickup_province: value.pickup,
-							dropoff_province: value.dropoff
-						})}
-					/>
-					<JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
-						{jobs.map((job, index) => {
-							return <JobCard key={index} origin="jobs-page" details={job} />
-						})}
-					</JobCardContainer>
-				</ContentContainer>
-			</AllJobContainer>
+			<BreakpointLGCustom>
+				<AllJobContainer>
+					<DesktopHeader>
+						<HeaderTitleContainer>
+							<HeaderTitle>
+								งานทั้งหมด
+							</HeaderTitle>
+						<PrimaryButton onClick={() => router.push("/jobs/add")}>สร้างงานใหม่</PrimaryButton>
+						</HeaderTitleContainer>
+						<FiltersComponent 
+							filterList={{
+								...filterList,
+								0: [{
+									type: "searchbar",
+									placeholder: "ค้นหาจังหวัด สินค้า ประเภทรถ ฯลฯ",
+									onChange: setFilterWord
+								}, ...filterList[0]]
+							}} 
+						/>
+					</DesktopHeader>
+					<ContentContainer>
+						<ThailandMap
+							provinceFilter={{
+								pickup: jobFilters.pickup_province,
+								dropoff: jobFilters.dropoff_province
+							}} 
+							setProvinceFilter={(value: {
+								pickup: string,
+								dropoff: string
+							}) => setJobFilters({...jobFilters, 
+								pickup_province: value.pickup,
+								dropoff_province: value.dropoff
+							})}
+						/>
+						<JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
+							{jobs.map((job, index) => {
+								return <JobCard key={index} origin="jobs-page" details={job} />
+							})}
+						</JobCardContainer>
+					</ContentContainer>
+				</AllJobContainer>
+			</BreakpointLGCustom>
 		</>
 	)
 }

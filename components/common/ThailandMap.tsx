@@ -92,6 +92,7 @@ const TooltipCustom = styled(props => (
 
 const Thailand = styled.div`
     position: relative;
+    height: 66rem;
     top: 2rem;
 
     ${NumberOfJobs} {

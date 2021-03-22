@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { useRouter } from "next/router"
 import { DetailRow, PrimaryButton, SecondaryButton, FormActions, TextButton } from "../styles/GlobalComponents"
 import {
@@ -17,6 +17,7 @@ import { dateFormatter, timeFormatter } from "../utilities/helper"
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../store/atoms/userInfoState'
 import Modal from "./Modal"
+import breakpointGenerator from "../utilities/breakpoint"
 
 interface JobCardInterface {
 	origin: string
@@ -29,6 +30,7 @@ const CardContainer = styled.div`
 	flex-direction: column;
 	font-size: 14px;
 	font-weight: 500;
+    overflow: hidden;
 
 	&:nth-child(even) {
 		background-color: hsl(220, 27%, 96%);
@@ -42,71 +44,24 @@ const CardContainer = styled.div`
 		grid-gap: 1.2rem 0.2rem;
 		margin-bottom: 1.2rem;
 	}
-`
 
-const BottomDetails = styled.div`
-	display: grid;
-	grid-template-columns: 2fr auto;
+	${breakpointGenerator({
+		large: css`
+			background-color: white;
+			box-shadow: 0px 0px 14px rgba(52, 71, 92, 0.1);
+			border-radius: 6px;
+			font-size: 1.5rem;
 
-	${DetailRow} {
-		display: flex;
-		flex-wrap: wrap;
-	}
-`
+			&:nth-child(even) {
+				background-color: white;
+			}
 
-const Locations = styled.div`
-	display: flex;
-	max-width: 40rem;
-	font-size: 1.8rem;
-	font-weight: bold;
-	color: hsl(217, 16%, 16%);
-
-	> span {
-		max-width: 10rem;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	> svg {
-		min-width: 2.7rem;
-		margin: 0 1.4rem;
-	}
-`
-
-const DateAndTime = styled.div`
-	display: flex;
-	white-space: nowrap;
-
-	svg {
-		margin-right: 0.6rem;
-	}
-
-	span {
-		margin: 0 0.8rem;
-	}
-`
-
-const SecondaryButtonCustom = styled(SecondaryButton)`
-	box-shadow: none;
-	border-width: 1px;
-	font-size: 1.2rem;
-	padding: 0.4rem 1.2rem;
-	align-self: flex-end;
-`
-
-const DetailColumn = styled.div`
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-
-	> span {
-		font-size: 1.8rem;
-		margin-bottom: 0.6rem;
-	}
-`
-
-const CardActions = styled(DetailColumn)`
-	justify-content: flex-end;
+			svg {
+				min-height: 24px;
+				min-width: 24px;
+			}
+		`
+	})}
 `
 
 const Detail = styled.div`
@@ -139,6 +94,119 @@ const Detail = styled.div`
 			}
 		}
 	}
+
+	${breakpointGenerator({
+		large: css`
+			&#description {
+				margin-bottom: 1rem;
+				
+				> span {
+					text-overflow: ellipsis;
+					overflow: hidden;
+					white-space: nowrap;
+					width: 20vw;
+				}
+			}
+		`
+	})}
+`
+
+const DetailColumn = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+	> span {
+		font-size: 1.8rem;
+		margin-bottom: 0.6rem;
+	}
+`
+
+const BottomDetails = styled.div`
+	display: grid;
+	grid-template-columns: 2fr auto;
+
+	${DetailRow} {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	${breakpointGenerator({
+		large: css`
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		`
+	})}
+`
+
+const Locations = styled.div`
+	display: flex;
+	max-width: 40rem;
+	font-size: 1.8rem;
+	font-weight: bold;
+	color: hsl(217, 16%, 16%);
+	max-width: 63%;
+
+	> span {
+		max-width: 10rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	> svg {
+		min-width: 2.7rem;
+		margin: 0 1.4rem;
+	}
+
+	${breakpointGenerator({
+		large: css`
+			width: 25vw;
+			
+			> span {
+				min-width: min-content;
+			}
+		`
+	})}
+`
+
+const DateAndTime = styled.div`
+	display: flex;
+	white-space: nowrap;
+
+	svg {
+		margin-right: 0.6rem;
+	}
+
+	span {
+		margin: 0 0.8rem;
+	}
+`
+
+const SecondaryButtonCustom = styled(SecondaryButton)`
+	box-shadow: none;
+	border-width: 1px;
+	font-size: 1.2rem;
+	padding: 0.4rem 1.2rem;
+	align-self: flex-end;
+`
+
+const CardActions = styled(DetailColumn)`
+	justify-content: flex-end;
+
+	${breakpointGenerator({
+		large: css`
+			display: flex;
+			flex-direction: row; 
+			justify-content: space-between;
+			align-items: center;
+
+			> span {
+				margin-bottom: 0;
+			}
+		`
+	})}
 `
 
 const ModalContent = styled.div`
@@ -216,13 +284,11 @@ const JobCard = (props: JobCardInterface) => {
 							{details.product_type} {details.weight} ตัน
 						</Detail>
 					</DetailRow>
-					<Detail>
-						{
-							origin === "jobs-page" ?
-								details.description && <><NoteIcon /><span>{details.description}</span></>
-								: <PersonIcon />
-						}
-					</Detail>
+					{
+						origin === "jobs-page" ?
+							details.description && <Detail id="description"><NoteIcon /><span>{details.description}</span></Detail>
+							: <PersonIcon />
+					}
 				</DetailColumn>
 				<CardActions>
 					{ details.offer_price && 
