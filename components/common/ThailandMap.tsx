@@ -1,31 +1,107 @@
 import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import styled from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { countJobInProvinceState } from '../../store/atoms/jobDocumentState'
-import { NumberOfJobs } from '../styles/GlobalComponents'
+import { NumberOfJobs, RadioInput, RadioInputContainer } from '../styles/GlobalComponents'
 import { Amnatcharoen, Angthong, Bangkok, Buengkan, Buriram, Chachoengsao, Chainat, Chaiyaphum, Chanthaburi, Chiangmai, Chiangrai, Chonburi, Chumphon, Kalasin, Kamphaengphet, Kanchanaburi, Khonkaen, Krabi, Lampang, Lamphun, Loei, Lopburi, Maehongson, Mahasarakham, Mukdahan, Nakhonnayok, Nakhonpathom, Nakhonphanom, Nakhonratchasima, Nakhonsawan, Nakhonsithammarat, Nan, Narathiwat, Nongbualamphu, Nongkhai, Nonthaburi, Pathumthani, Pattani, Phangnga, Phatthalung, Phayao, Phetchabun, Phetchaburi, Phichit, Phitsanulok, Phrae, Phranakhonsiayutthaya, Phuket, Prachinburi, Prachuapkhirikhan, Ranong, Ratchaburi, Rayong, Roiet, Sakaeo, Sakonnakhon, Samutprakan, Samutsakhon, Samutsongkhram, Saraburi, Satun, Singburi, Sisaket, Songkhla, Sukhothai, Suphanburi, Suratthani, Surin, Tak, Trang, Trat, Ubonratchathani, Udonthani, Uthaithani, Uttaradit, Yala, Yasothon } from './ProvincesIcon'
+import Tooltip from '@material-ui/core/Tooltip'
+
+const push = keyframes`
+    0%  {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+`;
+
+const click = keyframes`
+    0%  {
+        transform: scale(0.8);
+    }
+
+    50%  {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+`;
+
+const MapOption = styled.div`
+    font-size: 1.6rem;
+    position: absolute;
+    right: 2rem;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+
+    > span {
+        margin-top: 1rem;
+    }
+
+    ${RadioInputContainer} {
+        > button {
+            position: static;
+        }
+    }
+`
+
+const Province = styled.button<{isActive: boolean}>`
+    position: absolute;
+    
+    ${props => props.isActive && css`
+        svg path {
+            stroke: hsl(16, 56%, 51%);
+            fill: hsl(16, 56%, 51%);
+        }
+    `}
+
+    &:active {
+        animation: ${click} 10s ease-in-out;
+    }
+
+    &:hover {
+        svg path {
+            fill: hsl(212, 28%, 28%);
+        }
+    }
+`
+
+const TooltipCustom = styled(props => (
+    <Tooltip
+      classes={{ popper: props.className, tooltip: "tooltip" }}
+      {...props}
+    />
+    ))`
+    & .tooltip {
+        background-color:hsl(212, 28%, 28%);
+        font-size: 1.4rem;
+        font-family: "Bai Jamjuree";
+        margin: 0;
+
+        .MuiTooltip-arrow {
+            color: hsl(212, 28%, 28%);
+        }
+    }
+`;
 
 const Thailand = styled.div`
-    display:flex;
     position: relative;
+    top: 2rem;
 
     ${NumberOfJobs} {
         width: 1.8rem;
         height: 1.8rem;
         font-size: 1rem;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    button {
-        position: absolute;
-
-        &:hover {
-            svg path {
-                stroke: hsl(16, 56%, 51%);
-            }
-        }
+        top: 25%;
+        left: 25%;
+        animation: ${push} 0.3s ease-in-out 1;
+        background: #f59657;
     }
 `
 
@@ -33,6 +109,10 @@ const Northern = styled.div`
     position: relative;
     left: 57px;
     top: 38px;
+
+    ${NumberOfJobs} {
+        background-color: #ee623f;
+    }
 
     #maehongson {
         position: absolute;
@@ -210,6 +290,10 @@ const Western = styled.div`
     left: 16px;
     top: 200px;
 
+    ${NumberOfJobs} {
+        background-color: #a05f34;
+    }
+
     #tak {
         left: 6.36px;
         top: 0.78px;
@@ -240,6 +324,10 @@ const Eastern = styled.div`
     position: relative;
     left: 300px;
     top: 400px;
+
+    ${NumberOfJobs} {
+        background-color: #d66508;
+    }
 
     #chachoengsao {
         left: 0.74px;
@@ -280,7 +368,11 @@ const Eastern = styled.div`
 const Northeast = styled.div`
     position: relative;
     left: 290px;
-    top: 140px;
+    top: 160px;
+
+    ${NumberOfJobs} {
+        background-color: #7a4d23;
+    }
 
     #amnatcharoen {
         left: 168.4px;
@@ -387,6 +479,10 @@ const Southern = styled.div`
     position: relative;
     left: 50px;
     top: 480px;
+
+    ${NumberOfJobs} {
+        background-color: hsl(44, 87%, 50%);
+    }
 
     #chumphon {
         left: 33.6px;
@@ -878,26 +974,86 @@ const THAILAND_PROVINCES = [
     }
 ]
 
-const ThailandMaps = () => {
+interface ThailandMapInterface {
+    provinceFilter: {
+        pickup: string,
+        dropoff: string
+    }
+    setProvinceFilter: (value: {
+        pickup: string,
+        dropoff: string
+    }) => void
+}
+
+const ThailandMap = (props: ThailandMapInterface) => {
+    const { provinceFilter, setProvinceFilter } = props
     const jobInProvince = useRecoilValue(countJobInProvinceState)
     const [showJob, setShowJob] = useState("pickup")
+    const [hoverProvince, setHoverProvince] = useState("")
+
+    const handleSelectProvince = (province: string) => {
+        if (provinceFilter[showJob] === province) {
+            province = "ทั้งหมด"
+        } else {
+            const toggleNextContext = (showJob === "pickup" ? "dropoff" : "pickup")
+            setShowJob(toggleNextContext)
+        }
+        setProvinceFilter({
+            ...provinceFilter,
+            [showJob]: province
+        })
+    }
 
     return (
         <Thailand>
+            <MapOption>
+                <RadioInputContainer>
+                    <RadioInput
+                        type="button"
+                        value={showJob}
+                        name="pickup"
+                        onClick={() => setShowJob("pickup")}>
+                        ต้นทาง
+                        </RadioInput>
+                    <RadioInput
+                        type="button"
+                        value={showJob}
+                        name="dropoff"
+                        onClick={() => setShowJob("dropoff")}>
+                        ปลายทาง
+                        </RadioInput>
+                </RadioInputContainer>
+                <span>ต้นทาง: {provinceFilter.pickup}</span>
+                <span>ปลายทาง: {provinceFilter.dropoff}</span>
+            </MapOption>
             {
                 THAILAND_PROVINCES.map((zone) => (
                     <zone.name>
                         {
                             zone.provinces.map((province) => {
                                 const noOfJob = jobInProvince[showJob][province.nameTH]
+                                const isProvincePickup = (provinceFilter.pickup === province.nameTH)
+                                const isProvinceDropoff = (provinceFilter.dropoff === province.nameTH)
+                                const isProvincePickupDropoff = (isProvincePickup && isProvinceDropoff)
                                 return (
-                                    <button id={province.id}>
-                                        {
-                                            noOfJob > 0 &&
-                                            <NumberOfJobs>{jobInProvince[showJob][province.nameTH]}</NumberOfJobs>
-                                        }
-                                        <province.icon />
-                                    </button>
+                                    <TooltipCustom 
+                                        title={ isProvincePickupDropoff ? "ต้นทาง / ปลายทาง" : (isProvincePickup ? "ต้นทาง" : (isProvinceDropoff ? "ปลายทาง" : province.nameTH))} 
+                                        open={isProvincePickup || isProvinceDropoff || province.nameTH === hoverProvince}
+                                        arrow>
+                                        <Province 
+                                            id={province.id} 
+                                            onClick={() => handleSelectProvince(province.nameTH)} 
+                                            onMouseOver={() => setHoverProvince(province.nameTH)}
+                                            onMouseLeave={() => setHoverProvince("")}
+                                            isActive={isProvincePickup || isProvinceDropoff}
+                                        >
+                                            {
+                                                noOfJob > 0 &&
+                                                <NumberOfJobs>{jobInProvince[showJob][province.nameTH]}</NumberOfJobs>
+                                            }
+                                            <province.icon />
+                                        </Province>
+                                    </TooltipCustom>
                                 )
                             })
                         }
@@ -908,4 +1064,4 @@ const ThailandMaps = () => {
     )
 }
 
-export default ThailandMaps
+export default ThailandMap

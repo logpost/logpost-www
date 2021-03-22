@@ -553,3 +553,32 @@ svg {
 	}
 }
 `
+
+export const RadioInputContainer = styled.div`
+	display: flex;
+	margin-top: 1rem;
+	width: 100%;
+`
+
+export const RadioInput = styled.button`
+	font-size: 1.6rem;
+	width: 50%;
+	padding: 1rem 0;
+	text-align: center;
+	border: solid 0.2rem hsl(212, 28%, 28%);
+	${props => props.value === props.name &&
+		`
+		background-color: hsl(212, 28%, 28%);
+		color: white;
+	`}
+
+	&:first-child {
+		border-top-left-radius: 0.6rem;
+		border-bottom-left-radius: 0.6rem;
+	}
+
+	&:last-child {
+		border-top-right-radius: 0.6rem;
+		border-bottom-right-radius: 0.6rem;
+	}
+`

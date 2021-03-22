@@ -18,8 +18,9 @@ import { filterWordState, jobFiltersState, filterState } from "../../store/atoms
 import { TRUCK_TYPE_LIST } from "../../data/carrier"
 import { PROVINCES, PROVINCES_OBJECT } from "../../data/jobs"
 import SelectComponent from "../../components/common/SelectComponent"
-import ThailandMaps from "../../components/common/ThailandMaps"
+import ThailandMaps from "../../components/common/ThailandMap"
 import { countJobInProvinceState } from "../../store/atoms/jobDocumentState"
+import ThailandMap from "../../components/common/ThailandMap"
 
 interface FilterContainerInterface {
 	expand: boolean
@@ -116,6 +117,15 @@ const FiltersContainer = styled.div<FilterContainerInterface>`
 	height: ${props => props.expand ? "auto" : 0};
 	overflow: hidden;
 	box-shadow: 0px -2px 14px rgba(0, 0, 0, 0.1);
+`
+
+const AllJobContainer = styled.div`
+	width: 100%;
+`
+
+const ContentContainer = styled.div`
+	display: grid;
+	grid-template-columns: 48rem 1fr;
 `
 
 const JobsPage = () => {
@@ -236,6 +246,21 @@ const JobsPage = () => {
 	}
 
 	useEffect(() => {
+		const countPickupProvince = {...PROVINCES_OBJECT}
+		const countDropoffProvince = {...PROVINCES_OBJECT}
+		jobs.map((job) => {
+			const { pickup_location, dropoff_location } = job
+			countPickupProvince[pickup_location] += 1
+			countDropoffProvince[dropoff_location] += 1
+		})
+		console.log(countPickupProvince, countDropoffProvince)
+		setCountJobInProvince({
+			pickup: countPickupProvince,
+			dropoff: countDropoffProvince
+		})
+	}, [jobFilters.pickup_province, jobFilters.dropoff_province])
+
+	useEffect(() => {
 		getAllJobs((jobs: JobDocument[]) => {
 			const [jobCardData, countPickupProvince, countDropoffProvince] = convertJobToCardFormat(jobs)
 			setJobs(jobCardData as JobDocument[])
@@ -280,8 +305,8 @@ const JobsPage = () => {
 					</FiltersContainer>
 				}
 			</BreakpointMD>
-			<BreakpointLG>
-                <DesktopHeader>
+			<AllJobContainer>
+				<DesktopHeader>
 					<HeaderTitleContainer>
 						<HeaderTitle>
 							งานทั้งหมด
@@ -299,13 +324,27 @@ const JobsPage = () => {
 						}} 
 					/>
 				</DesktopHeader>
-				<ThailandMaps />
-            </BreakpointLG>
-			{/* <JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
-				{jobs.map((job, index) => {
-					return <JobCard key={index} origin="jobs-page" details={job} />
-				})}
-			</JobCardContainer> */}
+				<ContentContainer>
+					<ThailandMap
+						provinceFilter={{
+							pickup: jobFilters.pickup_province,
+							dropoff: jobFilters.dropoff_province
+						}} 
+						setProvinceFilter={(value: {
+							pickup: string,
+							dropoff: string
+						}) => setJobFilters({...jobFilters, 
+							pickup_province: value.pickup,
+							dropoff_province: value.dropoff
+						})}
+					/>
+					<JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
+						{jobs.map((job, index) => {
+							return <JobCard key={index} origin="jobs-page" details={job} />
+						})}
+					</JobCardContainer>
+				</ContentContainer>
+			</AllJobContainer>
 		</>
 	)
 }
