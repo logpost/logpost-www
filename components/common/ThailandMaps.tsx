@@ -6,7 +6,13 @@ import { NumberOfJobs } from '../styles/GlobalComponents'
 import { Amnatcharoen, Angthong, Bangkok, Buengkan, Buriram, Chachoengsao, Chainat, Chaiyaphum, Chanthaburi, Chiangmai, Chiangrai, Chonburi, Chumphon, Kalasin, Kamphaengphet, Kanchanaburi, Khonkaen, Krabi, Lampang, Lamphun, Loei, Lopburi, Maehongson, Mahasarakham, Mukdahan, Nakhonnayok, Nakhonpathom, Nakhonphanom, Nakhonratchasima, Nakhonsawan, Nakhonsithammarat, Nan, Narathiwat, Nongbualamphu, Nongkhai, Nonthaburi, Pathumthani, Pattani, Phangnga, Phatthalung, Phayao, Phetchabun, Phetchaburi, Phichit, Phitsanulok, Phrae, Phranakhonsiayutthaya, Phuket, Prachinburi, Prachuapkhirikhan, Ranong, Ratchaburi, Rayong, Roiet, Sakaeo, Sakonnakhon, Samutprakan, Samutsakhon, Samutsongkhram, Saraburi, Satun, Singburi, Sisaket, Songkhla, Sukhothai, Suphanburi, Suratthani, Surin, Tak, Trang, Trat, Ubonratchathani, Udonthani, Uthaithani, Uttaradit, Yala, Yasothon } from './ProvincesIcon'
 
 const Thailand = styled.div`
+    display:flex;
+    position: relative;
+
     ${NumberOfJobs} {
+        width: 1.8rem;
+        height: 1.8rem;
+        font-size: 1rem;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -25,436 +31,431 @@ const Thailand = styled.div`
 
 const Northern = styled.div`
     position: relative;
-    left: 87px;
+    left: 57px;
     top: 38px;
 
     #maehongson {
         position: absolute;
-        left: 0px;
-        top: 13.69px;
+        left: 0.95px;
+        top: 14.81px;
     }
 
     #chiangmai {
         position: absolute;
-        left: 24.7px;
-        top: 8.81px;
+        left: 24.63px;
+        top: 10.21px;
     }
 
     #chiangrai {
         position: absolute;
-        left: 79.9px;
-        top: 0;
+        left: 76.95px;
+        top: 2.15px;
     }
 
     #phayao {
         position: absolute;
-        left: 117.23px;
-        top: 26.64px;
+        left: 112.13px;
+        top: 27.06px;
     }
 
     #lamphun {
         position: absolute;
-        left: 56.06px;
-        top: 76.37px;
+        left: 54.09px;
+        top: 74.02px;
     }
 
     #lampang {
         position: absolute;
-        left: 85.2px;
-        top: 40.61px;
+        left: 81.71px;
+        top: 40.25px;
     }
 
     #uttaradit {
         position: absolute;
-        left: 147.44px;
-        top: 92.26px;
+        left: 140.71px;
+        top: 89.03px;
     }
 
     #phrae {
         position: absolute;
-        left: 114.78px;
-        top: 71.07px;
+        left: 109.75px;
+        top: 69.01px;
     }
 
     #nan {
         position: absolute;
-        left: 154.95px;
-        top: 30.02px;
+        left: 147.83px;
+        top: 30.24px;
     }
 `
 
 const Central = styled.div`
     position: relative;
-    left: 140px;
-    top: 214px;
+    left: 100px;
+    top: 200px;
 
     #sukhothai {
-        left: 68px;
-        top: 1.43px;
+        left: 56.48px;
+        top: 1.18px;
     }
 
     #kamphaengphet {
-        left: 56px;
-        top: 41.43px;
+        left: 46.51px;
+        top: 34.2px;
     }
 
     #nakhonsawan {
-        left: 53.93px;
-        top: 82.46px;
+        left: 44.79px;
+        top: 68.07px;
     }
 
     #phitsanulok {
-        left: 104px;
+        left: 86.38px;
         top: 0px;
     }
 
     #phichit {
-        left: 104px;
-        top: 53.43px;
+        left: 86.38px;
+        top: 44.11px;
     }
 
     #phetchabun {
-        left: 140px;
-        top: 31.43px;
+        left: 116.28px;
+        top: 25.95px;
     }
 
     #angthong {
-        left: 106.95px;
-        top: 169.58px;
+        left: 88.83px;
+        top: 140px;
     }
 
     #phranakhonsiayutthaya {
-        left: 116.46px;
-        top: 199.91px;
+        left: 96.72px;
+        top: 165.03px;
     }
 
     #bangkok {
-        left: 121px;
-        top: 271.43px;
+        left: 100.5px;
+        top: 224.07px;
     }
 
     #chainat {
-        left: 43.66px;
-        top: 119.93px;
+        left: 36.26px;
+        top: 99px;
     }
 
     #lopburi {
-        left: 138px;
-        top: 110.43px;
+        left: 114.61px;
+        top: 91.16px;
     }
 
     #nakhonnayok {
-        left: 176.03px;
-        top: 187.74px;
+        left: 146.2px;
+        top: 154.98px;
     }
 
     #nakhonpathom {
-        left: 58.69px;
-        top: 222.78px;
+        left: 48.74px;
+        top: 183.91px;
     }
 
     #nonthaburi {
-        left: 113.19px;
-        top: 242.72px;
+        left: 94.01px;
+        top: 200.37px;
     }
 
     #pathumthani {
-        left: 143.74px;
-        top: 237.28px;
+        left: 119.38px;
+        top: 195.88px;
     }
 
     #samutprakan {
-        left: 154px;
-        top: 302.43px;
+        left: 127.9px;
+        top: 249.66px;
     }
 
     #samutsakhon {
-        left: 71.05px;
-        top: 264.03px;
+        left: 59.01px;
+        top: 217.96px;
     }
 
     #samutsongkhram {
-        left: 38.13px;
-        top: 276.68px;
+        left: 31.67px;
+        top: 228.41px;
     }
 
     #saraburi {
-        left: 154px;
-        top: 143.43px;
+        left: 127.9px;
+        top: 118.41px;
     }
 
     #singburi {
-        left: 102.16px;
-        top: 129.16px;
+        left: 84.85px;
+        top: 106.62px;
     }
 
     #suphanburi {
-        left: 37.21px;
-        top: 159.5px;
+        left: 30.9px;
+        top: 131.67px;
     }
 
     #uthaithani {
-        left: 0.64px;
-        top: 91.28px;
+        left: 0.53px;
+        top: 75.35px;
     }
 `
 
 const Western = styled.div`
     position: relative;
-    left: 30px;
-    top: 214px;
+    left: 16px;
+    top: 200px;
 
     #tak {
-        position: absolute;
-        left: 9.31px;
-        top: 1px;
+        left: 6.36px;
+        top: 0.78px;
     }
 
     #kanchanaburi {
-        position: absolute;
-        left: 5.83px;
-        top: 103.02px;
+        left: 4.63px;
+        top: 80.69px;
     }
 
     #phetchaburi {
-        position: absolute;
-        left: 30.13px;
-        top: 215.08px;
+        left: 23.94px;
+        top: 168.47px;
     }
 
     #prachuapkhirikhan {
-        position: absolute;
-        left: 29.42px;
-        top: 260.88px;
+        left: 23.38px;
+        top: 204.34px;
     }
 
     #ratchaburi {
-        position: absolute;
-        left: 34.91px;
-        top: 172.86px;
+        left: 27.74px;
+        top: 135.4px;
     }
 `
 
 const Eastern = styled.div`
     position: relative;
-    left: 400px;
-    top: 460px;
+    left: 300px;
+    top: 400px;
 
     #chachoengsao {
-        left: 1px;
-        top: 30.52px;
+        left: 0.74px;
+        top: 22.63px;
     }
 
     #chanthaburi {
-        left: 53.85px;
-        top: 66.12px;
+        left: 39.86px;
+        top: 49.03px;
     }
 
     #chonburi {
-        left: 0;
-        top: 60.5px;
+        left: 0px;
+        top: 44.87px;
     }
 
     #prachinburi {
-        left: 7px;
-        top: 0;
+        left: 5.18px;
+        top: 0px;
     }
 
     #rayong {
-        left: 18px;
-        top: 92px;
+        left: 13.32px;
+        top: 68.23px;
     }
 
     #sakaeo {
-        left: 60.16px;
-        top: 13.11px;
+        left: 44.52px;
+        top: 9.72px;
     }
 
     #trat {
-        left: 90px;
-        top: 97.6px;
+        left: 66.61px;
+        top: 72.38px;
     }
 `
 
 const Northeast = styled.div`
     position: relative;
-    left: 360px;
+    left: 290px;
     top: 140px;
 
     #amnatcharoen {
-        left: 221.36px;
-        top: 138.96px;
+        left: 168.4px;
+        top: 105.59px;
     }
 
     #buengkan {
-        left: 127px;
-        top: 1.81px;
+        left: 96.62px;
+        top: 1.37px;
     }
 
     #buriram {
-        left: 84.3px;
-        top: 180.25px;
+        left: 64.14px;
+        top: 136.97px;
     }
 
     #chaiyaphum {
-        left: 9.77px;
-        top: 124.46px;
+        left: 7.44px;
+        top: 94.57px;
     }
 
     #kalasin {
-        left: 124.23px;
-        top: 92.4px;
+        left: 94.51px;
+        top: 70.21px;
     }
 
     #khonkaen {
-        left: 50px;
-        top: 100.81px;
+        left: 38.04px;
+        top: 76.6px;
     }
 
     #loei {
-        left: 0;
-        top: 16.81px;
+        left: 0px;
+        top: 12.77px;
     }
 
     #mahasarakham {
-        left: 111.09px;
-        top: 137.51px;
+        left: 84.52px;
+        top: 104.49px;
     }
 
     #mukdahan {
-        left: 173.19px;
-        top: 90.81px;
+        left: 131.76px;
+        top: 69px;
     }
 
     #nakhonphanom {
-        left: 159.67px;
-        top: 30.78px;
+        left: 121.47px;
+        top: 23.39px;
     }
 
     #nakhonratchasima {
-        left: 14.68px;
-        top: 176.75px;
+        left: 11.17px;
+        top: 134.31px;
     }
 
     #nongbualamphu {
-        left: 2px;
-        top: 84.81px;
+        left: 1.52px;
+        top: 64.44px;
     }
 
     #nongkhai {
-        left: 49.13px;
-        top: 1.33px;
+        left: 37.38px;
+        top: 1.01px;
     }
 
     #roiet {
-        left: 143.86px;
-        top: 129.82px;
+        left: 109.45px;
+        top: 98.65px;
     }
 
     #sakonnakhon {
-        left: 121px;
-        top: 36.14px;
+        left: 92.06px;
+        top: 27.46px;
     }
 
     #sisaket {
-        left: 192.52px;
-        top: 183.12px;
+        left: 146.47px;
+        top: 139.15px;
     }
 
     #surin {
-        left: 140.33px;
-        top: 182.53px;
+        left: 106.76px;
+        top: 138.7px;
     }
 
     #ubonratchathani {
-        left: 224.83px;
-        top: 162.89px;
+        left: 171.05px;
+        top: 123.78px;
     }
 
     #udonthani {
-        left: 46.86px;
-        top: 40.51px;
+        left: 35.65px;
+        top: 30.78px;
     }
 
     #yasothon {
-        left: 190.24px;
-        top: 132.17px;
+        left: 144.73px;
+        top: 100.43px;
     }
 `
 
 const Southern = styled.div`
     position: relative;
-    left: 120px;
-    top: 560px;
+    left: 50px;
+    top: 480px;
 
     #chumphon {
-        left: 44.04px;
-        top: 2.52px;
+        left: 33.6px;
+        top: 1.91px;
     }
 
     #krabi {
-        left: 30px;
-        top: 147.6px;
+        left: 22.89px;
+        top: 112.28px;
     }
 
     #nakhonsithammarat {
-        left: 82px;
-        top: 110px;
+        left: 62.57px;
+        top: 83.68px;
     }
 
     #narathiwat {
-        left: 232.73px;
-        top: 260.6px;
+        left: 177.59px;
+        top: 198.24px;
     }
 
     #phangnga {
-        left: 6.4px;
-        top: 90.44px;
+        left: 4.89px;
+        top: 68.8px;
     }
 
     #phatthalung {
-        left: 113.17px;
-        top: 194.2px;
+        left: 86.36px;
+        top: 147.73px;
     }
 
     #pattani {
-        left: 189.51px;
-        top: 232px;
+        left: 144.61px;
+        top: 176.48px;
     }
 
     #phuket {
-        left: 3.77px;
-        top: 156.59px;
+        left: 2.87px;
+        top: 119.11px;
     }
 
     #ranong {
-        left: 20.23px;
-        top: 8.61px;
+        left: 15.44px;
+        top: 6.55px;
     }
 
     #satun {
-        left: 102.35px;
-        top: 243.23px;
+        left: 78.1px;
+        top: 185.03px;
     }
 
     #songkhla {
-        left: 136.51px;
-        top: 232px;
+        left: 104.17px;
+        top: 176.48px;
     }
 
     #suratthani {
-        left: 35.8px;
-        top: 78.6px;
+        left: 27.32px;
+        top: 59.79px;
     }
 
     #trang {
-        left: 71.27px;
-        top: 191.64px;
+        left: 54.38px;
+        top: 145.78px;
     }
 
     #yala {
-        left: 191.62px;
-        top: 264.14px;
+        left: 146.22px;
+        top: 200.93px;
     }
 `
 
@@ -892,7 +893,7 @@ const ThailandMaps = () => {
                                 return (
                                     <button id={province.id}>
                                         {
-                                            noOfJob > 0 && 
+                                            noOfJob > 0 &&
                                             <NumberOfJobs>{jobInProvince[showJob][province.nameTH]}</NumberOfJobs>
                                         }
                                         <province.icon />
