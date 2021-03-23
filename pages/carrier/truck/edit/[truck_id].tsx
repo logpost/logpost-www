@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil'
 import { truckDetailsState } from '../../../../store/atoms/truckDetailsState'
 import { TruckDetails, TruckDocument } from '../../../../entities/interface/truck'
 import Alert from '../../../../components/common/Alert'
+import withPrivateRoute from '../../../../components/utilities/withPrivateRoute'
 
 const FormHeaderCustom = styled(FormHeader)`
 	padding: 3.4rem 0 3.4rem 3.7rem;
@@ -59,4 +60,4 @@ const EditTruckPage = () => {
 	)
 }
 
-export default EditTruckPage
+export default withPrivateRoute(EditTruckPage, "carrier")

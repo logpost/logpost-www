@@ -16,6 +16,7 @@ import { MapInterface } from '../../../entities/interface/googlemaps'
 import { initMap, route } from '../../../components/utilities/googlemaps'
 import JobFormStepThree from '../../../components/common/JobFormStepThree'
 import JobFormStepTwo from '../../../components/common/JobFormStepTwo'
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
 
 const MapContainer = styled.div`
 	padding: 1.8rem 2.6rem 0;
@@ -151,4 +152,4 @@ const AddJobSwitcherPage = () => {
 	)
 }
 
-export default AddJobSwitcherPage
+export default withPrivateRoute(AddJobSwitcherPage, "shipper")

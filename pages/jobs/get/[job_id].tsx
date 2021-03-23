@@ -37,6 +37,7 @@ import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoin
 import DesktopHeader from "../../../components/common/DesktopHeader";
 import breakpointGenerator from "../../../components/utilities/breakpoint";
 import { GooSpinner } from "react-spinners-kit";
+import withPrivateRoute from "../../../components/utilities/withPrivateRoute";
 
 const FormActionsCustom = styled(FormActions)`
     ${PrimaryButton}, ${SecondaryButton} {
@@ -480,4 +481,4 @@ const GetJobPage = () => {
 	)
 }
 
-export default GetJobPage;
+export default withPrivateRoute(GetJobPage, "carrier");

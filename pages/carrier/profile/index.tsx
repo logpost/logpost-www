@@ -24,6 +24,7 @@ import { HeaderTitle, HeaderTitleContainer, PrimaryButton, SeeAllButton, StatusH
 import { useRouter } from "next/router"
 import { filterState, jobFiltersState, tableDataState } from "../../../store/atoms/tableState"
 import { JOB_STATUS_CODE } from "../../../data/jobs"
+import withPrivateRoute from "../../../components/utilities/withPrivateRoute"
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
@@ -362,4 +363,4 @@ const CarrierProfilePage = () => {
 	)
 }
 
-export default CarrierProfilePage
+export default withPrivateRoute(CarrierProfilePage, "carrier")

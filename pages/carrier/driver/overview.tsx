@@ -16,6 +16,7 @@ import Alert from '../../../components/common/Alert'
 import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
 import { driverStatusCountState } from '../../../store/atoms/carrierProfileState'
 import { resourceStatusCount } from '../../../components/utilities/helper'
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
 
 const ModalContent = styled.div`
 	display: flex;
@@ -272,4 +273,4 @@ const OverviewDriverPage = () => {
 	)
 }
 
-export default OverviewDriverPage
+export default withPrivateRoute(OverviewDriverPage, "carrier")

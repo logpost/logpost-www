@@ -11,6 +11,7 @@ import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoin
 import DesktopHeader from '../../../components/common/DesktopHeader'
 import NavigationBar from '../../../components/common/NavigationBar'
 import breakpointGenerator from '../../../components/utilities/breakpoint'
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
 
 const FormHeaderCustom = styled(FormHeader)`
 	padding: 3.4rem 0 3.4rem 3.7rem;
@@ -78,4 +79,4 @@ const AddTruckPage = () => {
 	)
 }
 
-export default AddTruckPage
+export default withPrivateRoute(AddTruckPage, "carrier")

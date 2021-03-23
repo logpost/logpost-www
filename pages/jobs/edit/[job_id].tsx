@@ -19,6 +19,7 @@ import useAlert from '../../../hooks/useAlert'
 import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
 import DesktopHeader from '../../../components/common/DesktopHeader'
 import breakpointGenerator from '../../../components/utilities/breakpoint'
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
 
 const EditJobContainer = styled.div`
     width: 100%;
@@ -243,4 +244,4 @@ const EditJobPage = () => {
     )
 }
 
-export default EditJobPage
+export default withPrivateRoute(EditJobPage, "shipper")

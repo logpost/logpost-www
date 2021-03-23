@@ -19,6 +19,7 @@ import useAlert from "../../../hooks/useAlert"
 import Alert from "../../../components/common/Alert"
 import Modal from "../../../components/common/Modal"
 import { WarningIcon } from "../../../components/common/Icons"
+import withPrivateRoute from "../../../components/utilities/withPrivateRoute"
 
 const TextButtonCustom = styled(TextButton)`
 	margin-top: 3rem;
@@ -262,4 +263,4 @@ const ProfileSettingPage = () => {
 	)
 }
 
-export default ProfileSettingPage
+export default withPrivateRoute(ProfileSettingPage)

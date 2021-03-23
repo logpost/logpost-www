@@ -10,6 +10,7 @@ import { driverDetailsState, driverValidateState } from '../../../../store/atoms
 import { DriverDocument } from '../../../../entities/interface/driver'
 import useAlert from '../../../../hooks/useAlert'
 import { validateDriverDetails } from '../../../../components/utilities/helper'
+import withPrivateRoute from '../../../../components/utilities/withPrivateRoute'
 
 const FormHeaderCustom = styled(FormHeader)`
 	padding: 3.4rem 0 3.4rem 3.7rem;
@@ -75,4 +76,4 @@ const AddDriverPage = () => {
 	)
 }
 
-export default AddDriverPage
+export default withPrivateRoute(AddDriverPage, "carrier")

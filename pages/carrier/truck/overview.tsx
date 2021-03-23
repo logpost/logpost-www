@@ -17,6 +17,7 @@ import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
 import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
 import { truckStatusCountState } from '../../../store/atoms/carrierProfileState'
 import { resourceStatusCount } from '../../../components/utilities/helper'
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
 
 const ModalContent = styled.div`
 	display: flex;
@@ -351,4 +352,4 @@ const OverviewTruckPage = () => {
 	)
 }
 
-export default OverviewTruckPage
+export default withPrivateRoute(OverviewTruckPage, "carrier")

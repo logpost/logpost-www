@@ -9,6 +9,7 @@ import {
 import InputComponent from "../../../../components/common/InputComponent"
 import { useRouter } from "next/router"
 import { changeEmail } from "../../../../components/utilities/apis"
+import withPrivateRoute from "../../../../components/utilities/withPrivateRoute"
 
 const EmailSettingPage = () => {
 	const router = useRouter()
@@ -54,4 +55,4 @@ const EmailSettingPage = () => {
 	)
 }
 
-export default EmailSettingPage
+export default withPrivateRoute(EmailSettingPage)
