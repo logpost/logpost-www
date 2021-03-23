@@ -17,6 +17,7 @@ import { JobDocument } from '../../../entities/interface/job'
 import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoints"
 import { tableDataState, jobFiltersState, filterWordState } from "../../../store/atoms/tableState"
 import JobDesktopTable from "../../../components/common/JobDesktopTable"
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute';
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
@@ -60,7 +61,7 @@ const ShipperProfilePage = () => {
 	}
 
 	useEffect(() => {
-		if (shipperInfo.username) {
+		if (shipperInfo?.username) {
 			getMyJob((jobs: JobDocument[]) => {
 				const jobTableData = convertJobToTableFormat(jobs)
 				setTableData(jobTableData)
@@ -112,4 +113,4 @@ const ShipperProfilePage = () => {
 	)
 }
 
-export default ShipperProfilePage
+export default withPrivateRoute(ShipperProfilePage, "shipper")

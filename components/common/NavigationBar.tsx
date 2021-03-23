@@ -173,7 +173,7 @@ const NavigationBar = (props: NavBarInterface) => {
 	}
 
 	return (
-		userInfo && (<>
+		userInfo ? (<>
 			<NavBarBlank />
 			<NavBarContainer>
 				<BreakpointLG>
@@ -205,7 +205,7 @@ const NavigationBar = (props: NavBarInterface) => {
 					<span>บัญชีของฉัน</span>
 				</NavBarItem>
 			</NavBarContainer>
-		</>)
+		</>) : <div />
 	);
 };
 
