@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Router from 'next/router';
 import { getUserInfo } from './tokenHelper';
 
@@ -17,22 +17,19 @@ const withPrivateRoute = (WrappedComponent, strict?: string) => {
 		return <WrappedComponent {...props} />
 	};
 
-	hocComponent.getInitialProps = async (context) => {
+	hocComponent.getInitialProps = async ({ res }) => {
 		const userAuth = checkUserAuthentication();
 		
 		if (!userAuth?.auth || (strict && userAuth.role !== strict) ) {
-			if (context.res) {
-				context.res?.writeHead(302, {
+			if (res) {
+				res.writeHead(302, {
 					Location: login,
 				});
-				context.res?.end();
+				res.end();
 			} else {
 				Router.replace(login);
 			}
-		} else if (WrappedComponent.getInitialProps) {
-			const wrappedProps = await WrappedComponent.getInitialProps({ ...context, auth: userAuth });
-			return { ...wrappedProps, userAuth };
-		}
+		} 
 
 		return { userAuth };
 	};

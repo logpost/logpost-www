@@ -66,8 +66,8 @@ const Alert = () => {
             }, 5000)
         }
     }, [])
-
-	return (
+ 
+	return ( alertProperty.isShow &&
 		<AlertContainer type={alertProperty.type} isDisplay={alertProperty.isShow}>
 			<AlertContent>
 				{ALERT_ICON[alertProperty.type]}
