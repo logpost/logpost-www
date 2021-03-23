@@ -12,6 +12,7 @@ const ACCOUNT_URL = "https://account-management-service-logpost-stag-qjrfn6j7kq-
 const JOB_URL = "https://jobs-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app/jobs"
 const CARRIER_URL = "https://carrier-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app"
 const SHIPPER_URL = "https://shipper-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app"
+const OPTIMIZE_URL = "https://jobs-optimization-service-logpost-stag-qjrfn6j7kq-as.a.run.app/job-opts"
 
 const credentialsAPIs = axios.create({
 	'withCredentials': true
@@ -32,9 +33,9 @@ const signup = async (role: string, data: AccountInterface) => {
 const resendEmail = async () => {
 	try {
 		const email_token = localStorage.getItem("email_token")
-		await axios.post(`${ACCOUNT_URL}/email/confirm/send?email_token=${email_token}`)
+		await axios.post(`${ACCOUNT_URL}/guest/email/confirm/send?email_token=${email_token}`)
 	} catch (error) {
-		console.log(error)
+		console.log(error.response)
 	}
 } 
 
@@ -435,6 +436,18 @@ const deleteDriver = async (id: string) => {
 	})
 }
 
+const getSuggestJob = async (body: {job_id: string, hop: number, origin_location: {}}, next: (suggestJobs: Object) => void) => {
+	return await authorizationHandler(async () => {
+		try {
+			const res = await axios.post(`${OPTIMIZE_URL}/suggest`, body,
+			{ headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }})
+			next(res.data)
+		} catch (error) {
+			throw error	
+		}
+	})
+} 
+
 export {
 	signup,
 	login,
@@ -466,5 +479,6 @@ export {
 	updateDriverByID,
 	deleteDriver,
 	deleteTruck,
-	deleteJob
+	deleteJob,
+	getSuggestJob
 }

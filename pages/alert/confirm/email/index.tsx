@@ -34,6 +34,7 @@ const EmailConfirmationContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	margin-top: 5rem;
+	width: 100%;
 
 	> button {
 		margin-top: 13.6rem;

@@ -198,7 +198,7 @@ const JobDetailsSection = (props) => {
 		} else {
 			setDetails(detailsState)
 		}
-	}, [])
+	}, [detailsState])
 
 	return (
 		<>

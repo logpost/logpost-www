@@ -1,220 +1,14 @@
 import { useRouter } from 'next/router'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import styled, { css } from 'styled-components'
-import { Detail, DetailRow, FilterContainer, FilterLabel, FormActions, JobTitle, NumberOfJobs, PrimaryButton, SecondaryButton } from '../styles/GlobalComponents'
+import { GooSpinner } from 'react-spinners-kit'
+import styled from 'styled-components'
+import { FilterContainer, FilterLabel, FormActions, PrimaryButton, SecondaryButton, Spinner } from '../styles/GlobalComponents'
+import { getSuggestJob } from '../utilities/apis'
 import { selectPositionOnMap } from '../utilities/googlemaps'
-import { dateFormatter, timeFormatter } from '../utilities/helper'
-import { DownArrowLine, ProductIcon, RightArrow, RightArrowLine, UpArrowLine, WeightIcon } from './Icons'
+import { RightArrow } from './Icons'
 import InputComponent from './InputComponent'
 import JobSequence from './JobSequence'
 import Modal from './Modal'
-
-const MOCKUP_SUGGEST = {
-	"summary": {
-		"0": {
-			"sum_cost": 3658.0492,
-			"sum_offer": 10000,
-			"profit": 6341.9508000000005,
-			"distance_to_origin": 148957.3,
-			"start_date": "2021-02-18 23:00:00 +0000 UTC",
-			"end_date": "2021-02-20 01:00:00 +0000 UTC"
-		},
-		"1": {
-			"sum_cost": 7381.8336,
-			"sum_offer": 14000,
-			"profit": 6618.1664,
-			"distance_to_origin": 171131.4,
-			"start_date": "2021-02-18 23:00:00 +0000 UTC",
-			"end_date": "2021-01-26 05:00:00 +0000 UTC"
-		},
-		"2": {
-			"sum_cost": 10873.890800000001,
-			"sum_offer": 15200,
-			"profit": 4326.109199999999,
-			"distance_to_origin": 71855.9,
-			"start_date": "2021-02-18 23:00:00 +0000 UTC",
-			"end_date": "2021-01-26 00:00:00 +0000 UTC"
-		},
-		"3": {
-			"sum_cost": 14627.0316,
-			"sum_offer": 18060,
-			"profit": 3432.9683999999997,
-			"distance_to_origin": 189088.3,
-			"start_date": "2021-02-18 23:00:00 +0000 UTC",
-			"end_date": "2021-01-30 05:30:00 +0000 UTC"
-		},
-		"4": {
-			"sum_cost": 18748.7436,
-			"sum_offer": 23560,
-			"profit": 4811.256399999998,
-			"distance_to_origin": 0,
-			"start_date": "2021-02-18 23:00:00 +0000 UTC",
-			"end_date": "2021-03-26 11:00:00 +0000 UTC"
-		}
-	},
-	"history": {
-		"0": {
-			"job_id": "602ccfee4b38d4000edc94e8",
-			"carrier_id": "000000000000000000000000",
-			"offer_price": 10000,
-			"weight": 20,
-			"duration": 18368,
-			"waiting_time": 0,
-			"distance": 340.454,
-			"product_type": "ปุ๋ยนกแงว",
-			"permission": "public",
-			"pickup_date": "2021-02-18T23:00:00Z",
-			"dropoff_date": "2021-02-20T01:00:00Z",
-			"pickup_location": {
-				"latitude": 13.6494163,
-				"longitude": 99.8500984,
-				"address": "Thai Tan ตำบล คลองตาคต",
-				"province": "ราชบุรี",
-				"district": "อำเภอโพธาราม",
-				"zipcode": "70120"
-			},
-			"dropoff_location": {
-				"latitude": 14.1161121,
-				"longitude": 101.7732958,
-				"address": "ตลาด ตำบล สำพันตา",
-				"province": "ปราจีนบุรี",
-				"district": "อำเภอนาดี",
-				"zipcode": "25220"
-			},
-			"status": 100,
-			"visited": true,
-			"cost": 2723.632
-		},
-		"1": {
-			"job_id": "600e7a786b1a50000edc95a0",
-			"carrier_id": "000000000000000000000000",
-			"offer_price": 4000,
-			"weight": 12,
-			"duration": 4438,
-			"waiting_time": 0,
-			"distance": 75.867,
-			"product_type": "สินค้า",
-			"permission": "public",
-			"pickup_date": "2021-01-26T01:30:00Z",
-			"dropoff_date": "2021-01-26T05:00:00Z",
-			"pickup_location": {
-				"latitude": 13.6767054,
-				"longitude": 100.7224837,
-				"address": "ถนนกิ่งแก้ว ตำบลราชาเทวะ",
-				"province": "สมุทรปราการ",
-				"district": "อำเภอบางพลี",
-				"zipcode": ""
-			},
-			"dropoff_location": {
-				"latitude": 13.970653,
-				"longitude": 100.3414934,
-				"address": "ถนน บางกรวย - กรุงเทพ ตำบลไทรน้อย",
-				"province": "นนทบุรี",
-				"district": "อำเภอไทรน้อย",
-				"zipcode": "11150"
-			},
-			"status": 100,
-			"visited": true,
-			"cost": 606.936
-		},
-		"2": {
-			"job_id": "600e87af6b1a50000edc969d",
-			"carrier_id": "000000000000000000000000",
-			"offer_price": 1200,
-			"weight": 1,
-			"duration": 3947,
-			"waiting_time": 0,
-			"distance": 78.668,
-			"product_type": "สินค้าบรรจุลัง",
-			"permission": "public",
-			"pickup_date": "2021-01-25T21:00:00Z",
-			"dropoff_date": "2021-01-26T00:00:00Z",
-			"pickup_location": {
-				"latitude": 14.200357,
-				"longitude": 100.650232,
-				"address": "ตำบล ลำไทร",
-				"province": "พระนครศรีอยุธยา",
-				"district": "อำเภอวังน้อย",
-				"zipcode": "13170"
-			},
-			"dropoff_location": {
-				"latitude": 13.6117233,
-				"longitude": 100.7323332,
-				"address": "",
-				"province": "สมุทรปราการ",
-				"district": "อำเภอบางพลี",
-				"zipcode": ""
-			},
-			"status": 100,
-			"visited": true,
-			"cost": 629.344
-		},
-		"3": {
-			"job_id": "600ec9493cae9c000e24dcca",
-			"carrier_id": "000000000000000000000000",
-			"offer_price": 2860,
-			"weight": 22,
-			"duration": 4723,
-			"waiting_time": 0,
-			"distance": 83.811,
-			"product_type": "ขยะแห้ง",
-			"permission": "public",
-			"pickup_date": "2021-01-30T02:30:00Z",
-			"dropoff_date": "2021-01-30T05:30:00Z",
-			"pickup_location": {
-				"latitude": 14.0786882,
-				"longitude": 101.0259275,
-				"address": "",
-				"province": "นครนายก",
-				"district": "อำเภอองครักษ์",
-				"zipcode": ""
-			},
-			"dropoff_location": {
-				"latitude": 14.6382852,
-				"longitude": 101.1289634,
-				"address": "ตำบลมิตรภาพ",
-				"province": "สระบุรี",
-				"district": "อำเภอมวกเหล็ก",
-				"zipcode": "18180"
-			},
-			"status": 100,
-			"visited": true,
-			"cost": 670.488
-		},
-		"4": {
-			"job_id": "600e6b5e63b812000e4532e4",
-			"carrier_id": "000000000000000000000000",
-			"offer_price": 5500,
-			"weight": 5,
-			"duration": 9870,
-			"waiting_time": 0,
-			"distance": 188.297,
-			"product_type": "เหล็ก 10 เมตร",
-			"permission": "public",
-			"pickup_date": "2021-01-25T06:00:00Z",
-			"dropoff_date": "2021-03-26T11:00:00Z",
-            "pickup_location": {
-				"latitude": 14.0786882,
-				"longitude": 101.0259275,
-				"address": "",
-				"province": "นครนายก",
-				"district": "อำเภอองครักษ์",
-				"zipcode": ""
-			},
-			"dropoff_location": {
-				"latitude": 14.6382852,
-				"longitude": 101.1289634,
-				"address": "ตำบลมิตรภาพ",
-				"province": "สระบุรี",
-				"district": "อำเภอมวกเหล็ก",
-				"zipcode": "18180"
-			},
-			"status": 100,
-			"visited": true,
-			"cost": 670.488
-        }
-    }
-}
 
 const JobSuggestContainer = styled.div`
     display: flex;
@@ -345,7 +139,7 @@ const VerticalLine = styled.div`
     margin: 0 0.4rem;
 `;
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled.div<{isNegative: boolean}>`
     display: flex;
     justify-content: space-around;
     margin: 2rem;
@@ -359,9 +153,15 @@ const ButtonContainer = styled.div`
         font-size: 1.4rem;
         margin-right: 2rem;
 
-        > span:first-child {
-            margin-bottom: 0.4rem;
-        }
+        > span {
+			&:first-child {
+            	margin-bottom: 0.4rem;
+        	}
+
+			&:last-child {
+				color: ${props => props.isNegative ? "red" : "green"};
+			}
+		}
     }
 
     > button:not(:last-child) {
@@ -369,21 +169,35 @@ const ButtonContainer = styled.div`
     }
 `;
 
-interface JobSuggestion {
+interface JobSuggestionInterface {
     selectedJobID: string
 }
 
-const JobSuggestion = (props) => {
+interface JobSuggestResult {
+	history: {
+		[key: number]: Object
+	}
+	summary: {
+		[key: number]: Object
+	}
+}
+
+const JobSuggestion = (props: JobSuggestionInterface) => {
     const { selectedJobID } = props
     const router = useRouter()
     const [hop, setHop] = useState(2)
     const [toggleOriginModal, setToggleOriginModal] = useState(false)
+    const [suggestJobs, setSuggestJob] = useState({
+        history: {},
+        summary: {}
+    })
     const [originLocation, setOriginLocation] = useState({
         latitude: undefined,
         longitude: undefined
     })
     const [tempLocation, setTempLocation] = useState<google.maps.places.PlaceResult | google.maps.GeocoderResult>()
     const [collapsible, setCollapsible] = useState({})
+	const [isLoading, setIsLoading] = useState(false)
 
     const initOriginMap = () => {
         setToggleOriginModal(true)
@@ -401,12 +215,26 @@ const JobSuggestion = (props) => {
 	}
 
     useEffect(() => {
-        const defaultMenu = {}
-        Object.keys(MOCKUP_SUGGEST.history).forEach((index) => {
-            defaultMenu[index] = false
-        })
-        setCollapsible(defaultMenu)
-    }, [])
+        if (originLocation.latitude) {
+			const suggestInput = {
+                job_id: selectedJobID,
+                hop,
+                origin_location: originLocation
+            }
+			console.log(suggestInput)
+			setIsLoading(true)
+            getSuggestJob(suggestInput, (suggestJob: JobSuggestResult) => {
+				console.log(suggestJob)
+				setIsLoading(false)
+				setSuggestJob(suggestJob)
+			})
+            const defaultMenu = {}
+            Object.keys(suggestJobs.history).forEach((index) => {
+                defaultMenu[index] = false
+            })
+            setCollapsible(defaultMenu)
+        }
+    }, [originLocation, hop])
 
     return (
         <>
@@ -436,17 +264,17 @@ const JobSuggestion = (props) => {
                     />
                 </FilterContainer>
                 <SuggestContainer>
-                {
-                    Object.keys(MOCKUP_SUGGEST.history).map((index) => {
+                { isLoading ? <Spinner><GooSpinner size={100} /></Spinner> :
+                    Object.keys(suggestJobs.history).map((index) => {
                         const noOfJob = parseInt(index) + 1
-                        const summarySequence = MOCKUP_SUGGEST.summary[index]
+                        const summarySequence = suggestJobs.summary[index]
                         const endDate = new Date(summarySequence.end_date)
                         const startDate = new Date(summarySequence.start_date)
                         const diffDay = Math.ceil(Math.abs((endDate as any) - (startDate as any)) / (1000 * 60 * 60 * 24))
                         const groupJob = []
                         if (noOfJob !== 1) {
                             return (
-                                <Collapsible>
+                                <Collapsible key={noOfJob}>
                                     <Header isOpen={collapsible[index]} onClick={() => setCollapsible({...collapsible, [index]: !collapsible[index]})}>
                                         <span>งานต่อเนื่อง {noOfJob} งาน</span>
                                         <RightArrow />
@@ -454,9 +282,10 @@ const JobSuggestion = (props) => {
                                     {collapsible[index] && <>
                                         {
                                             Array(noOfJob).fill(0).map((_, index) => {
-                                                const job = MOCKUP_SUGGEST.history[index]
+                                                const job = suggestJobs.history[index]
                                                 groupJob.push(job.job_id)
                                                 return (<JobSequence 
+													key={job.job_id}
                                                     index={index}
                                                     job={job}
                                                 />)
@@ -466,29 +295,29 @@ const JobSuggestion = (props) => {
                                             <PriceItem>
                                                 ราคาเสนอ
                                                 <div>
-                                                    {summarySequence.sum_offer?.toLocaleString()} <span>บาท</span>
+                                                    {Math.floor(summarySequence.sum_offer)?.toLocaleString()} <span>บาท</span>
                                                 </div>
                                             </PriceItem>
                                             <VerticalLine />
                                             <PriceItem>
                                                 ต้นทุน <span>ประมาณ</span>
                                                 <div>
-                                                    {summarySequence.sum_cost?.toLocaleString()} <span>บาท</span>
+                                                    {Math.floor(summarySequence.sum_cost)?.toLocaleString()} <span>บาท</span>
                                                 </div>
                                             </PriceItem>
                                             <VerticalLine />
                                             <PriceItem>
                                                 กำไร
                                                 <div>
-                                                    {summarySequence.profit?.toLocaleString()}
+                                                    {Math.floor(summarySequence.profit)?.toLocaleString()}
                                                     <span> บาท</span>
                                                 </div>
                                             </PriceItem>
                                         </PriceDetailsContainer>
-                                        <ButtonContainer>
+                                        <ButtonContainer isNegative={summarySequence.profit - suggestJobs.summary[0].profit < 0}>
                                             <div>
                                                 <span>เดินทางรวม {diffDay} วัน</span>
-                                                <span>กำไรเพิ่มขึ้น {Math.floor(summarySequence.profit - MOCKUP_SUGGEST.summary[0].profit).toLocaleString()} บาท!</span>
+                                                <span>กำไร{summarySequence.profit - suggestJobs.summary[0].profit > 0 ? "เพิ่มขึ้น" : "ลดลง"} {Math.floor(Math.abs(summarySequence.profit - suggestJobs.summary[0].profit)).toLocaleString()} บาท</span>
                                             </div>
                                             <PrimaryButton onClick={() => router.push(`/jobs/get/${groupJob}`)}>
                                                 รับ {noOfJob} งานนี้

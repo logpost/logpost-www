@@ -16,6 +16,7 @@ import {
 	PrimaryButton,
 	RadioButton,
 	HeaderTitle,
+	Spinner,
 } from "../../../components/styles/GlobalComponents"
 import JobDetailsSection from "../../../components/common/JobDetailsSection"
 import Modal from "../../../components/common/Modal"
@@ -23,7 +24,6 @@ import TableComponent from "../../../components/common/TableComponent"
 import NavigationBar from "../../../components/common/NavigationBar"
 import SearchBar from "../../../components/common/SearchBar"
 import { useSetRecoilState } from 'recoil'
-import { jobDetailsSelector, jobDetailsState } from '../../../store/atoms/jobDetailsState'
 import { useRecoilState } from 'recoil'
 import { getDriver, getJobDetailsByID, getTruck, pickJob } from "../../../components/utilities/apis"
 import { JobDocument } from "../../../entities/interface/job"
@@ -36,7 +36,7 @@ import useAlert from "../../../hooks/useAlert";
 import { BreakpointLG, BreakpointMD } from "../../../components/styles/Breakpoints";
 import DesktopHeader from "../../../components/common/DesktopHeader";
 import breakpointGenerator from "../../../components/utilities/breakpoint";
-import id from "date-fns/esm/locale/id/index.js";
+import { GooSpinner } from "react-spinners-kit";
 
 const FormActionsCustom = styled(FormActions)`
     ${PrimaryButton}, ${SecondaryButton} {
@@ -179,9 +179,8 @@ const GetJobPage = () => {
 		truck: null,
 		driver: null,
 	})
+	const [isLoading, setIsLoading] = useState(false)
 	const { setAlert } = useAlert()
-
-	console.log(jobDetails)
 
 	const driverColumns = [
 		{
@@ -299,8 +298,10 @@ const GetJobPage = () => {
 
 	useEffect(() => {
 		if (jobID && !Boolean(jobDetails[0]?.shipper_id)) {
+			setIsLoading(true)
 			jobID.split(",").map((job) => {
 				getJobDetailsByID(job, (jobDocument: JobDocument) => {
+					setIsLoading(false)
 					jobDetails.push(jobDocument)
 				})
 			})
@@ -314,17 +315,14 @@ const GetJobPage = () => {
 	}, [router.query.job_id])
 
 	const confirmGetJob = async () => {
-		const response = await pickJob({
-			job_id: jobID,
-			truck_id: trucks[parseInt(carrierDetails.truck)].truck_id,
-			driver_id: drivers[parseInt(carrierDetails.driver)].driver_id
+		jobDetails.map(async (job) => {
+			const response = await pickJob({
+				job_id: job.job_id,
+				truck_id: trucks[parseInt(carrierDetails.truck)].truck_id,
+				driver_id: drivers[parseInt(carrierDetails.driver)].driver_id
+			})
 		})
-		if (response !== 200) {
-			setAlert(true, "error")
-		} else {
-			setAlert(true, "success")
-		}
-		router.push(`/jobs/details/${jobID}`, undefined, { shallow: true })
+		router.push(`/jobs/details/${jobID.split(",")[0]}`, undefined, { shallow: true })
 	}
 
 	return (
@@ -363,7 +361,8 @@ const GetJobPage = () => {
 				</BreakpointLG>
 				<JobDetails>
 					<div>
-					{
+					{ isLoading ? <Spinner><GooSpinner size={120} /></Spinner> : <>
+						{
 						jobDetails.map((job, index) => {
 							let isShowTruckDetails = false
 							if (index + 1 === jobDetails.length) {
@@ -378,6 +377,7 @@ const GetJobPage = () => {
 								isShowTruckDetails={isShowTruckDetails}
 							/>)
 						})
+						}</>
 					}
 					</div>
 					<div>

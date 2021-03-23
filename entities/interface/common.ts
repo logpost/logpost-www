@@ -2,7 +2,7 @@ import { ChangeEvent, ReactElement } from 'react'
 import { RecoilState, SetterOrUpdater } from 'recoil';
 import { StyledComponent } from 'styled-components';
 import { DriverTable } from './driver';
-import { JobDetails } from './job';
+import { JobDocument } from './job';
 import { TruckTable } from './truck';
 
 export interface AuthInterface {
@@ -67,18 +67,19 @@ export interface TableComponentInterface {
 		align?: string
 		width?: string
 		sortable?: boolean
-		format?: (index: number, item?: (TruckTable | DriverTable | JobDetails)) => ReactElement
+		format?: (index: number, item?: (TruckTable | DriverTable | JobDocument)) => ReactElement
 	}[]
 	tableStyle?: {
 		minWidth?: string
 		width?: string
 		gap?: string
 	}
-	RowStyle?: StyledComponent<"tr", any, {}>
+	RowStyle?: StyledComponent<"tr", {clickable: boolean}, {clickable: boolean}>
 	HeaderStyle?: StyledComponent<"tr", any, {}>
 	PaginationStyle?: StyledComponent<"div", any, {}>
 	filterSelector: RecoilState<FilterSelector[]>
 	rowPerPage?: number
+	handleClickRow?: (value: TruckTable | DriverTable | JobDocument) => void
 }
 
 export interface DateFilter {

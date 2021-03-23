@@ -334,7 +334,10 @@ const JobsPage = () => {
 							<HeaderTitle>
 								งานทั้งหมด
 							</HeaderTitle>
-						<PrimaryButton onClick={() => router.push("/jobs/add")}>สร้างงานใหม่</PrimaryButton>
+							{
+								userInfo?.role === "shipper" && 
+								<PrimaryButton onClick={() => router.push("/jobs/add")}>สร้างงานใหม่</PrimaryButton>
+							}
 						</HeaderTitleContainer>
 						<FiltersComponent 
 							filterList={{

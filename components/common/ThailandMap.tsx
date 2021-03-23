@@ -84,6 +84,10 @@ const TooltipCustom = styled(props => (
         font-family: "Bai Jamjuree";
         margin: 0;
 
+        @media screen and (max-width: 960px) {
+            display: none;
+        }
+
         .MuiTooltip-arrow {
             color: hsl(212, 28%, 28%);
         }

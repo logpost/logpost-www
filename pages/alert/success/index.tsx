@@ -32,6 +32,8 @@ const SuccessContainer = styled.div`
 	flex-direction: column;
 	align-items: center;
 	margin-top: 5rem;
+	width: 100%;
+	justify-content: center;
 
 	> button {
 		margin-top: 1.8rem;

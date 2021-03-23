@@ -156,7 +156,7 @@ const CarrierProfilePage = () => {
 			width: "8%",
 			align: "left",
 			format: (_: number, job): ReactElement => (
-				<span>{JOB_STATUS_CODE[job.status].status_name}</span>
+				<span>{JOB_STATUS_CODE[job.status]?.status_name}</span>
 			)
 		},
 		{
@@ -354,6 +354,7 @@ const CarrierProfilePage = () => {
 						filterSelector={filterState}
 						filterState={jobFiltersState}
 						rowPerPage={5}
+						handleClickRow={(selectRow) => router.push(`/jobs/details/${(selectRow as JobDocument).job_id}`)}
 					/>
 				</JobTableContainer>
 			</BreakpointLGCustom>

@@ -588,3 +588,26 @@ export const RadioInput = styled.button`
 		border-bottom-right-radius: 0.6rem;
 	}
 `
+
+export const Spinner = styled.div`
+	display: flex;
+	justify-content: center;
+	justify-self: center;
+	
+	> div {
+		
+		> div {
+			> div:first-child {
+				background-color: hsl(212, 28%, 28%);
+			}
+
+			> div:last-child {
+				background-color: hsl(16, 56%, 51%);
+			}
+		}
+
+		> svg {
+			display: none;
+		}
+	}
+`
