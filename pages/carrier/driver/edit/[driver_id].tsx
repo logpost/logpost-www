@@ -41,12 +41,14 @@ const AddDriverPage = () => {
 			setDriverValidate(validateResult)
 			const response = await updateDriverByID(driverID, driverDetails)
 			if (response !== 200) {
-				setAlert(true, "error")
+				setAlert(true, "error", "ไม่สามารถแก้ไขข้อมูลพนักงานได้ เนื่องจากข้อผิดพลาดบางอย่าง")
 			} else {
-				setAlert(true, "success")
+				setAlert(true, "success", "แก้ไขข้อมูลพนักงานสำเร็จ")
+
 			}
 		} else {
 			setDriverValidate(validateResult)
+			router.push(`/carrier/driver/overview`, undefined, { shallow: true })
 		}
 	}
 
@@ -57,9 +59,7 @@ const AddDriverPage = () => {
 
 	return (
 		<>
-			<Alert>
-                {alertStatus.type === "success" ? "แก้ไขข้อมูลสำเร็จ" : "แก้ไขข้อมูลไม่สำเร็จ"}
-            </Alert>
+			<Alert />
 			<FormHeaderCustom>
 				แก้ไขข้อมูลพนักงานขับรถ
 			</FormHeaderCustom>

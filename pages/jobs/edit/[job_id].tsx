@@ -20,6 +20,7 @@ import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoin
 import DesktopHeader from '../../../components/common/DesktopHeader'
 import breakpointGenerator from '../../../components/utilities/breakpoint'
 import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
+import Alert from '../../../components/common/Alert'
 
 const EditJobContainer = styled.div`
     width: 100%;
@@ -156,11 +157,11 @@ const EditJobPage = () => {
         }
         const response = await updateJob(jobID, updateJobDetails) 
 		if (response !== 200) {
-			setAlert(true, "error")
+			setAlert(true, "error", "ไม่สามารถแก้ไขงานได้ เนื่องจากข้อผิดพลาดบางอย่าง")
 		} else {
-			setAlert(true, "success")
+			setAlert(true, "success", "แก้ไขงานสำเร็จ")
+            router.push(`/jobs`)
 		}
-		router.push(`/jobs`)
 	}
 
     useEffect(() => {
@@ -173,6 +174,7 @@ const EditJobPage = () => {
 
     return (
         <EditJobContainer>
+            <Alert />
             <BreakpointMD>
                 <Header>
                     <JobTitle>

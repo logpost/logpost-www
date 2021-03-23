@@ -72,12 +72,12 @@ const SignUpForm = (props: SignUpFormInterface) => {
 		if (profile.account_type === "business") {
 			signupData.display_name = signupData.name
 		}
-		const passwordsAreMatch = (signupData.password === confirm_password)
+		const passwordsAreMatch = (signupData.password !== "" && signupData.password === confirm_password)
 		if (passwordsAreMatch) {
 			const response = await signup(role, signupData)
 			console.log(response)
 			if (response !== 200) {
-				setAlert(true, "error")
+				setAlert(true, "error", "ชื่อผู้ใช้หรืออีเมลถูกใช้ไปแล้ว")
 			} else {
 				router.push({
 					pathname: '/alert/confirm/email',
@@ -89,15 +89,14 @@ const SignUpForm = (props: SignUpFormInterface) => {
 				password: false,
 				confirm_password: false
 			}
+			setAlert(true, "error", "ข้อมูลไม่ถูกต้อง")
 			setValidField(invalidPassword)
 		}
 	}
 
 	return (
 		<Form as="div">
-			<Alert>
-				{alertStatus.type === "error" && "ชื่อผู้ใช้หรืออีเมลถูกใช้ไปแล้ว"}
-			</Alert>
+			<Alert />
 			<SideImage />
 			<div>
 				<Title>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</Title>

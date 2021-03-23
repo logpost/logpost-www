@@ -38,6 +38,7 @@ import DesktopHeader from "../../../components/common/DesktopHeader";
 import breakpointGenerator from "../../../components/utilities/breakpoint";
 import { GooSpinner } from "react-spinners-kit";
 import withPrivateRoute from "../../../components/utilities/withPrivateRoute";
+import Alert from "../../../components/common/Alert";
 
 const FormActionsCustom = styled(FormActions)`
     ${PrimaryButton}, ${SecondaryButton} {
@@ -322,12 +323,18 @@ const GetJobPage = () => {
 				truck_id: trucks[parseInt(carrierDetails.truck)].truck_id,
 				driver_id: drivers[parseInt(carrierDetails.driver)].driver_id
 			})
+			if (response !== 200) {
+				setAlert(true, "error", "ไม่สามารถรับงานได้ เนื่องจากข้อผิดพลาดบางอย่าง")
+			} else {
+				setAlert(true, "success", "รับงานสำเร็จ")
+				router.push(`/jobs/details/${jobID.split(",")[0]}`, undefined, { shallow: true })
+			}
 		})
-		router.push(`/jobs/details/${jobID.split(",")[0]}`, undefined, { shallow: true })
 	}
 
 	return (
 		<GetJobPageContainer>
+			<Alert />
 			<NavigationBar activeIndex={1} />
 			<BreakpointMD>
 				<Header>

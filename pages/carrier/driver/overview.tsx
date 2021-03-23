@@ -201,9 +201,7 @@ const OverviewDriverPage = () => {
 
 	return (
 		<>
-			<Alert>
-				{alertStatus.type === "success" ? "เพิ่มพนักงานขับรถสำเร็จ" : "เพิ่มพนักงานขับรถไม่สำเร็จ"}
-			</Alert>
+			<Alert />
 			<NavigationBar activeIndex={2} />
 			<BreakpointMD>
 				<ResourceOverview 

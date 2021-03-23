@@ -168,7 +168,7 @@ const NavigationBar = (props: NavBarInterface) => {
 	}, []);
 
 	const changePage = (route: string) => {
-		setAlert(false, "")
+		setAlert(false, "", "")
 		router.push(route)
 	}
 

@@ -279,9 +279,7 @@ const OverviewTruckPage = () => {
 
 	return (
 		<>
-			<Alert>
-				{alertStatus.type === "success" ? "เพิ่มรถบรรทุกสำเร็จ" : "เพิ่มรถบรรทุกไม่สำเร็จ"}
-			</Alert>
+			<Alert />
 			<NavigationBar activeIndex={2} />
 			<BreakpointMD>
 				<ResourceOverview 

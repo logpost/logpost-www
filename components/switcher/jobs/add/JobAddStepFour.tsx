@@ -21,6 +21,7 @@ import { BreakpointLG, BreakpointMD } from "../../../styles/Breakpoints";
 import DesktopHeader from "../../../common/DesktopHeader";
 import { RightArrowLine } from "../../../common/Icons";
 import breakpointGenerator from "../../../utilities/breakpoint";
+import Alert from "../../../common/Alert";
 
 const MapContainer = styled.div`
 	padding: 1.8rem 2.6rem 0;
@@ -66,9 +67,13 @@ const HeaderTitleCustom = styled(HeaderTitle)`
 `
 
 const ContentContainer = styled.div`
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	max-width: 110rem;
+	${breakpointGenerator({
+		large: css`
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			max-width: 110rem;
+		`
+	})}
 `
 
 const JobAddStepFour = () => {
@@ -84,11 +89,11 @@ const JobAddStepFour = () => {
 			waiting_time: details.waiting_time || 0
 		})
 		if (response !== 200) {
-			setAlert(true, "error")
+			setAlert(true, "error", "ไม่สามารถสร้างงานได้ เนื่องจากข้อผิดพลาดบางอย่าง")
 		} else {
-			setAlert(true, "success")
+			setAlert(true, "success", "สร้างงานสำเร็จ")
+			router.push(`/jobs`)
 		}
-		router.push(`/jobs`)
 	}
 
 	useEffect(() => {
@@ -102,6 +107,7 @@ const JobAddStepFour = () => {
 
 	return (
 		<>
+			<Alert />
 			<BreakpointMD>
 				<FormHeader>
 					<Progress currentStep="ตัวอย่างงาน" percent={4 / 4} />

@@ -14,6 +14,7 @@ import { useRecoilState } from "recoil";
 import { alertPropertyState } from "../../store/atoms/alertPropertyState";
 import breakpointGenerator from "../../components/utilities/breakpoint";
 import { BreakpointLG, BreakpointMD } from "../../components/styles/Breakpoints";
+import useAlert from "../../hooks/useAlert";
 
 const BackgroundCustom = styled(Background)`
     width: 100%;
@@ -206,10 +207,7 @@ const LoginPage = () => {
         username: "",
         password: "",
     });
-    const [alertProperty, setAlertProperty] = useRecoilState(
-        alertPropertyState
-    );
-    const [alertDescriptiton, setAlertDescription] = useState("");
+    const { setAlert } = useAlert()
 
     useEffect(() => {
         if (localStorage.getItem("access_token") !== null) {
@@ -222,18 +220,10 @@ const LoginPage = () => {
         const ExpiredToken = statusCode === 100;
         const inValidToken = statusCode === 200;
         if (ExpiredToken || inValidToken) {
-            setAlertProperty({
-                type: "error",
-                isShow: true,
-            });
             if (ExpiredToken) {
-                setAlertDescription(
-                    `ลิงก์ของคุณหมดอายุ กรุณาเข้าสู่ระบบเพื่อส่งอีเมลยืนยันอีกครั้ง`
-                );
+                setAlert(true, "error", "ลิงก์ของคุณหมดอายุ กรุณาเข้าสู่ระบบเพื่อส่งอีเมลยืนยันอีกครั้ง")
             } else {
-                setAlertDescription(
-                    `ลิงก์ของคุณไม่ถูกต้อง กรุณาเข้าสู่ระบบเพื่อส่งอีเมลยืนยันอีกครั้ง`
-                );
+                setAlert(true, "error", "ลิงก์ของคุณไม่ถูกต้อง กรุณาเข้าสู่ระบบเพื่อส่งอีเมลยืนยันอีกครั้ง")
             }
         }
     }, [router.query]);
@@ -249,25 +239,19 @@ const LoginPage = () => {
         if (loginResponse === 200) {
             router.push("/jobs");
         } else {
-            setAlertProperty({
-                type: "error",
-                isShow: true,
-            });
             if (loginResponse === 400) {
-                setAlertDescription("รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง");
+                setAlert(true, "error", "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง")
             } else if (loginResponse === 404) {
-                setAlertDescription(
-                    "ไม่พบบัญชีผู้ใช้ กรุณาลงทะเบียนก่อนเข้าสู่ระบบ"
-                );
+                setAlert(true, "error", "ไม่พบบัญชีผู้ใช้ กรุณาลงทะเบียนก่อนเข้าสู่ระบบ")
             } else {
-                setAlertDescription("เข้าสู่ระบบไม่สำเร็จ");
+                setAlert(true, "error", "เข้าสู่ระบบไม่สำเร็จ")
             }
         }
     };
 
     return (
         <BackgroundCustom>
-            {alertProperty.isShow && <Alert>{alertDescriptiton}</Alert>}
+            <Alert />
             <div>
                 <BreakpointMD>
                     <TitleContainer>

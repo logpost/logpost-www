@@ -4,9 +4,10 @@ import { alertPropertyState } from '../store/atoms/alertPropertyState'
 const useAlert = () => {
     const [alertStatus, setAlertStatus] = useRecoilState(alertPropertyState)
 
-    const setAlert = (isAlert: boolean, alertType: string) => {
+    const setAlert = (isAlert: boolean, alertType: string, alertDescription: string) => {
         setAlertStatus({
             type: alertType,
+            description: alertDescription,
             isShow: isAlert
         })
     }

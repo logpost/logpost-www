@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import styled, { css } from "styled-components"
 import JobCard from "../../components/common/JobCard"
 import { DownArrowLine, FilterIcon, OptionIcon, PlusIcon, PriceIcon, SearchIcon, TruckIcon, UpArrowLine, WeightIcon } from "../../components/common/Icons"
-import { FilterContainer, HeaderTitle, PrimaryButton, HeaderTitleContainer } from "../../components/styles/GlobalComponents"
+import { HeaderTitle, PrimaryButton, HeaderTitleContainer, Spinner } from "../../components/styles/GlobalComponents"
 import NavigationBar from "../../components/common/NavigationBar"
 import { getAllJobs } from "../../components/utilities/apis"
 import { CountProvinceInterface, JobDocument } from "../../entities/interface/job"
@@ -17,11 +17,10 @@ import FiltersComponent from "../../components/common/FiltersComponent"
 import { filterWordState, jobFiltersState, filterState } from "../../store/atoms/tableState"
 import { TRUCK_TYPE_LIST } from "../../data/carrier"
 import { PROVINCES, PROVINCES_OBJECT } from "../../data/jobs"
-import SelectComponent from "../../components/common/SelectComponent"
-import ThailandMaps from "../../components/common/ThailandMap"
 import { countJobInProvinceState } from "../../store/atoms/jobDocumentState"
 import ThailandMap from "../../components/common/ThailandMap"
 import breakpointGenerator from "../../components/utilities/breakpoint"
+import { GooSpinner } from "react-spinners-kit"
 
 interface FilterContainerInterface {
 	expand: boolean
@@ -42,6 +41,10 @@ const Header = styled.div`
 	padding: 1.6rem 2rem;
 	align-items: center;
 	z-index: 1;
+
+	& ~ ${Spinner} {
+		margin-top: 20rem;
+	}
 
 	${PrimaryButton} {
 		font-size: 1.2rem;
@@ -140,6 +143,10 @@ const ContentContainer = styled.div`
 	display: grid;
 	height: 100%;
 	grid-template-columns: 45rem 1fr;
+
+	> ${Spinner} {
+		align-items: center;
+	}
 `
 
 const BreakpointLGCustom = styled(BreakpointLG)`
@@ -155,6 +162,7 @@ const JobsPage = () => {
 	const setFilterWord = useSetRecoilState(filterWordState)
 	const [jobFilters, setJobFilters] = useRecoilState(jobFiltersState)
 	const setCountJobInProvince = useSetRecoilState(countJobInProvinceState)
+	const [isLoading, setIsLoading] = useState(true)
 
 	const filterList = {
 		0: [
@@ -278,7 +286,9 @@ const JobsPage = () => {
 	}, [jobFilters.pickup_province, jobFilters.dropoff_province])
 
 	useEffect(() => {
+		setIsLoading(true)
 		getAllJobs((jobs: JobDocument[]) => {
+			setIsLoading(false)
 			const [jobCardData, countPickupProvince, countDropoffProvince] = convertJobToCardFormat(jobs)
 			setJobs(jobCardData as JobDocument[])
 			setCountJobInProvince({
@@ -290,9 +300,7 @@ const JobsPage = () => {
 
 	return (
 		<>
-			<Alert>
-				{alertStatus.type === "success" ? "เพิ่มงานสำเร็จ" : "เพิ่มงานสำเร็จ"}
-			</Alert>
+			<Alert />
 			<NavigationBar activeIndex={1} />
 			<BreakpointMD>
 				{
@@ -321,11 +329,14 @@ const JobsPage = () => {
 						<FiltersComponent filterList={filterList} alwaysExpand={true} />
 					</FiltersContainer>
 				}
-				<JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
-					{jobs.map((job, index) => {
-						return <JobCard key={index} origin="jobs-page" details={job} />
-					})}
-				</JobCardContainer>	
+				{
+					isLoading ? <Spinner><GooSpinner size={120} /></Spinner> :
+					<JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
+						{jobs.map((job, index) => {
+							return <JobCard key={index} origin="jobs-page" details={job} />
+						})}
+					</JobCardContainer>	
+				}
 			</BreakpointMD>
 			<BreakpointLGCustom>
 				<AllJobContainer>
@@ -364,11 +375,14 @@ const JobsPage = () => {
 								dropoff_province: value.dropoff
 							})}
 						/>
-						<JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
-							{jobs.map((job, index) => {
-								return <JobCard key={index} origin="jobs-page" details={job} />
-							})}
-						</JobCardContainer>
+						{
+							isLoading ? <Spinner><GooSpinner size={120} /></Spinner>
+							: <JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
+								{jobs.map((job, index) => {
+									return <JobCard key={index} origin="jobs-page" details={job} />
+								})}
+							</JobCardContainer>
+						}
 					</ContentContainer>
 				</AllJobContainer>
 			</BreakpointLGCustom>

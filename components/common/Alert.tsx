@@ -27,7 +27,7 @@ const AlertContainer = styled.div<AlertContainer>`
 		props.type === "error" ? "hsl(360, 77%, 65%, 0.94)" : "hsl(43, 90%, 52%, 0.94)"};
 	border-radius: 6px;
 	color: white;
-	z-index: 1;
+	z-index: 2;
 	align-items: center;
 	justify-content: space-between;
 	padding: 0.8rem 1.6rem;
@@ -55,8 +55,7 @@ const AlertContent = styled.div`
 	}
 `
 
-const Alert: FunctionComponent = (props) => {
-	const { children } = props
+const Alert = () => {
 	const alertProperty = useRecoilValue(alertPropertyState)
 	const discardAlert = useResetRecoilState(alertPropertyState)
 
@@ -72,7 +71,7 @@ const Alert: FunctionComponent = (props) => {
 		<AlertContainer type={alertProperty.type} isDisplay={alertProperty.isShow}>
 			<AlertContent>
 				{ALERT_ICON[alertProperty.type]}
-				<span>{children}</span>
+				<span>{alertProperty.description}</span>
 			</AlertContent>
 			<button onClick={discardAlert}><CancelIcon /></button>
 		</AlertContainer>

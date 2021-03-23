@@ -123,9 +123,10 @@ const ProfileSettingPage = () => {
 			response = await updateCarrierProfile(newProfile)
 		}
 		if (response !== 200) {
-			setAlert(true, "error")
+			setAlert(true, "error", "ไม่สามารถแก้ไขข้อมูลได้ เนื่องจากข้อผิดพลาดบางอย่าง")
 		} else {
-			setAlert(true, "success")
+			setAlert(true, "success", "แก้ไขข้อมูลสำเร็จ")
+			router.push(`/jobs`, undefined, { shallow: true })
 		}
 	}
 
@@ -146,9 +147,7 @@ const ProfileSettingPage = () => {
 	return (
 		<Form>
 			<Title>ข้อมูลส่วนตัว</Title>
-			<Alert>
-				{alertStatus.type === "success" ? "แก้ไขข้อมูลส่วนตัวสำเร็จ" : "แก้ไขข้อมูลส่วนตัวไม่สำเร็จ"}
-			</Alert>
+			<Alert />
 			<InputComponent
 				name="tel"
 				value={profile.tel || ""}
