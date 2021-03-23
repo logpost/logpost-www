@@ -253,3 +253,20 @@ export const filterDriverState = selector({
 		return filteredData
 	}
 })
+
+export const filterByStatusState = selector({
+	key: "filterByStatusState",
+	set: ({set}, newValue: Object[]) => {
+		set(tableDataState, newValue)
+	},
+	get: ({get}) => {
+		let filteredData = get(tableDataState)
+		const status = get(filterStatusState)
+		if (status[0] !== 0) {
+			filteredData = filteredData.filter((item) => {
+				return status.includes(item.status)
+			})
+		} 
+		return filteredData
+	},
+})

@@ -6,16 +6,10 @@ const login = "/login";
 
 const checkUserAuthentication = () => {
 	const userInfo = getUserInfo()
-	if (typeof window !== 'undefined') {
-		return { 
-			auth: Boolean(userInfo),
-			role: userInfo.role
-		};
-	}
 	return { 
-		auth: false,
-		role: undefined
-	}
+		auth: Boolean(userInfo),
+		role: userInfo?.role
+	};
 };
 
 const withPrivateRoute = (WrappedComponent, strict?: string) => {

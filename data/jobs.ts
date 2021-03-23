@@ -230,6 +230,13 @@ const JOB_STATUS_CODE = {
 	},
 }
 
+const STATUS_MAP = {
+	"all": [0],
+	"waiting": [100],
+	"shipping": [200, 300, 400, 500, 600, 700],
+	"finished": [800]
+}
+
 const DEFAULT_JOB = {
 	pickup_location: {
 		address: "",
@@ -276,5 +283,6 @@ export {
 	SHORT_MONTHS,
 	DEFAULT_JOB,
 	PROVINCES,
-	PROVINCES_OBJECT
+	PROVINCES_OBJECT,
+	STATUS_MAP
 }
