@@ -24,6 +24,7 @@ import { HeaderTitle, HeaderTitleContainer, PrimaryButton, SeeAllButton, StatusH
 import { useRouter } from "next/router"
 import { filterState, jobFiltersState, tableDataState } from "../../../store/atoms/tableState"
 import { JOB_STATUS_CODE } from "../../../data/jobs"
+import withPrivateRoute from "../../../components/utilities/withPrivateRoute"
 
 const ProfileStatusContainer = styled.div`
 	margin-top: 1.8rem;
@@ -156,7 +157,7 @@ const CarrierProfilePage = () => {
 			width: "8%",
 			align: "left",
 			format: (_: number, job): ReactElement => (
-				<span>{JOB_STATUS_CODE[job.status].status_name}</span>
+				<span>{JOB_STATUS_CODE[job.status]?.status_name}</span>
 			)
 		},
 		{
@@ -175,8 +176,8 @@ const CarrierProfilePage = () => {
 	]
 
 	useEffect(() => {
-		if (carrierInfo.username) {
-			getCarrierProfile(carrierInfo.username, (carrierProfile) => {
+		if (carrierInfo?.username) {
+			getCarrierProfile(carrierInfo?.username, (carrierProfile) => {
 				resourceStatusCount(carrierProfile.drivers, driverStatusCount, setDriverStatusCount)
 				resourceStatusCount(carrierProfile.trucks, truckStatusCount, setTruckStatusCount)
 			})
@@ -194,7 +195,7 @@ const CarrierProfilePage = () => {
 			<NavigationBar activeIndex={2} />
 			<BreakpointMD>
 				<Header enabledSetting={true}>
-					{carrierInfo.displayName}
+					{carrierInfo?.displayName}
 				</Header>
 				<ProfileStatusContainer>
 					<ProfileStatus
@@ -245,7 +246,7 @@ const CarrierProfilePage = () => {
 						]}
 					/>
 					{
-					carrierInfo.accountType === "business" && <>
+					carrierInfo?.accountType === "business" && <>
 						<Line />
 						<ProfileStatus
 							title="พนักงานขับรถ"
@@ -299,7 +300,7 @@ const CarrierProfilePage = () => {
 							},
 						]}
 					/>
-					{carrierInfo.accountType === "business" && <>
+					{carrierInfo?.accountType === "business" && <>
 						<ProfileStatus
 							title="พนักงานขับรถ"
 							buttonText="จัดการพนักงาน"
@@ -354,6 +355,7 @@ const CarrierProfilePage = () => {
 						filterSelector={filterState}
 						filterState={jobFiltersState}
 						rowPerPage={5}
+						handleClickRow={(selectRow) => router.push(`/jobs/details/${(selectRow as JobDocument).job_id}`)}
 					/>
 				</JobTableContainer>
 			</BreakpointLGCustom>
@@ -361,4 +363,4 @@ const CarrierProfilePage = () => {
 	)
 }
 
-export default CarrierProfilePage
+export default withPrivateRoute(CarrierProfilePage, "carrier")

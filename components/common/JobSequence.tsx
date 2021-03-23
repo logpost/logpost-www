@@ -1,155 +1,10 @@
-const MOCKUP_JOB = {
-	pickup_location: {
-		address: "",
-		district: "",
-		province: "",
-		zipcode: "",
-		latitude: null,
-		longitude: null
-	},
-	dropoff_location: {
-		address: "",
-		district: "",
-		province: "",
-		zipcode: "",
-		latitude: null,
-		longitude: null
-	},
-	pickup_date: "",
-	dropoff_date: "",
-	weight: 1.2,
-	carrier_specification: { 
-		truck: {
-			age: 5,
-			property: {
-				type: "รถ 4 ล้อ",
-				option: "ตู้ทึบ",
-				chassis: null
-			}
-		},
-		driver: {
-			driver_license_type: "ประเภท 1"
-		}
-	},
-	description: "ไม่มี",
-	product_type: "ไม้",
-	offer_price: 8000,
-	auto_price: 4000,
-	distance: 250,
-	permission: "public",
-	waiting_time: 5
-}
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { Detail, DetailRow, JobTitle } from '../styles/GlobalComponents'
+import { dateFormatter, timeFormatter } from '../utilities/helper'
+import { DownArrowLine, ProductIcon, RightArrowLine, UpArrowLine, WeightIcon } from './Icons'
 
-const MOCKUP_GOOGLE_ADDRESS = {
-	non_bangkok: [
-		{
-			long_name: "แหลมทอง",
-			short_name: "แหลมทอง",
-			types: ["premise"]
-		},
-		{
-			long_name: "ตำบลแสนสุข",
-			short_name: "ตำบลแสนสุข",
-			types: ["locality", "political"]
-		},
-		{
-			long_name: "อำเภอเมืองชลบุรี",
-			short_name: "อำเภอเมืองชลบุรี",
-			types:["administrative_area_level_2", "political"]
-		},
-		{
-			long_name: "ชลบุรี",
-			short_name: "จ.ชลบุรี",
-			types: ["administrative_area_level_1", "political"]
-		},
-		{
-			long_name: "ประเทศไทย",
-			short_name: "TH",
-			types: ["country", "political"]
-		},
-		{
-			long_name: "20130",
-			short_name: "20130",
-			types: ["postal_code"]
-		}
-	],
-	bangkok: [
-		{
-			long_name: "28",
-			short_name: "28",
-			types: ["street_number"]
-		},
-		{
-			long_name: "ถนน งามวงศ์วาน",
-			short_name: "ถนน งามวงศ์วาน",
-			types: ["route"]
-		},
-		{
-			long_name: "แขวง ลาดยาว",
-			short_name: "แขวง ลาดยาว",
-			types: ["sublocality_level_2", "sublocality", "political"]
-		},
-		{
-			long_name: "เขตจตุจักร",
-			short_name: "เขตจตุจักร",
-			types: ["sublocality_level_1", "sublocality", "political"]
-		},
-		{
-			long_name: "กรุงเทพมหานคร",
-			short_name: "กรุงเทพมหานคร",
-			types: ["administrative_area_level_1", "political"]
-		},
-		{
-			long_name: "ประเทศไทย",
-			short_name: "TH",
-			types: ["country", "political"]
-		},
-		{
-			long_name: "10900",
-			short_name: "10900",
-			types: ["postal_code"]
-		},
-	],
-	bangkok_2: [
-		{
-			long_name: "999/9",
-			short_name: "999/9",
-			types: ["street_number"]
-		},
-		{
-			long_name: "ถนน พระรามที่ ๑",
-			short_name: "ถนน พระรามที่ ๑",
-			types: ["route"]
-		},
-		{
-			long_name: "แขวง ปทุมวัน",
-			short_name: "แขวง ปทุมวัน",
-			types: ["sublocality_level_2", "sublocality", "political"]
-		},
-		{
-			long_name: "เขตปทุมวัน",
-			short_name: "เขตปทุมวัน",
-			types: ["sublocality_level_1", "sublocality", "political"]
-		},
-		{
-			long_name: "กรุงเทพมหานคร",
-			short_name: "กรุงเทพมหานคร",
-			types: ["administrative_area_level_1", "political"]
-		},
-		{
-			long_name: "ประเทศไทย",
-			short_name: "TH",
-			types: ["country", "political"]
-		},
-		{
-			long_name: "10330",
-			short_name: "10330",
-			types: ["postal_code"]
-		}
-	]
-}
-
-const MOCKUP_OPTIMIZED_JOBS = {
+const MOCKUP_SUGGEST = {
 	"summary": {
 		"0": {
 			"sum_cost": 3658.0492,
@@ -356,6 +211,157 @@ const MOCKUP_OPTIMIZED_JOBS = {
     }
 }
 
-export {
-	MOCKUP_JOB, MOCKUP_GOOGLE_ADDRESS, MOCKUP_OPTIMIZED_JOBS
+const Number = styled.div`
+    min-width: 2.6rem;
+    min-height: 2.6rem;
+    width: 2.6rem;
+    height: 2.6rem;
+    font-size: 1.4rem;
+    color: white;
+    background: hsl(212, 28%, 28%);
+    border-radius: 40rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
+const JobContent = styled.div`
+    margin: 1rem 0;
+    padding: 0 2rem;
+
+    &:first-child {
+        ${Number} {
+            background: hsl(16, 56%, 51%);
+        }
+    }
+
+    ${DetailRow} {
+        margin-top: 1rem;
+        margin-left: 4rem;
+        max-width: 48rem;
+        grid-template-columns: repeat(auto-fit, minmax(22rem,1fr));
+        grid-gap: 1rem;
+    }
+
+    ${Detail} {
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+
+        span {
+            margin: 0 1.2rem;
+            color: hsl(212, 28%, 28%);
+        }
+        
+        svg {
+            margin-right: 1ch;
+            min-height: 20px;
+            min-width: 20px;
+        }
+
+        span:nth-child(2) {
+            color: hsl(212, 28%, 28%);
+        } 
+    }
+`
+
+const SuggestJob = styled.div`
+
+`
+
+const JobHeader = styled.div`
+    display: flex;
+
+    > div:last-child {
+        margin-left: 1.4rem;
+        font-weight: 700;
+        color: hsl(16, 56%, 51%);
+        border: 2px solid hsl(16, 56%, 51%);
+        border-radius: 4px;
+        padding: 0.4rem 1.2rem;
+        width: fit-content;
+        font-size: 1.4rem;
+        white-space: nowrap;
+    }
+
+    ${JobTitle} {
+        font-size: 1.6rem;
+        margin-left: 1rem;
+
+        svg {
+            height: 18px;
+            width: 18px;
+
+            path {
+                fill: hsl(212, 28%, 28%);
+            }
+        }
+    }
+`
+
+const HorizontalLine = styled.div`
+	height: 0.2rem;
+	border-radius: 10rem;
+	background-color: hsl(212, 28%, 88%);
+	width: 100%;
+    margin-top: 1rem;
+`
+
+const JobSequence = (props) => {
+    const { index, job } = props
+
+    return (
+        <JobContent>
+            <JobHeader>
+                <Number>{index + 1}</Number>
+                <JobTitle>
+                    <span>{job.pickup_location.province}</span>
+                    <RightArrowLine />
+                    <span>{job.dropoff_location.province}</span>
+                </JobTitle>
+                {index === 0 && <div>งานที่กำลังดู</div>}
+            </JobHeader>
+            <>
+                <DetailRow>
+                    <Detail>
+                        <UpArrowLine /> ขึ้นสินค้า <span>{job.pickup_location.province}</span>
+                    </Detail>
+                    <Detail>
+                        เวลา <span>{dateFormatter(job.pickup_date)} {timeFormatter(job.pickup_date)}</span>
+                    </Detail>
+                </DetailRow>
+                <DetailRow>
+                    <Detail>
+                        <DownArrowLine /> ลงสินค้า <span>{job.dropoff_location.province}</span> 
+                    </Detail>
+                    <Detail>
+                        เวลา <span> {dateFormatter(job.dropoff_date)} {timeFormatter(job.dropoff_date)}</span>
+                    </Detail>
+                </DetailRow>
+                <DetailRow>
+                    <Detail>
+                        <ProductIcon /> สินค้า <span>{job.product_type}</span>
+                    </Detail>
+                    <Detail>
+                        <WeightIcon /> น้ำหนัก <span>{job.weight}</span> ตัน
+                    </Detail>
+                </DetailRow>
+                {
+                    job.waiting_time > 0 && 
+                    <Detail>
+                        ขึ้นลงสินค้า <span>{job.waiting_time}</span> <span>ชั่วโมง</span>
+                    </Detail>
+                }
+                {
+                    job.description && 
+                    <Detail>
+                        คำอธิบาย <span>{job.description}</span>
+                    </Detail>
+                }
+            </>
+            <HorizontalLine />
+        </JobContent>
+    )
 }
+
+export default JobSequence

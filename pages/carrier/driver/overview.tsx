@@ -16,6 +16,7 @@ import Alert from '../../../components/common/Alert'
 import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
 import { driverStatusCountState } from '../../../store/atoms/carrierProfileState'
 import { resourceStatusCount } from '../../../components/utilities/helper'
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
 
 const ModalContent = styled.div`
 	display: flex;
@@ -200,9 +201,7 @@ const OverviewDriverPage = () => {
 
 	return (
 		<>
-			<Alert>
-				{alertStatus.type === "success" ? "เพิ่มพนักงานขับรถสำเร็จ" : "เพิ่มพนักงานขับรถไม่สำเร็จ"}
-			</Alert>
+			<Alert />
 			<NavigationBar activeIndex={2} />
 			<BreakpointMD>
 				<ResourceOverview 
@@ -272,4 +271,4 @@ const OverviewDriverPage = () => {
 	)
 }
 
-export default OverviewDriverPage
+export default withPrivateRoute(OverviewDriverPage, "carrier")

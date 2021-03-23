@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import styled from "styled-components"
 import { useRecoilState, useSetRecoilState } from "recoil"
-import { jobStatusCountState, myJobsState } from "../../store/atoms/carrierProfileState"
+import { jobStatusCountState } from "../../store/atoms/carrierProfileState"
 import { getMyJob } from "../utilities/apis"
 import { JobDocument } from "../../entities/interface/job"
 import NavigationBar from "./NavigationBar"
@@ -10,16 +10,42 @@ import ScrollableTab from "./ScrollableTab"
 import JobCard from "./JobCard"
 import { BreakpointLG, BreakpointMD } from "../styles/Breakpoints"
 import JobDesktopTable from "./JobDesktopTable"
-import { tableDataState } from "../../store/atoms/tableState"
+import { filterByStatusState, filterStatusState } from "../../store/atoms/tableState"
 import { resourceStatusCount } from "../utilities/helper"
+import { STATUS_MAP } from "../../data/jobs"
+import { JobNotFound } from "./Icons"
+import { Spinner } from "../styles/GlobalComponents"
+import { GooSpinner } from "react-spinners-kit"
 
 const JobContainer = styled.div`
 	padding-top: 6rem;
+	min-height: calc(100vh - 18rem);
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+
+	> div {
+		width: 100%;
+	}
 `
 
 const BreakpointLGCustom = styled(BreakpointLG)`
 	background-color: hsla(228, 24%, 96%);
 	width: calc(100% - 7rem);
+`
+
+const NotFoundContainer = styled.div`
+	font-size: 2rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	> span {
+		margin-top: 3rem;
+	}
 `
 
 interface JobStatusInterface {
@@ -30,9 +56,10 @@ const JobStatus = (props: JobStatusInterface) => {
 	const { role } = props
 	const router = useRouter()
 	const [status, setStatus] = useState("all")
-    const [myJobs, setMyJobs] = useRecoilState(myJobsState)
-	const setTableData = useSetRecoilState(tableDataState)
 	const [jobStatusCount, setJobStatusCount] = useRecoilState<{ [key: number]: number }>(jobStatusCountState)
+	const [filteredJob, setTableData] = useRecoilState(filterByStatusState)
+	const setStatusFilter = useSetRecoilState(filterStatusState)
+	const [isLoading, setIsLoading] = useState(false)
 
 	const convertJobToTableFormat = (jobs: JobDocument[]) => {
 		const jobTableData = []
@@ -49,22 +76,26 @@ const JobStatus = (props: JobStatusInterface) => {
 	}
 
 	useEffect(() => {
-        setStatus(router.query.status as string)
-		if (!Boolean(myJobs[0])) {
+		const status = router.query.status as string
+        setStatus(status)
+		setStatusFilter(STATUS_MAP[status])
+		if (!Boolean(filteredJob[0])) {
+			setIsLoading(true)
             getMyJob((jobs: JobDocument[]) => {
+				setIsLoading(false)
 				const jobTableData = convertJobToTableFormat(jobs)
 				setTableData(jobTableData)
 				resourceStatusCount(jobTableData, jobStatusCount, setJobStatusCount)
-                setMyJobs(jobs)
             })
         }
 	}, [router.query])
 
 	const changeStatus = (nextStatus: string) => {
 		setStatus(nextStatus)
+		setStatusFilter(STATUS_MAP[nextStatus])
 		router.push(
 			{
-				pathname: `/shipper/jobs/`,
+				pathname: `/${role}/jobs/`,
 				query: {
 					status: nextStatus,
 				},
@@ -90,24 +121,20 @@ const JobStatus = (props: JobStatusInterface) => {
 					scrollAtIndex={2}
 				/>
 				<JobContainer>
-					{ status === "all" && myJobs.map((job: JobDocument, index) => {
-						return <JobCard key={index} origin="jobs-page" details={job} />
-					})}
-					{ status === "waiting" && myJobs.map((job: JobDocument, index) => {
-						if (job.status === 100) {
-							return <JobCard key={index} origin="jobs-page" details={job} />
-						}
-					})}
-					{ status === "shipping" && myJobs.map((job: JobDocument, index) => {
-						if (job.status > 100 && job.status < 800) {
-							return <JobCard key={index} origin="jobs-page" details={job} />
-						}
-					})}
-					{ status === "finished" && myJobs.map((job: JobDocument, index) => {
-						if (job.status === 800) {
-							return <JobCard key={index} origin="jobs-page" details={job} />
-						}
-					})}
+					{
+						isLoading ? <Spinner>
+							<GooSpinner size={150} />
+						</Spinner> :
+						(filteredJob.length > 0 ?
+							filteredJob.map((job: JobDocument, index) => {
+								return <JobCard key={index} origin="jobs-page" details={job} />
+							}) : 
+							<NotFoundContainer>
+								<JobNotFound />
+								<span>ไม่พบงานในสถานะนี้</span>
+							</NotFoundContainer>
+						)
+					}
 				</JobContainer>
 			</BreakpointMD>
 			<BreakpointLGCustom>

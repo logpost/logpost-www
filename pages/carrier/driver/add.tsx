@@ -12,6 +12,8 @@ import NavigationBar from '../../../components/common/NavigationBar'
 import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
 import DesktopHeader from '../../../components/common/DesktopHeader'
 import breakpointGenerator from '../../../components/utilities/breakpoint'
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
+import Alert from '../../../components/common/Alert'
 
 const FormHeaderCustom = styled(FormHeader)`
 	padding: 3.4rem 0 3.4rem 3.7rem;
@@ -52,11 +54,11 @@ const AddDriverPage = () => {
 			setDriverValidate(validateResult)
 			const response = await createDriver(driverDetails)
 			if (response !== 200) {
-				setAlert(true, "error")
+				setAlert(true, "error", "ไม่สามารถเพิ่มพนักงานได้ เนื่องจากข้อผิดพลาดบางอย่าง")
 			} else {
-				setAlert(true, "success")
+				setAlert(true, "success", "เพิ่มพนักงานสำเร็จ")
+				router.push(`/carrier/driver/overview`, undefined, { shallow: true })
 			}
-			router.push(`/carrier/driver/overview`, undefined, { shallow: true })
 		} else {
 			setDriverValidate(validateResult)
 		}
@@ -64,6 +66,7 @@ const AddDriverPage = () => {
 
 	return (
 		<>
+			<Alert />
 			<NavigationBar activeIndex={2} />
 			<AddPageContainer>
 				<BreakpointMD>
@@ -92,4 +95,4 @@ const AddDriverPage = () => {
 	)
 }
 
-export default AddDriverPage
+export default withPrivateRoute(AddDriverPage, "carrier")

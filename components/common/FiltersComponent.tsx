@@ -1,7 +1,8 @@
 import React, { ChangeEvent, useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Filter, FilterComponentInterface, DateFilter, RangeFilter } from '../../entities/interface/common'
-import { ButtonGroupContainer, ButtonItem, RadioButton, TextButton } from '../styles/GlobalComponents'
+import { ButtonGroupContainer, ButtonItem, FilterContainer, FilterLabel, RadioButton, TextButton } from '../styles/GlobalComponents'
+import breakpointGenerator from '../utilities/breakpoint'
 import DateAndTimePicker from './DateAndTimePicker'
 import { JobSuccessIcon, RightArrow } from './Icons'
 import InputComponent from './InputComponent'
@@ -25,74 +26,6 @@ const FiltersContainer = styled.div<FiltersContainerInterface>`
 	}
 `
 
-const FilterContainer = styled.div`
-	font-size: 1.4rem;
-	display: flex;
-	align-items: center;
-	width: 50%;
-
-	&#option {
-		width: 100%;
-
-		> ${ButtonGroupContainer} {
-			width: 100%;
-			grid-template-columns: repeat(auto-fill, 8.5rem);
-
-			${ButtonItem} {
-				font-size: 1.4rem;
-				height: 3.2rem;
-				width: 8.2rem;
-				padding: 0;
-			}
-		}
-	}
-
-	input {
-		margin-top: 0;
-		font-size: 1.4rem;
-		height: 3.2rem;
-
-		& ~ div {
-			font-size: 1.4rem;
-			margin-left: 1.4rem;
-		}
-	}
-
-	> svg {
-		margin-right: 0.5rem;
-		min-height: 1.8rem;
-		min-width: 1.8rem;
-	}
-
-	> div {
-		margin-top: 0;
-
-		&.MuiInputBase-root {
-			width: 70%;
-			max-width: 17rem;
-			min-width: 12rem;
-			font-size: 1.4rem;
-			height: 2.8rem;
-
-			> svg {
-				height: 2.6rem;
-				width: 2.6rem;
-				padding: 0.9rem;
-			}
-		}
-		
-		.react-datepicker__input-container input {
-			font-size: 1.4rem;
-			margin-top: 0;
-			height: 3.2rem;
-		}
-	}
-
-	> span {
-		margin: 0 1.4rem;
-	}
-`
-
 const FilterRow = styled.div`
 	display: flex;
 	align-items: center;
@@ -109,7 +42,7 @@ const FilterRow = styled.div`
 		}
 	}
 
-	&:first-child {
+	&#first-row {
 		justify-content: space-between;
 
 		> div {
@@ -163,28 +96,64 @@ const RadioContainer = styled.div`
 	}
 `
 
-const FilterLabel = styled.div`
-	white-space: nowrap;
-	display: flex;
-	margin-right: 2rem;
+const DateTimeFilter = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-left: 3rem;
+    width: calc(100% - 3rem);
 
-	svg {
-		margin-right: 10%;
-		min-height: 20px;
-		min-width: 20px; 
-        height: 20px;
-		width: 20px; 
-		
-		#truck {
-			stroke: hsl(16, 56%, 51%);
-			stroke-width: 3px;
+    > div {
+        margin-top: 1.4rem;
+        display: flex; 
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+
+        &:last-child {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 16rem);
+            grid-gap: 1.4rem 0;
+        }
+
+        > div:last-child {
+            display: flex;
+            align-items: center;
+
+            > span {
+                margin-right: 1rem;
+                white-space: nowrap;
+            }
 		}
-	}
+
+    }
+
+    ${breakpointGenerator({
+        large: css`
+            flex-direction: row;
+            align-items: center;
+            margin-top: 0;
+            margin-left: 0;
+            width: auto;
+
+            > div:last-child {
+                display: flex;
+            }
+
+            > div, > div:last-child {
+                margin-top: 0;
+
+                span {
+                    margin-left: 1rem;
+                    white-space: nowrap;
+                }
+            }
+        `
+    })}
 `
 
 const FiltersComponent = (props: FilterComponentInterface) => {
-    const { filterList } = props
-    const [showMoreFilter, setShowMoreFilter] = useState(false)
+    const { filterList, alwaysExpand = false } = props
+    const [showMoreFilter, setShowMoreFilter] = useState(alwaysExpand)
 
     const generateFilter = (row: string) => {
         return filterList[row].map((filter: Filter, index: number) => {
@@ -195,7 +164,7 @@ const FiltersComponent = (props: FilterComponentInterface) => {
                     setValue={filter.onChange}
                 />
             } else if (filter.enabled !== false) {
-                return <FilterContainer key={`${filter.type}-${index}`} id={filter.type === "selector" ? "option" : ""}>
+                return <FilterContainer key={`${filter.type}-${index}`} id={filter.type === "selector" ? "option" : filter.type}>
                     <FilterLabel>
                         <filter.icon />
                         <span>{filter.label}</span>
@@ -250,7 +219,7 @@ const FiltersComponent = (props: FilterComponentInterface) => {
 							handleOnChange={(e: ChangeEvent<HTMLInputElement>) => filter.onChange(e.target.value, "max")}
                         />
 					</>}
-                    {(filter.type === "date") && <>
+                    {(filter.type === "date") && <DateTimeFilter>
                         <RadioContainer>
                             <div>
                                 <RadioButton>
@@ -276,22 +245,26 @@ const FiltersComponent = (props: FilterComponentInterface) => {
                                 <span>เลือกช่วง</span>
                             </div>
                         </RadioContainer>
-                        <DateAndTimePicker
-                            dateAndTime={(filter.value as DateFilter).start}
-                            setDateAndTime={filter.setStart}
-                            hideTime={true}
-                            disabledDate={!(filter.value as DateFilter).isFilter}
-                            minDate={new Date(2000)}
-                        />
-                        <span>ถึง</span>
-                        <DateAndTimePicker 
-                            dateAndTime={(filter.value as DateFilter).end < (filter.value as DateFilter).start ? (filter.value as DateFilter).start : (filter.value as DateFilter).end}
-                            setDateAndTime={filter.setEnd}
-                            minDate={(filter.value as DateFilter).start}
-                            hideTime={true}
-                            disabledDate={!(filter.value as DateFilter).isFilter}
-                        />
-                    </>}
+                        <div>
+                            <DateAndTimePicker
+                                dateAndTime={(filter.value as DateFilter).start}
+                                setDateAndTime={filter.setStart}
+                                hideTime={true}
+                                disabledDate={!(filter.value as DateFilter).isFilter}
+                                minDate={new Date(2000)}
+                            />
+                            <div>
+                            <span>ถึง</span>
+                            <DateAndTimePicker 
+                                dateAndTime={(filter.value as DateFilter).end < (filter.value as DateFilter).start ? (filter.value as DateFilter).start : (filter.value as DateFilter).end}
+                                setDateAndTime={filter.setEnd}
+                                minDate={(filter.value as DateFilter).start}
+                                hideTime={true}
+                                disabledDate={!(filter.value as DateFilter).isFilter}
+                            />
+                            </div>
+                        </div>
+                    </DateTimeFilter>}
                 </FilterContainer>
             }
         })
@@ -303,8 +276,8 @@ const FiltersComponent = (props: FilterComponentInterface) => {
                 Object.keys(filterList).map((row: string) => {
 					if (filterList[row][0].enabled !== false) {
 						return (
-							row === "0" ?
-								<FilterRow key={row}>
+							(row === "0" && !alwaysExpand) ?
+								<FilterRow key={row} id="first-row">
 									<div>{generateFilter(row)}</div>
 									{
 										filterList[1] &&

@@ -15,6 +15,7 @@ import JobDetailsSection from '../../components/common/JobDetailsSection'
 import Modal from '../../components/common/Modal'
 import InputComponent from '../../components/common/InputComponent'
 import { jobDetailsSelector, jobDetailsState } from '../../store/atoms/jobDetailsState'
+import withPrivateRoute from '../../components/utilities/withPrivateRoute'
 
 const JobDocumentContainer = styled.div`
 	margin: 1.8rem 2rem;

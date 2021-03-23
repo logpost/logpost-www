@@ -168,12 +168,12 @@ const NavigationBar = (props: NavBarInterface) => {
 	}, []);
 
 	const changePage = (route: string) => {
-		setAlert(false, "")
+		setAlert(false, "", "")
 		router.push(route)
 	}
 
 	return (
-		userInfo && (<>
+		userInfo ? (<>
 			<NavBarBlank />
 			<NavBarContainer>
 				<BreakpointLG>
@@ -205,7 +205,7 @@ const NavigationBar = (props: NavBarInterface) => {
 					<span>บัญชีของฉัน</span>
 				</NavBarItem>
 			</NavBarContainer>
-		</>)
+		</>) : <div />
 	);
 };
 

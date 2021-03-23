@@ -19,6 +19,7 @@ interface TableContainerInterface {
 interface TableInterface {
 	width?: string,
 	gap?: string
+	minWidth?: string
 }
 
 interface HeaderInterface {
@@ -39,7 +40,7 @@ const Table = styled.table<TableInterface>`
 	-webkit-border-horizontal-spacing: 0;
 	table-layout: fixed;
 	width: ${props => props.width ? props.width : "100%"};
-	min-width: 96rem;
+	min-width: ${props => props.minWidth ? props.minWidth : 0};
 
 	${props => props.gap && 
 		css`
@@ -52,7 +53,9 @@ const HeaderRow = styled.tr`
 	box-shadow: 0 4px 8px 0 hsla(0, 0%, 0%, 0.08);
 `
 
-const Row = styled.tr`
+const Row = styled.tr<{clickable: boolean}>`
+	cursor: ${props => props.clickable ? "pointer" : "default"};
+
 	&:nth-child(odd) {
 		background-color: hsl(220, 27%, 96%);
 	}
@@ -124,6 +127,7 @@ const TableComponent = (props: TableComponentInterface) => {
 		HeaderStyle = HeaderRow,
 		PaginationStyle = Pagination,
 		filterSelector,
+		handleClickRow = null,
 		rowPerPage = 7
 	} = props
 	const [currentPage, setCurrentPage] = useState(1)
@@ -201,7 +205,7 @@ const TableComponent = (props: TableComponentInterface) => {
 						</HeaderStyle>
 						{data.slice(firstRowOfPage, LastRowOfPage).map((item: (TruckTable | DriverTable), index) => {
 							return (
-								<RowStyle key={index}>
+								<RowStyle key={index} onClick={handleClickRow ? () => handleClickRow(item) : null} clickable={Boolean(handleClickRow)}>
 									{columns.map((column) => {
 										const cellValue = item[column.id]
 										return (

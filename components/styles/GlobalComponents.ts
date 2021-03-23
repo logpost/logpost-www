@@ -196,6 +196,12 @@ export const DetailRow = styled.div`
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(16.2rem, 1fr));
 	grid-gap: 1.6rem;
+
+	${breakpointGenerator({
+		large: css`
+			grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+		`
+	})}
 `
 
 export const Detail = styled.div`
@@ -452,4 +458,156 @@ export const SeeAllButton = styled.button`
 			font-size: 1.6rem;
 		`
 	})}
+`
+
+export const FilterContainer = styled.div`
+	font-size: 1.4rem;
+	display: flex;
+	align-items: center;
+	width: 50%;
+
+	&#date {
+		flex-direction: column;
+		align-items: flex-start;
+		width: 100%;
+
+		${breakpointGenerator({
+			large: css`
+				align-items: center;
+				flex-direction: row;
+			`
+		})}
+	}
+
+	&#option {
+		width: 100%;
+
+		> ${ButtonGroupContainer} {
+			width: 100%;
+			grid-template-columns: repeat(auto-fill, 8.5rem);
+
+			${ButtonItem} {
+				font-size: 1.4rem;
+				height: 3.2rem;
+				width: 8.2rem;
+				padding: 0;
+			}
+		}
+	}
+
+	input {
+		margin-top: 0;
+		font-size: 1.4rem;
+		height: 3.2rem;
+
+		& ~ div {
+			font-size: 1.4rem;
+			margin-left: 1.4rem;
+		}
+	}
+
+	> svg {
+		margin-right: 0.5rem;
+		min-height: 1.8rem;
+		min-width: 1.8rem;
+	}
+
+	> div {
+		margin-top: 0;
+
+		&.MuiInputBase-root {
+			width: 70%;
+			max-width: 17rem;
+			min-width: 12rem;
+			font-size: 1.4rem;
+			height: 2.8rem;
+
+			> svg {
+				height: 2.6rem;
+				width: 2.6rem;
+				padding: 0.9rem;
+			}
+		}
+		
+		.react-datepicker__input-container input {
+			font-size: 1.4rem;
+			margin-top: 0;
+			height: 3.2rem;
+		}
+	}
+
+	> span {
+		margin: 0 1.4rem;
+	}
+`
+
+export const FilterLabel = styled.div`
+white-space: nowrap;
+display: flex;
+margin-right: 2rem;
+
+svg {
+	margin-right: 10%;
+	min-height: 20px;
+	min-width: 20px; 
+	height: 20px;
+	width: 20px; 
+	
+	#truck {
+		stroke: hsl(16, 56%, 51%);
+		stroke-width: 3px;
+	}
+}
+`
+
+export const RadioInputContainer = styled.div`
+	display: flex;
+	margin-top: 1rem;
+	width: 100%;
+`
+
+export const RadioInput = styled.button`
+	font-size: 1.6rem;
+	width: 50%;
+	padding: 1rem 0;
+	text-align: center;
+	border: solid 0.2rem hsl(212, 28%, 28%);
+	${props => props.value === props.name &&
+		`
+		background-color: hsl(212, 28%, 28%);
+		color: white;
+	`}
+
+	&:first-child {
+		border-top-left-radius: 0.6rem;
+		border-bottom-left-radius: 0.6rem;
+	}
+
+	&:last-child {
+		border-top-right-radius: 0.6rem;
+		border-bottom-right-radius: 0.6rem;
+	}
+`
+
+export const Spinner = styled.div`
+	display: flex;
+	justify-content: center;
+	justify-self: center;
+	
+	> div {
+		
+		> div {
+			> div:first-child {
+				background-color: hsl(212, 28%, 28%);
+			}
+
+			> div:last-child {
+				background-color: hsl(16, 56%, 51%);
+			}
+		}
+
+		> svg {
+			display: none;
+		}
+	}
 `

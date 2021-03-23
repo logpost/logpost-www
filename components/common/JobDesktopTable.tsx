@@ -4,7 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { TRUCK_TYPE_LIST } from '../../data/carrier'
 import { JOB_STATUS_CODE, PROVINCES } from '../../data/jobs'
-import { JobDetails } from '../../entities/interface/job'
+import { JobDetails, JobDocument } from '../../entities/interface/job'
 import { filterState, filterWordState, jobFiltersState } from '../../store/atoms/tableState'
 import { HeaderTitle, HeaderTitleContainer, PrimaryButton, TableRowActions } from '../styles/GlobalComponents'
 import { dateFormatter, timeFormatter } from '../utilities/helper'
@@ -186,7 +186,7 @@ const JobDesktopTable = (props: JobDesktopTableInterface) => {
 			width: "8%",
 			align: "left",
 			format: (_: number, job): ReactElement => (
-				<span>{JOB_STATUS_CODE[job.status].status_name}</span>
+				<span>{JOB_STATUS_CODE[job.status]?.status_name}</span>
 			)
 		},
 		{
@@ -236,6 +236,7 @@ const JobDesktopTable = (props: JobDesktopTableInterface) => {
                     columns={jobColumns}
                     filterSelector={filterState}
                     filterState={jobFiltersState}
+					handleClickRow={(selectRow) => router.push(`/jobs/details/${(selectRow as JobDocument).job_id}`)}
                 />
             </JobTableContainer>
         </>

@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import Progress from "../../../common/Progress";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
 	FormActions,
 	PrimaryButton,
 	SecondaryButton,
-	FormHeader
+	FormHeader,
+	HeaderTitle
 } from "../../../styles/GlobalComponents"
 import JobDetailsSection from "../../../common/JobDetailsSection"
 import { useRouter } from "next/router"
@@ -16,6 +17,16 @@ import { MapInterface } from '../../../../entities/interface/googlemaps'
 import { jobDetailsState } from '../../../../store/atoms/jobDetailsState'
 import { costCalculator } from '../../../utilities/costCalculater'
 import useAlert from "../../../../hooks/useAlert";
+import { BreakpointLG, BreakpointMD } from "../../../styles/Breakpoints";
+import DesktopHeader from "../../../common/DesktopHeader";
+import { RightArrowLine } from "../../../common/Icons";
+import breakpointGenerator from "../../../utilities/breakpoint";
+import Alert from "../../../common/Alert";
+
+const MapContainer = styled.div`
+	padding: 1.8rem 2.6rem 0;
+	max-width: 110rem;
+`
 
 const Map = styled.div`
     height: 45rem;
@@ -23,12 +34,47 @@ const Map = styled.div`
 
     &#route-map {
         height: 19rem;
+
+		${breakpointGenerator({
+			large: css`
+				border-radius: 14px;
+				height: 100%;
+			`
+		})}
     }
 `;
 
 const JobDetailsContainer = styled.div`
     margin: 1.8rem 2rem;
 `;
+
+const HeaderTitleCustom = styled(HeaderTitle)`
+	color: hsl(212, 28%, 28%);
+	
+	> span {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-left: 0.8rem;
+	}
+
+	svg {
+		margin: 0 1.4rem;
+
+		path {
+			fill: hsl(212, 28%, 28%);
+		}
+	}
+`
+
+const ContentContainer = styled.div`
+	${breakpointGenerator({
+		large: css`
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			max-width: 110rem;
+		`
+	})}
+`
 
 const JobAddStepFour = () => {
 	const router = useRouter()
@@ -43,41 +89,57 @@ const JobAddStepFour = () => {
 			waiting_time: details.waiting_time || 0
 		})
 		if (response !== 200) {
-			setAlert(true, "error")
+			setAlert(true, "error", "ไม่สามารถสร้างงานได้ เนื่องจากข้อผิดพลาดบางอย่าง")
 		} else {
-			setAlert(true, "success")
+			setAlert(true, "success", "สร้างงานสำเร็จ")
+			router.push(`/jobs`)
 		}
-		router.push(`/jobs`)
 	}
 
 	useEffect(() => {
 		initMap(document.getElementById("route-map") as HTMLElement, (routeMap: MapInterface) => {
 			const { pickup, dropoff } = jobDetails.geocoder_result
-			const pickupLatLng = (pickup as google.maps.places.PlaceResult).geometry.location
-			const dropoffLatLng = (dropoff as google.maps.places.PlaceResult).geometry.location
+			const pickupLatLng = (pickup as google.maps.places.PlaceResult).geometry?.location
+			const dropoffLatLng = (dropoff as google.maps.places.PlaceResult).geometry?.location
 			route(pickupLatLng, dropoffLatLng, routeMap)
 		})
 	}, [])
 
 	return (
-		<div>
-			<FormHeader>
-				<Progress currentStep="ตัวอย่างงาน" percent={4 / 4} />
-			</FormHeader>
-			<Map id="route-map" />
-			<JobDetailsContainer>
-				<JobDetailsSection 
-					isShowCarrierDetails={false}
-					isShowAutoPrice={false}
-				/>
-				<FormActions>
-					<SecondaryButton onClick={() => router.push(`/jobs/add/3`)}>
-						ย้อนกลับ
-					</SecondaryButton>
-					<PrimaryButton onClick={submitDetails}>สร้างงาน</PrimaryButton>
-				</FormActions>
-			</JobDetailsContainer>
-		</div>
+		<>
+			<Alert />
+			<BreakpointMD>
+				<FormHeader>
+					<Progress currentStep="ตัวอย่างงาน" percent={4 / 4} />
+				</FormHeader>
+			</BreakpointMD>
+			<BreakpointLG>
+				<DesktopHeader>
+					<HeaderTitleCustom>
+						งาน <span>{jobDetails.pickup_location.province}</span>
+						<RightArrowLine />
+						<span>{jobDetails.dropoff_location.province}</span>
+					</HeaderTitleCustom>
+				</DesktopHeader>
+			</BreakpointLG>
+			<ContentContainer>
+				<MapContainer>
+					<Map id="route-map" />
+				</MapContainer>
+				<JobDetailsContainer>
+					<JobDetailsSection 
+						isShowCarrierDetails={false}
+						isShowAutoPrice={false}
+					/>
+					<FormActions>
+						<SecondaryButton onClick={() => router.push(`/jobs/add/3`)}>
+							ย้อนกลับ
+						</SecondaryButton>
+						<PrimaryButton onClick={submitDetails}>สร้างงาน</PrimaryButton>
+					</FormActions>
+				</JobDetailsContainer>
+			</ContentContainer>
+		</>
 	)
 }
 

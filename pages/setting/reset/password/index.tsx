@@ -5,6 +5,7 @@ import InputComponent from '../../../../components/common/InputComponent'
 import { changePassword } from '../../../../components/utilities/apis'
 import { useRecoilValue } from 'recoil'
 import { userInfoState } from '../../../../store/atoms/userInfoState'
+import withPrivateRoute from '../../../../components/utilities/withPrivateRoute'
 
 const PasswordSettingPage = () => {
 	const router = useRouter()
@@ -97,4 +98,4 @@ const PasswordSettingPage = () => {
 	)
 }
 
-export default PasswordSettingPage
+export default withPrivateRoute(PasswordSettingPage)

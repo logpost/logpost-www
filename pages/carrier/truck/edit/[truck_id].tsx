@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil'
 import { truckDetailsState } from '../../../../store/atoms/truckDetailsState'
 import { TruckDetails, TruckDocument } from '../../../../entities/interface/truck'
 import Alert from '../../../../components/common/Alert'
+import withPrivateRoute from '../../../../components/utilities/withPrivateRoute'
 
 const FormHeaderCustom = styled(FormHeader)`
 	padding: 3.4rem 0 3.4rem 3.7rem;
@@ -34,17 +35,16 @@ const EditTruckPage = () => {
 	const submitDetails = async () => {
 		const response = await updateTruckByID(truckID, truckDetails)
 		if (response !== 200) {
-			setAlert(true, "error")
+			setAlert(true, "error", "แก้ไขข้อมูลรถบรรทุกไม่สำเร็จ")
 		} else {
-			setAlert(true, "success")
+			setAlert(true, "success", "แก้ไขข้อมูลรถบรรทุกสำเร็จ")
+			router.push(`/carrier/truck/overview`, undefined, { shallow: true })
 		}
 	}
 
 	return (
 		<>
-            <Alert>
-                {alertStatus.type === "success" ? "แก้ไขข้อมูลสำเร็จ" : "แก้ไขข้อมูลไม่สำเร็จ"}
-            </Alert>
+            <Alert />
 			<FormHeaderCustom>
                 แก้ไขข้อมูลรถบรรทุก
 			</FormHeaderCustom>
@@ -59,4 +59,4 @@ const EditTruckPage = () => {
 	)
 }
 
-export default EditTruckPage
+export default withPrivateRoute(EditTruckPage, "carrier")

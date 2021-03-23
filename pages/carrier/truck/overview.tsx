@@ -17,6 +17,7 @@ import { alertPropertyState } from '../../../store/atoms/alertPropertyState'
 import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
 import { truckStatusCountState } from '../../../store/atoms/carrierProfileState'
 import { resourceStatusCount } from '../../../components/utilities/helper'
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
 
 const ModalContent = styled.div`
 	display: flex;
@@ -278,9 +279,7 @@ const OverviewTruckPage = () => {
 
 	return (
 		<>
-			<Alert>
-				{alertStatus.type === "success" ? "เพิ่มรถบรรทุกสำเร็จ" : "เพิ่มรถบรรทุกไม่สำเร็จ"}
-			</Alert>
+			<Alert />
 			<NavigationBar activeIndex={2} />
 			<BreakpointMD>
 				<ResourceOverview 
@@ -351,4 +350,4 @@ const OverviewTruckPage = () => {
 	)
 }
 
-export default OverviewTruckPage
+export default withPrivateRoute(OverviewTruckPage, "carrier")

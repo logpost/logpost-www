@@ -11,6 +11,8 @@ import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoin
 import DesktopHeader from '../../../components/common/DesktopHeader'
 import NavigationBar from '../../../components/common/NavigationBar'
 import breakpointGenerator from '../../../components/utilities/breakpoint'
+import withPrivateRoute from '../../../components/utilities/withPrivateRoute'
+import Alert from '../../../components/common/Alert'
 
 const FormHeaderCustom = styled(FormHeader)`
 	padding: 3.4rem 0 3.4rem 3.7rem;
@@ -43,15 +45,16 @@ const AddTruckPage = () => {
 	const submitDetails = async () => {
 		const response = await createTruck(truckDetails)
 		if (response !== 200) {
-			setAlert(true, "error")
+			setAlert(true, "error", "ไม่สามารถเพิ่มรถบรรทุกได้ เนื่องจากข้อผิดพลาดบางอย่าง")
 		} else {
-			setAlert(true, "success")
+			setAlert(true, "success", "เพิ่มรถบรรทุกสำเร็จ")
+			router.push(`/carrier/truck/overview`, undefined, { shallow: true })
 		}
-		router.push(`/carrier/truck/overview`, undefined, { shallow: true })
 	}
 
 	return (
 		<>
+			<Alert />
 			<NavigationBar activeIndex={2} />
 			<AddPageContainer>
 				<BreakpointMD>
@@ -78,4 +81,4 @@ const AddTruckPage = () => {
 	)
 }
 
-export default AddTruckPage
+export default withPrivateRoute(AddTruckPage, "carrier")

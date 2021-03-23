@@ -4,7 +4,7 @@ import { NumberOfJobs, Pagination } from '../styles/GlobalComponents'
 import TableComponent from './TableComponent'
 import { RecoilState, useRecoilState, useRecoilValue } from 'recoil'
 import { jobStatusCountState } from '../../store/atoms/carrierProfileState'
-import { JobDetails } from '../../entities/interface/job'
+import { JobDocument } from '../../entities/interface/job'
 import { TruckTable } from '../../entities/interface/truck'
 import { DriverTable } from '../../entities/interface/driver'
 
@@ -31,10 +31,12 @@ const TableContainer = styled.div`
 	border-right: 3rem solid transparent;
 `
 
-const TableRowStyle = styled.tr`
+const TableRowStyle = styled.tr<{clickable: boolean}>`
 	background-color: hsl(211, 22%, 96%);
 	border-radius: 6px;
 	font-weight: 300;
+
+	cursor: ${props => props.clickable ? "pointer" : "default"};
 
 	td {
 		padding: 1.4rem 0.6rem;
@@ -118,8 +120,9 @@ interface JobTableInterface {
 		align?: string
 		width?: string
 		sortable?: boolean
-		format?: (index: number, item?: (TruckTable | DriverTable | JobDetails)) => ReactElement
+		format?: (index: number, item?: (TruckTable | DriverTable | JobDocument)) => ReactElement
 	}[]
+	handleClickRow?: (value: TruckTable | DriverTable | JobDocument) => void
 	filterSelector: RecoilState<any[]>
 	filterState: RecoilState<{
 		status?: number[]
@@ -154,7 +157,8 @@ const DesktopTable = (props: JobTableInterface) => {
 			<TableContainer>
 				<TableComponent
 					tableStyle={{
-						gap: "18px"
+						gap: "18px",
+						minWidth: "96rem"
 					}}
 					RowStyle={TableRowStyle}
 					HeaderStyle={TableHeaderStyle}

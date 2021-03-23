@@ -1,10 +1,10 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 import { DetailRow, Detail } from "../styles/GlobalComponents"
 import { DownArrowLine, UpArrowLine } from "./Icons"
 import { dateFormatter, timeFormatter } from "../utilities/helper"
 import { JobDetails, JobDocument } from '../../entities/interface/job'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { jobDetailsState } from '../../store/atoms/jobDetailsState'
 
 const JobDetailsContainer = styled.div`
@@ -181,19 +181,31 @@ const DisplayName = styled.span`
 
 const JobDetailsSection = (props) => {
 	const { 
+		number,
+		jobDetails,
 		isShowJobDetails = true,
 		isShowCarrierDetails = true,
+		isShowTruckDetails = true,
 		isShowAutoPrice = true,
 		isShowFooterDetails = true
 	} = props
-	const details = useRecoilValue<JobDocument>(jobDetailsState)
+	const detailsState = useRecoilValue<JobDocument>(jobDetailsState)
+	const [details, setDetails] = useState<JobDocument>()
+
+	useEffect(() => {
+		if (jobDetails) {
+			setDetails(jobDetails)
+		} else {
+			setDetails(detailsState)
+		}
+	}, [detailsState])
 
 	return (
 		<>
 			{ isShowJobDetails && 
 				<JobDetailsContainer>
 					<SectionHeader>
-						<div>รายละเอียดงาน</div> <Line />
+						<div>รายละเอียดงาน{number ? `ที่ ${number}` : ""}</div> <Line />
 					</SectionHeader>
 					<>
 						<DetailRow id="space-between">
@@ -201,64 +213,68 @@ const JobDetailsSection = (props) => {
 								<span>
 									ขึ้นสินค้า <UpArrowLine />
 								</span>
-								<span>{details.pickup_location.province}</span>
-								<span>{dateFormatter(details.pickup_date)} {timeFormatter(details.pickup_date)}</span>
+								<span>{details?.pickup_location.province}</span>
+								<span>{dateFormatter(details?.pickup_date)} {timeFormatter(details?.pickup_date)}</span>
 							</PickUpDeliverContainer>
 							<PickUpDeliverContainer>
 								<span>
 									ลงสินค้า <DownArrowLine />
 								</span>
-								<span>{details.dropoff_location.province}</span>
-								<span>{dateFormatter(details.dropoff_date)} {timeFormatter(details.dropoff_date)}</span>
+								<span>{details?.dropoff_location.province}</span>
+								<span>{dateFormatter(details?.dropoff_date)} {timeFormatter(details?.dropoff_date)}</span>
 							</PickUpDeliverContainer>
 						</DetailRow>
 						<DetailRow>
 							<Detail>
-								สินค้า <span>{details.product_type}</span>
+								สินค้า <span>{details?.product_type}</span>
 							</Detail>
 							<Detail>
-								น้ำหนัก <span>{details.weight}</span> <span>ตัน</span>
+								น้ำหนัก <span>{details?.weight}</span> <span>ตัน</span>
 							</Detail>
 						</DetailRow>
 						{
-							details.waiting_time > 0 && 
+							details?.waiting_time > 0 && 
 							<Detail>
-								ขึ้นลงสินค้า <span>{details.waiting_time}</span> <span>ชั่วโมง</span>
+								ขึ้นลงสินค้า <span>{details?.waiting_time}</span> <span>ชั่วโมง</span>
 							</Detail>
 						}
 						{
-							details.description && 
+							details?.description && 
 							<Detail>
-								คำอธิบาย <span>{details.description}</span>
+								คำอธิบาย <span>{details?.description}</span>
 							</Detail>
 						}
 					</>
-					<SectionHeader>
-						<div>รายละเอียดรถบรรทุก</div> <Line />
-					</SectionHeader>
-					<>
-						<Detail>
-							ประเภทรถ <span>{details.carrier_specification.truck.property.type} {details.carrier_specification.truck.property.option} {details.carrier_specification.truck.property.chassis > 0 &&  ` ${details.carrier_specification.truck.property.chassis} เพลา`} </span>
-						</Detail>
-						<Detail>
-							อายุไม่เกิน <span>{details.carrier_specification.truck.age}</span> <span>ปี</span>
-						</Detail>
-						<Detail>
-							พนักงานขับรถใบขับขี่ <span>{details.carrier_specification.driver.driver_license_type}</span>
-						</Detail>
-					</>
+					{
+						isShowTruckDetails && <>
+							<SectionHeader>
+								<div>รายละเอียดรถบรรทุก</div> <Line />
+							</SectionHeader>
+							<>
+								<Detail>
+									ประเภทรถ <span>{details?.carrier_specification.truck.property.type} {details?.carrier_specification.truck.property.option} {details?.carrier_specification.truck.property.chassis > 0 &&  ` ${details?.carrier_specification.truck.property.chassis} เพลา`} </span>
+								</Detail>
+								<Detail>
+									อายุไม่เกิน <span>{details?.carrier_specification.truck.age}</span> <span>ปี</span>
+								</Detail>
+								<Detail>
+									พนักงานขับรถใบขับขี่ <span>{details?.carrier_specification.driver.driver_license_type}</span>
+								</Detail>
+							</>
+						</>
+					}
 				</JobDetailsContainer>
 			}
 			{ isShowCarrierDetails &&
 				<CarrierDetailsContainer>
 					<Detail>
-						ขนส่งโดย <span>{details.carrier_display_name}</span>
+						ขนส่งโดย <span>{details?.carrier_display_name}</span>
 					</Detail>
 					<Detail>
-						พนักงานขับรถ <span>{details.driver_name}</span>
+						พนักงานขับรถ <span>{details?.driver_name}</span>
 					</Detail>
 					<Detail>
-						ทะเบียนรถ <span>{details.license_number}</span>
+						ทะเบียนรถ <span>{details?.license_number}</span>
 					</Detail>
 				</CarrierDetailsContainer>
 			}
@@ -267,21 +283,21 @@ const JobDetailsSection = (props) => {
 					<PriceItem>
 						ราคาเสนอ
 						<div>
-							{details.offer_price?.toLocaleString()} <span>บาท</span>
+							{details?.offer_price?.toLocaleString()} <span>บาท</span>
 						</div>
 					</PriceItem>
 					<VerticalLine />
 					<PriceItem>
 						ต้นทุน <span>ประมาณ</span>
 						<div>
-							{details.auto_price?.toLocaleString()} <span>บาท</span>
+							{details?.auto_price?.toLocaleString()} <span>บาท</span>
 						</div>
 					</PriceItem>
 					<VerticalLine />
 					<PriceItem>
 						กำไร
 						<div>
-							{ (details.offer_price - details.auto_price).toLocaleString() }
+							{ (details?.offer_price - details?.auto_price).toLocaleString() }
 							<span> บาท</span>
 						</div>
 					</PriceItem>
@@ -292,13 +308,13 @@ const JobDetailsSection = (props) => {
 				<FooterDetails rowLayout={isShowAutoPrice}>
 					{
 						(!isShowAutoPrice) &&
-						<OfferPrice>{details.offer_price?.toLocaleString()} บาท</OfferPrice>
+						<OfferPrice>{details?.offer_price?.toLocaleString()} บาท</OfferPrice>
 					}
 					<span>
 						<Detail>
-							โดย <DisplayName>{details.shipper_display_name}</DisplayName>
+							โดย <DisplayName>{details?.shipper_display_name}</DisplayName>
 						</Detail>
-						<span>{dateFormatter(details.dropoff_date)} {timeFormatter(details.dropoff_date)}</span>
+						<span>{dateFormatter(details?.dropoff_date)} {timeFormatter(details?.dropoff_date)}</span>
 					</span>
 				</FooterDetails>
 			}
