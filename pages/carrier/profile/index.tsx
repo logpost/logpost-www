@@ -176,8 +176,8 @@ const CarrierProfilePage = () => {
 	]
 
 	useEffect(() => {
-		if (carrierInfo.username) {
-			getCarrierProfile(carrierInfo.username, (carrierProfile) => {
+		if (carrierInfo?.username) {
+			getCarrierProfile(carrierInfo?.username, (carrierProfile) => {
 				resourceStatusCount(carrierProfile.drivers, driverStatusCount, setDriverStatusCount)
 				resourceStatusCount(carrierProfile.trucks, truckStatusCount, setTruckStatusCount)
 			})
@@ -195,7 +195,7 @@ const CarrierProfilePage = () => {
 			<NavigationBar activeIndex={2} />
 			<BreakpointMD>
 				<Header enabledSetting={true}>
-					{carrierInfo.displayName}
+					{carrierInfo?.displayName}
 				</Header>
 				<ProfileStatusContainer>
 					<ProfileStatus
@@ -246,7 +246,7 @@ const CarrierProfilePage = () => {
 						]}
 					/>
 					{
-					carrierInfo.accountType === "business" && <>
+					carrierInfo?.accountType === "business" && <>
 						<Line />
 						<ProfileStatus
 							title="พนักงานขับรถ"
@@ -300,7 +300,7 @@ const CarrierProfilePage = () => {
 							},
 						]}
 					/>
-					{carrierInfo.accountType === "business" && <>
+					{carrierInfo?.accountType === "business" && <>
 						<ProfileStatus
 							title="พนักงานขับรถ"
 							buttonText="จัดการพนักงาน"

@@ -1,37 +1,19 @@
-import React, { useEffect } from 'react';
-import Router from 'next/router';
+import React, { FunctionComponent, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { getUserInfo } from './tokenHelper';
 
-const login = "/login";
-
-const checkUserAuthentication = () => {
-	const userInfo = getUserInfo()
-	return { 
-		auth: Boolean(userInfo),
-		role: userInfo?.role
-	};
-};
-
-const withPrivateRoute = (WrappedComponent, strict?: string) => {
+const withPrivateRoute = (WrappedComponent: FunctionComponent, strict?: string) => {
 	const hocComponent = ({ ...props }) => { 
+		const router = useRouter()
+		const userInfo = getUserInfo()
+
+		useEffect(() => {
+			if (!userInfo || (strict && strict !== userInfo.role ) ) {
+				router.replace("/login")
+			} 
+		}, [])
+
 		return <WrappedComponent {...props} />
-	};
-
-	hocComponent.getInitialProps = async ({ res }) => {
-		const userAuth = checkUserAuthentication();
-		
-		if (!userAuth?.auth || (strict && userAuth.role !== strict) ) {
-			if (res) {
-				res.writeHead(302, {
-					Location: login,
-				});
-				res.end();
-			} else {
-				Router.replace(login);
-			}
-		} 
-
-		return { userAuth };
 	};
 
 	return hocComponent;
