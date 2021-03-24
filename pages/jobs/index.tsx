@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import styled, { css } from "styled-components"
 import JobCard from "../../components/common/JobCard"
-import { DownArrowLine, FilterIcon, OptionIcon, PlusIcon, PriceIcon, SearchIcon, TruckIcon, UpArrowLine, WeightIcon } from "../../components/common/Icons"
+import { DownArrowLine, FilterIcon, JobNotFound, OptionIcon, PlusIcon, PriceIcon, SearchIcon, TruckIcon, UpArrowLine, WeightIcon } from "../../components/common/Icons"
 import { HeaderTitle, PrimaryButton, HeaderTitleContainer, Spinner } from "../../components/styles/GlobalComponents"
 import NavigationBar from "../../components/common/NavigationBar"
 import { getAllJobs } from "../../components/utilities/apis"
@@ -151,6 +151,19 @@ const ContentContainer = styled.div`
 
 const BreakpointLGCustom = styled(BreakpointLG)`
 	width: calc(100% - 7rem);
+`
+
+const NotFoundContainer = styled.div`
+	font-size: 2rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 80vh;
+
+	> span {
+		margin-top: 3rem;
+	}
 `
 
 const JobsPage = () => {
@@ -332,9 +345,16 @@ const JobsPage = () => {
 				{
 					isLoading ? <Spinner><GooSpinner size={120} /></Spinner> :
 					<JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
-						{jobs.map((job, index) => {
-							return <JobCard key={index} origin="jobs-page" details={job} />
-						})}
+						{
+							jobs.length > 0 ? 
+							jobs.map((job, index) => {
+								return <JobCard key={index} origin="jobs-page" details={job} />
+							}) : 
+							<NotFoundContainer>
+								<JobNotFound />
+								<span>ไม่พบงานที่คุณค้นหา</span>
+							</NotFoundContainer>
+						}
 					</JobCardContainer>	
 				}
 			</BreakpointMD>
@@ -378,9 +398,16 @@ const JobsPage = () => {
 						{
 							isLoading ? <Spinner><GooSpinner size={120} /></Spinner>
 							: <JobCardContainer isFloat={Boolean(userInfo)} expand={showMoreFilter}>
-								{jobs.map((job, index) => {
-									return <JobCard key={index} origin="jobs-page" details={job} />
-								})}
+								{
+									jobs.length > 0 ?
+										jobs.map((job, index) => {
+											return <JobCard key={index} origin="jobs-page" details={job} />
+										}) :
+									<NotFoundContainer>
+										<JobNotFound />
+										<span>ไม่พบงานที่คุณค้นหา</span>
+									</NotFoundContainer>	
+								}
 							</JobCardContainer>
 						}
 					</ContentContainer>

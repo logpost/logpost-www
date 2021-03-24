@@ -77,6 +77,29 @@ export const SecondaryButton = styled.button`
 	}
 `
 
+export const Spinner = styled.div`
+	display: flex;
+	justify-content: center;
+	justify-self: center;
+	
+	> div {
+		
+		> div {
+			> div:first-child {
+				background-color: hsl(212, 28%, 28%);
+			}
+
+			> div:last-child {
+				background-color: hsl(16, 56%, 51%);
+			}
+		}
+
+		> svg {
+			display: none;
+		}
+	}
+`
+
 export const TextButton = styled.button`
 	color: hsl(212, 28%, 28%);
 	text-decoration: underline;
@@ -190,6 +213,19 @@ export const FormActions = styled.span`
 		}
 	}
 
+	${Spinner} {
+        > div {
+            > div {
+                > div:first-child {
+                    background-color: white;
+                }
+
+                > div:last-child {
+                    background-color: white;
+                }
+            }
+        }
+    }
 `
 
 export const DetailRow = styled.div`
@@ -586,28 +622,5 @@ export const RadioInput = styled.button`
 	&:last-child {
 		border-top-right-radius: 0.6rem;
 		border-bottom-right-radius: 0.6rem;
-	}
-`
-
-export const Spinner = styled.div`
-	display: flex;
-	justify-content: center;
-	justify-self: center;
-	
-	> div {
-		
-		> div {
-			> div:first-child {
-				background-color: hsl(212, 28%, 28%);
-			}
-
-			> div:last-child {
-				background-color: hsl(16, 56%, 51%);
-			}
-		}
-
-		> svg {
-			display: none;
-		}
 	}
 `

@@ -6,6 +6,7 @@ import { dateFormatter, timeFormatter } from "../utilities/helper"
 import { JobDetails, JobDocument } from '../../entities/interface/job'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { jobDetailsState } from '../../store/atoms/jobDetailsState'
+import { getUserInfo } from "../utilities/tokenHelper"
 
 const JobDetailsContainer = styled.div`
 	> div {
@@ -254,9 +255,12 @@ const JobDetailsSection = (props) => {
 								<Detail>
 									ประเภทรถ <span>{details?.carrier_specification.truck.property.type} {details?.carrier_specification.truck.property.option} {details?.carrier_specification.truck.property.chassis > 0 &&  ` ${details?.carrier_specification.truck.property.chassis} เพลา`} </span>
 								</Detail>
-								<Detail>
-									อายุไม่เกิน <span>{details?.carrier_specification.truck.age}</span> <span>ปี</span>
-								</Detail>
+								{
+									details?.carrier_specification.truck.age &&
+									<Detail>
+										อายุไม่เกิน <span>{details?.carrier_specification.truck.age}</span> <span>ปี</span>
+									</Detail>
+								}
 								<Detail>
 									พนักงานขับรถใบขับขี่ <span>{details?.carrier_specification.driver.driver_license_type}</span>
 								</Detail>
@@ -312,7 +316,7 @@ const JobDetailsSection = (props) => {
 					}
 					<span>
 						<Detail>
-							โดย <DisplayName>{details?.shipper_display_name}</DisplayName>
+							โดย <DisplayName>{details?.shipper_display_name || getUserInfo()?.displayName}</DisplayName>
 						</Detail>
 						<span>{dateFormatter(details?.dropoff_date)} {timeFormatter(details?.dropoff_date)}</span>
 					</span>

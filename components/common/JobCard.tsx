@@ -250,7 +250,7 @@ const JobCard = (props: JobCardInterface) => {
 
 	const seeMoreDetails = () => {
 		if (Boolean(userInfo)) { 
-			router.push(`/jobs/details/${details.job_id}`)
+			router.push(`/jobs/details/${details?.job_id}`)
 		} else {
 			setToggleModal(true)
 		}
@@ -259,18 +259,18 @@ const JobCard = (props: JobCardInterface) => {
 	return (
 		<CardContainer>
 			<Locations>
-				<span>{details.pickup_location}</span>
+				<span>{details?.pickup_location}</span>
 				<RightArrowLine />
-				<span>{details.dropoff_location}</span>
+				<span>{details?.dropoff_location}</span>
 			</Locations>
 			<DetailRow>
 				<DateAndTime>
 					<UpArrowLine />
-					{dateFormatter(details.pickup_date)} <span>|</span> {timeFormatter(details.pickup_date)}
+					{dateFormatter(details?.pickup_date)} <span>|</span> {timeFormatter(details?.pickup_date)}
 				</DateAndTime>
 				<DateAndTime>
 					<DownArrowLine />
-					{dateFormatter(details.dropoff_date)} <span>|</span> {timeFormatter(details.dropoff_date)}
+					{dateFormatter(details?.dropoff_date)} <span>|</span> {timeFormatter(details?.dropoff_date)}
 				</DateAndTime>
 			</DetailRow>
 			<BottomDetails>
@@ -278,22 +278,22 @@ const JobCard = (props: JobCardInterface) => {
 					<DetailRow>
 						<Detail>
 							<TruckIcon />
-							{details.truck_type}
+							{details?.truck_type}
 						</Detail>
 						<Detail>
 							<ProductIcon />
-							{details.product_type} {details.weight} ตัน
+							{details?.product_type} {details?.weight} ตัน
 						</Detail>
 					</DetailRow>
 					{
 						origin === "jobs-page" ?
-							details.description && <Detail id="description"><NoteIcon /><span>{details.description}</span></Detail>
+							details?.description && <Detail id="description"><NoteIcon /><span>{details?.description}</span></Detail>
 							: <PersonIcon />
 					}
 				</DetailColumn>
 				<CardActions>
-					{ details.offer_price && 
-						<span>{details.offer_price.toLocaleString()} บาท</span>
+					{ details?.offer_price && 
+						<span>{details?.offer_price.toLocaleString()} บาท</span>
 					}
 					<SecondaryButtonCustom onClick={seeMoreDetails}>รายละเอียด</SecondaryButtonCustom>
 				</CardActions>

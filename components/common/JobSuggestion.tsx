@@ -316,7 +316,7 @@ const JobSuggestion = (props: JobSuggestionInterface) => {
                                         </PriceDetailsContainer>
                                         <ButtonContainer isNegative={summarySequence.profit - suggestJobs.summary[0].profit < 0}>
                                             <div>
-                                                <span>เดินทางรวม {diffDay} วัน</span>
+                                                {/* <span>เดินทางรวม {diffDay} วัน</span> */}
                                                 <span>กำไร{summarySequence.profit - suggestJobs.summary[0].profit > 0 ? "เพิ่มขึ้น" : "ลดลง"} {Math.floor(Math.abs(summarySequence.profit - suggestJobs.summary[0].profit)).toLocaleString()} บาท</span>
                                             </div>
                                             <PrimaryButton onClick={() => router.push(`/jobs/get/${groupJob}`)}>

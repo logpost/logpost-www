@@ -14,6 +14,7 @@ import FiltersComponent from './FiltersComponent'
 import { CancelIcon, DownArrowLine, EditIcon, OptionIcon, PriceIcon, TruckIcon, UpArrowLine, WeightIcon } from './Icons'
 
 const JobTableContainer = styled.div`
+	min-height: 80vh;
 	padding: 3rem;
 `
 
@@ -209,7 +210,7 @@ const JobDesktopTable = (props: JobDesktopTableInterface) => {
             <DesktopHeader>
                 <HeaderTitleContainer>
                     <HeaderTitle>รายการงาน</HeaderTitle>
-                    <PrimaryButton>{role === "shipper" ? "สร้างงานใหม่" : "ค้นหางาน"}</PrimaryButton>
+                    <PrimaryButton onClick={() => router.push("/jobs/add/1")}>{role === "shipper" ? "สร้างงานใหม่" : "ค้นหางาน"}</PrimaryButton>
                 </HeaderTitleContainer>
                 <FiltersComponent filterList={filterList} />
             </DesktopHeader>

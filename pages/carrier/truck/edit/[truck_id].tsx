@@ -18,6 +18,11 @@ const FormHeaderCustom = styled(FormHeader)`
 	color: hsl(217, 16%, 16%);
 `
 
+const PageContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+`
+
 const EditTruckPage = () => {
     const router = useRouter()
     const truckID = router.query.truck_id as string
@@ -45,16 +50,18 @@ const EditTruckPage = () => {
 	return (
 		<>
             <Alert />
-			<FormHeaderCustom>
-                แก้ไขข้อมูลรถบรรทุก
-			</FormHeaderCustom>
-			<FormInputContainer>
-                <TruckForm />
-				<FormActions>
-					<SecondaryButton onClick={() => router.back()}>ย้อนกลับ</SecondaryButton>
-					<PrimaryButton onClick={submitDetails}>บันทึกข้อมูล</PrimaryButton>
-				</FormActions>
-			</FormInputContainer>
+			<PageContainer>
+				<FormHeaderCustom>
+					แก้ไขข้อมูลรถบรรทุก
+				</FormHeaderCustom>
+				<FormInputContainer>
+					<TruckForm />
+					<FormActions>
+						<SecondaryButton onClick={() => router.back()}>ย้อนกลับ</SecondaryButton>
+						<PrimaryButton onClick={submitDetails}>บันทึกข้อมูล</PrimaryButton>
+					</FormActions>
+				</FormInputContainer>
+			</PageContainer>
 		</>
 	)
 }

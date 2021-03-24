@@ -19,7 +19,6 @@ export const getUserInfo = () => {
 		const accessToken = localStorage.getItem("access_token")
 		if (accessToken !== null) {
 			const tokenPayload = decodeToken(accessToken) as TokenPayload
-			console.log(tokenPayload)
 			return {
 				accountType: tokenPayload.account_type,
 				displayName: tokenPayload.display_name,

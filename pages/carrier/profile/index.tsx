@@ -11,7 +11,7 @@ import {
 import NavigationBar from "../../../components/common/NavigationBar"
 import Header from "../../../components/common/Header"
 import ProfileStatus from "../../../components/common/ProfileStatus"
-import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil'
 import { userInfoState } from "../../../store/atoms/userInfoState"
 import { getCarrierProfile, getMyJob } from "../../../components/utilities/apis"
 import { dateFormatter, resourceStatusCount, timeFormatter } from "../../../components/utilities/helper"
@@ -75,6 +75,7 @@ const CarrierProfilePage = () => {
 	const [jobStatusCount, setJobStatusCount] = useRecoilState<{[key: number]: number}>(jobStatusCountState)
 	// const setMyJobs = useSetRecoilState(myJobsState)
 	const setTableData = useSetRecoilState(tableDataState)
+	const resetTableData = useResetRecoilState(tableDataState)
 
 	const convertJobToTableFormat = (jobs: JobDocument[]) => {
 		const jobTableData = []
@@ -109,7 +110,7 @@ const CarrierProfilePage = () => {
 			width: "14%",
 			align: "left",
 			format: (_: number, job: JobDetails): ReactElement => (
-				<span>{`${dateFormatter(job.pickup_date)} ${timeFormatter(job.pickup_date)}`.slice(0, -3)}</span>
+				<span>{`${dateFormatter(job?.pickup_date)} ${timeFormatter(job?.pickup_date)}`.slice(0, -3)}</span>
 			)
 		},
 		{
@@ -118,7 +119,7 @@ const CarrierProfilePage = () => {
 			width: "14%",
 			align: "left",
 			format: (_: number, job: JobDetails): ReactElement => (
-				<span>{`${dateFormatter(job.dropoff_date)} ${timeFormatter(job.dropoff_date)}`.slice(0, -3)}</span>
+				<span>{`${dateFormatter(job?.dropoff_date)} ${timeFormatter(job?.dropoff_date)}`.slice(0, -3)}</span>
 			)
 		},
 		{
@@ -168,7 +169,7 @@ const CarrierProfilePage = () => {
 			align: "center",
 			format: (_: number, job): ReactElement => (
 				<TableRowActions>
-					<button onClick={() => router.push(`/jobs/edit/${job.job_id}`)}><EditIcon /></button>
+					<button onClick={() => router.push(`/jobs/edit/${job?.job_id}`)}><EditIcon /></button>
 					<button ><CancelIcon /></button>
 				</TableRowActions>
 			),
@@ -177,6 +178,7 @@ const CarrierProfilePage = () => {
 
 	useEffect(() => {
 		if (carrierInfo?.username) {
+			resetTableData()
 			getCarrierProfile(carrierInfo?.username, (carrierProfile) => {
 				resourceStatusCount(carrierProfile.drivers, driverStatusCount, setDriverStatusCount)
 				resourceStatusCount(carrierProfile.trucks, truckStatusCount, setTruckStatusCount)
@@ -188,7 +190,7 @@ const CarrierProfilePage = () => {
 				// setMyJobs(jobs)
 			})
 		}
-	}, [carrierInfo])
+	}, [])
 
 	return (
 		<>
@@ -340,7 +342,7 @@ const CarrierProfilePage = () => {
 							},
 							{
 								code: [100],
-								title: "รอผู้รับงาน",
+								title: "รอเริ่มงาน",
 							},
 							{
 								code: [200, 300, 400, 500, 600, 700],

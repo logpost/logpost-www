@@ -12,10 +12,11 @@ export const authorizationHandler = async (fetcher)  => {
 					const response = await fetcher()
 					return response	
 				} catch (error) {
-					console.log(error)
+					console.log(error.response)
 				}
 			} 
 		} else {
+			console.log(error.response)
 			return error
 		}
 	}

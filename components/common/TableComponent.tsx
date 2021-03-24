@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import styled, { css } from "styled-components"
 import { FilterSelector, TableComponentInterface } from "../../entities/interface/common"
-import { RightArrow, DoubleRightArrow, UpArrowLine, DownArrowLine } from "./Icons"
+import { RightArrow, DoubleRightArrow, UpArrowLine, DownArrowLine, JobNotFound } from "./Icons"
 import { useRecoilState } from 'recoil'
 import { TruckTable } from "../../entities/interface/truck"
 import { DriverTable } from "../../entities/interface/driver"
@@ -106,6 +106,19 @@ const Cell = styled.td<CellInterface>`
 
 	&:first-child {
 		padding: 0.8rem 0.5rem 0.8rem 1.8rem;
+	}
+`
+
+const NotFoundContainer = styled.div`
+	font-size: 1.6rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: calc(100vw - 18rem);
+
+	> span {
+		margin-top: 2rem;
 	}
 `
 
@@ -219,6 +232,9 @@ const TableComponent = (props: TableComponentInterface) => {
 								</RowStyle>
 							)
 						})}
+						{/* {
+							data.length === 0 && <NotFoundContainer><JobNotFound /><span>ไม่พบผลการค้นหา</span></NotFoundContainer>
+						} */}
 					</tbody>
 				</Table>
 			</TableContainer>

@@ -19,6 +19,7 @@ import DesktopTable from './DesktopTable'
 
 const ResourcesTableContainer = styled.div`
 	padding: 3rem;
+	min-height: 80vh;
 `
 
 const ResourceOverviewContainer = styled.div`
