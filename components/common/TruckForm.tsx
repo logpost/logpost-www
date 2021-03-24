@@ -66,20 +66,20 @@ const TruckForm = () => {
                 <InputComponent labelTH="ประเภทรถ" labelEN="Truck Type" type="other">
                     <SelectComponent
                         menuList={Object.keys(TRUCK_TYPE_LIST)}
-                        value={truckProperty.type}
+                        value={truckProperty?.type}
                         setValue={(value: string) => handlePropertyOnChange("type", value)}
                     />
                 </InputComponent>
                 <InputComponent labelTH="ส่วนเสริม" labelEN="Option" type="other">
                     <ButtonGroupContainer>
                         {
-                            TRUCK_TYPE_LIST[truckProperty.type].option.map((option: string, index: number) => {
+                            TRUCK_TYPE_LIST[truckProperty?.type]?.option.map((option: string, index: number) => {
                                 return (
                                     <ButtonItem
                                         key={index}
                                         onClick={() => handlePropertyOnChange("option", option)}
                                         name={option}
-                                        value={truckProperty.option}
+                                        value={truckProperty?.option}
                                     >
                                         {option}
                                     </ButtonItem>
@@ -89,17 +89,17 @@ const TruckForm = () => {
                     </ButtonGroupContainer>
                 </InputComponent>
                 {
-                    TRUCK_TYPE_LIST[truckProperty.type].chassis && 
+                    TRUCK_TYPE_LIST[truckProperty?.type]?.chassis && 
                     <InputComponent labelTH="จำนวนเพลา" labelEN="Chassis" type="other">
                         <ButtonGroupContainer>
                             {
-                                TRUCK_TYPE_LIST[truckProperty.type].chassis.map((chassis: number, index: number) => {
+                                TRUCK_TYPE_LIST[truckProperty?.type]?.chassis.map((chassis: number, index: number) => {
                                     return (
                                         <ButtonItem
                                             key={index}
                                             onClick={() => handlePropertyOnChange("chassis", chassis)}
                                             name={String(chassis)}
-                                            value={String(truckProperty.chassis)}
+                                            value={String(truckProperty?.chassis)}
                                         >
                                             {`${chassis} เพลา`}
                                         </ButtonItem>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 import styled from "styled-components"
-import { useRecoilState, useSetRecoilState } from "recoil"
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil"
 import { jobStatusCountState } from "../../store/atoms/carrierProfileState"
 import { getMyJob } from "../utilities/apis"
 import { JobDocument } from "../../entities/interface/job"
@@ -10,7 +10,7 @@ import ScrollableTab from "./ScrollableTab"
 import JobCard from "./JobCard"
 import { BreakpointLG, BreakpointMD } from "../styles/Breakpoints"
 import JobDesktopTable from "./JobDesktopTable"
-import { filterByStatusState, filterStatusState } from "../../store/atoms/tableState"
+import { filterByStatusState, filterStatusState, tableDataState } from "../../store/atoms/tableState"
 import { resourceStatusCount } from "../utilities/helper"
 import { STATUS_MAP } from "../../data/jobs"
 import { JobNotFound } from "./Icons"
@@ -60,6 +60,7 @@ const JobStatus = (props: JobStatusInterface) => {
 	const [filteredJob, setTableData] = useRecoilState(filterByStatusState)
 	const setStatusFilter = useSetRecoilState(filterStatusState)
 	const [isLoading, setIsLoading] = useState(false)
+	const resetTableData = useResetRecoilState(tableDataState)
 
 	const convertJobToTableFormat = (jobs: JobDocument[]) => {
 		const jobTableData = []
@@ -79,7 +80,8 @@ const JobStatus = (props: JobStatusInterface) => {
 		const status = router.query.status as string
         setStatus(status)
 		setStatusFilter(STATUS_MAP[status])
-		if (!Boolean(filteredJob[0])) {
+		resetTableData()
+		// if (!Boolean(filteredJob[0])) {
 			setIsLoading(true)
             getMyJob((jobs: JobDocument[]) => {
 				setIsLoading(false)
@@ -87,7 +89,7 @@ const JobStatus = (props: JobStatusInterface) => {
 				setTableData(jobTableData)
 				resourceStatusCount(jobTableData, jobStatusCount, setJobStatusCount)
             })
-        }
+        // }
 	}, [router.query])
 
 	const changeStatus = (nextStatus: string) => {

@@ -262,7 +262,7 @@ export const filterByStatusState = selector({
 	get: ({get}) => {
 		let filteredData = get(tableDataState)
 		const status = get(filterStatusState)
-		if (status[0] !== 0) {
+		if (status?.[0] !== 0) {
 			filteredData = filteredData.filter((item) => {
 				return status.includes(item.status)
 			})

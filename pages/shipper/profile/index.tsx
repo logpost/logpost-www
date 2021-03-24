@@ -8,7 +8,7 @@ import {
 import NavigationBar from "../../../components/common/NavigationBar"
 import Header from "../../../components/common/Header"
 import ProfileStatus from "../../../components/common/ProfileStatus"
-import { useRecoilValue, useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilValue, useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil'
 import { userInfoState } from "../../../store/atoms/userInfoState"
 import { jobStatusCountState } from "../../../store/atoms/carrierProfileState"
 import { resourceStatusCount } from "../../../components/utilities/helper"
@@ -36,7 +36,8 @@ const ShipperProfilePage = () => {
 	const shipperInfo = useRecoilValue(userInfoState)
 	const [jobStatusCount, setJobStatusCount] = useRecoilState<{ [key: number]: number }>(jobStatusCountState)
 	const setTableData = useSetRecoilState(tableDataState)
-	const [jobFilters, setJobFilters] = useRecoilState(jobFiltersState)
+	const resetFilter = useResetRecoilState(jobFiltersState)
+	const resetTableData = useResetRecoilState(tableDataState)
 
  	// useEffect(() => {
 	// 	resourceStatusCount(filteredData, {
@@ -62,13 +63,15 @@ const ShipperProfilePage = () => {
 
 	useEffect(() => {
 		if (shipperInfo?.username) {
+			resetTableData()
+			resetFilter()
 			getMyJob((jobs: JobDocument[]) => {
 				const jobTableData = convertJobToTableFormat(jobs)
 				setTableData(jobTableData)
 				resourceStatusCount(jobTableData, jobStatusCount, setJobStatusCount)
 			})
 		}
-	}, [shipperInfo])
+	}, [])
 
 	return (
 		<>

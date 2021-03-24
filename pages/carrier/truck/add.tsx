@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled, { css } from "styled-components"
 import { useRouter } from 'next/router'
 import { FormActions, FormHeader, FormInputContainer, HeaderTitle, HeaderTitleContainer, PrimaryButton, SecondaryButton } from '../../../components/styles/GlobalComponents'
 import { createTruck } from '../../../components/utilities/apis'
 import useAlert from '../../../hooks/useAlert'
 import TruckForm from '../../../components/common/TruckForm'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useResetRecoilState } from 'recoil'
 import { truckDetailsState } from '../../../store/atoms/truckDetailsState'
 import { BreakpointLG, BreakpointMD } from '../../../components/styles/Breakpoints'
 import DesktopHeader from '../../../components/common/DesktopHeader'
@@ -41,6 +41,11 @@ const AddTruckPage = () => {
 	const router = useRouter()
     const { setAlert } = useAlert()
 	const truckDetails = useRecoilValue(truckDetailsState)
+	const resetTruckDetails = useResetRecoilState(truckDetailsState)
+
+	useEffect(() => {
+		resetTruckDetails()
+	}, [])
 
 	const submitDetails = async () => {
 		const response = await createTruck(truckDetails)

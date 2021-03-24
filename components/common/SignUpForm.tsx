@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { SignUpFormInterface } from '../../entities/interface/common'
 import InputComponent from './InputComponent'
-import { PrimaryButton, Title, Form, FormActions, SecondaryButton } from '../styles/GlobalComponents'
+import { PrimaryButton, Title, Form, FormActions, SecondaryButton, Spinner } from '../styles/GlobalComponents'
 import { useRouter } from 'next/router'
 import { signup } from '../utilities/apis'
 import useAlert from '../../hooks/useAlert'
 import Alert from './Alert'
+import { GooSpinner } from 'react-spinners-kit'
 
 const RadioInputContainer = styled.div`
 	display: flex;
@@ -61,6 +62,7 @@ const SignUpForm = (props: SignUpFormInterface) => {
 	})
 	const router = useRouter()
 	const { alertStatus, setAlert } = useAlert()
+	const [isLoading, setIsLoading] = useState(false)
 
 	const handleInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value
@@ -74,7 +76,9 @@ const SignUpForm = (props: SignUpFormInterface) => {
 		}
 		const passwordsAreMatch = (signupData.password !== "" && signupData.password === confirm_password)
 		if (passwordsAreMatch) {
+			setIsLoading(true)
 			const response = await signup(role, signupData)
+			setIsLoading(false)
 			console.log(response)
 			if (response !== 200) {
 				setAlert(true, "error", "ชื่อผู้ใช้หรืออีเมลถูกใช้ไปแล้ว")
@@ -169,7 +173,11 @@ const SignUpForm = (props: SignUpFormInterface) => {
 					>
 						ยกเลิก
 					</SecondaryButton>
-					<PrimaryButton type="button" onClick={handleSignup}>ลงทะเบียน{role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}</PrimaryButton>
+					<PrimaryButton type="button" onClick={handleSignup}>
+						{
+							isLoading ? <Spinner><GooSpinner size={30} /></Spinner> : `ลงทะเบียน${role === "shipper" ? "ผู้ส่ง" : "ขนส่ง"}`
+						}
+					</PrimaryButton>
 				</FormActions>`
 			</div>
 		</Form>

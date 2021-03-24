@@ -255,7 +255,8 @@ const GetJobPage = () => {
 		const validDrivers = []
 		drivers.map((driver) => {
 			const { name, driver_license_type, status } = driver
-			const matchDriverLicenseType = (driver_license_type === jobDetails[0].carrier_specification.driver.driver_license_type)
+			const jobDriverLicense = jobDetails[0].carrier_specification.driver.driver_license_type
+			const matchDriverLicenseType = (parseInt(driver_license_type.split(" ")[1]) >= parseInt(jobDriverLicense.split(" ")[1]))
 			if (matchDriverLicenseType && (status === 100)) {
 				driverTableData.push({
 					name,
@@ -301,8 +302,8 @@ const GetJobPage = () => {
 	useEffect(() => {
 		if (jobID && !Boolean(jobDetails[0]?.shipper_id)) {
 			setIsLoading(true)
-			jobID.split(",").map((job) => {
-				getJobDetailsByID(job, (jobDocument: JobDocument) => {
+			jobID.split(",").map(async (job) => {
+				await getJobDetailsByID(job, (jobDocument: JobDocument) => {
 					setIsLoading(false)
 					jobDetails.push(jobDocument)
 				})
@@ -377,6 +378,7 @@ const GetJobPage = () => {
 								isShowTruckDetails = true
 							}
 							return (<JobDetailsSection
+								key={job.job_id}
 								number={index + 1}
 								jobDetails={job}
 								isShowCarrierDetails={false}

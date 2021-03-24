@@ -7,14 +7,14 @@ import {
     PrimaryButton,
     Title,
     TextButton,
+    Spinner,
 } from "../../components/styles/GlobalComponents";
 import { login } from "../../components/utilities/apis";
 import Alert from "../../components/common/Alert";
-import { useRecoilState } from "recoil";
-import { alertPropertyState } from "../../store/atoms/alertPropertyState";
 import breakpointGenerator from "../../components/utilities/breakpoint";
 import { BreakpointLG, BreakpointMD } from "../../components/styles/Breakpoints";
 import useAlert from "../../hooks/useAlert";
+import { GooSpinner } from "react-spinners-kit";
 
 const BackgroundCustom = styled(Background)`
     width: 100%;
@@ -93,6 +93,20 @@ const PrimaryButtonCustom = styled(PrimaryButton)`
     background-color: hsl(212, 28%, 28%);
     font-weight: 500;
     align-self: center;
+
+    ${Spinner} {
+        > div {
+            > div {
+                > div:first-child {
+                    background-color: white;
+                }
+
+                > div:last-child {
+                    background-color: white;
+                }
+            }
+        }
+    }
 `;
 
 const SignUpContainer = styled.div`
@@ -207,6 +221,7 @@ const LoginPage = () => {
         username: "",
         password: "",
     });
+    const [isLoading, setIsLoading] = useState(false)
     const { setAlert } = useAlert()
 
     useEffect(() => {
@@ -235,7 +250,9 @@ const LoginPage = () => {
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setIsLoading(true)
         const loginResponse = await login(role, auth);
+        setIsLoading(false)
         if (loginResponse === 200) {
             router.push("/jobs");
         } else {
@@ -250,8 +267,9 @@ const LoginPage = () => {
     };
 
     return (
+        <>
+        <Alert />
         <BackgroundCustom>
-            <Alert />
             <div>
                 <BreakpointMD>
                     <TitleContainer>
@@ -305,7 +323,9 @@ const LoginPage = () => {
                             handleOnChange={handleInputOnChange}
                         />
                         <PrimaryButtonCustom type="submit">
-                            เข้าสู่ระบบ
+                            {
+                                isLoading ? <Spinner><GooSpinner size={30} /></Spinner> : "เข้าสู่ระบบ"
+                            }
                         </PrimaryButtonCustom>
                     </InputContainer>
                     <SignUpContainer>
@@ -317,6 +337,7 @@ const LoginPage = () => {
                 </LoginContainer>
             </div>
         </BackgroundCustom>
+        </>
     );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Header from '../../components/common/Header'
-import styled from 'styled-components'
-import { JobTitle, PrimaryButton, Detail, SecondaryButton } from '../../components/styles/GlobalComponents'
+import styled, { css } from 'styled-components'
+import { JobTitle, PrimaryButton, Detail, SecondaryButton, Spinner, HeaderTitle } from '../../components/styles/GlobalComponents'
 import { useRouter } from 'next/router'
 import { useRecoilState, useSetRecoilState } from 'recoil'
 import { getJobDetailsByID, updateStatusByDriver } from '../../components/utilities/apis'
@@ -16,19 +16,42 @@ import Modal from '../../components/common/Modal'
 import InputComponent from '../../components/common/InputComponent'
 import { jobDetailsSelector, jobDetailsState } from '../../store/atoms/jobDetailsState'
 import withPrivateRoute from '../../components/utilities/withPrivateRoute'
+import { BreakpointLG, BreakpointMD } from '../../components/styles/Breakpoints'
+import breakpointGenerator from '../../components/utilities/breakpoint'
+import DesktopHeader from '../../components/common/DesktopHeader'
+
+const PageContainer = styled.div`
+	width: 100%;
+`
+
+const MapContainer = styled.div`
+	${breakpointGenerator({
+	large: css`
+			padding: 1.8rem 2.6rem 0;
+			max-width: 110rem;
+		`
+})}
+`
 
 const JobDocumentContainer = styled.div`
 	margin: 1.8rem 2rem;
 `
 
 const Map = styled.div`
-	height: 45rem;
-	width: 100%;
+    height: 45rem;
+    width: 100%;
 
-	&#route-map {
-		height: 19rem;
-	}
-`
+    &#route-map {
+        height: 19rem;
+
+		${breakpointGenerator({
+			large: css`
+					border-radius: 14px;
+					height: 100%;
+				`
+			})}
+    }
+`;
 
 const ModalContent = styled.div`
 	padding: 2rem 2rem;
@@ -55,6 +78,43 @@ const ButtonContainer = styled.div`
 	> button:not(:last-child) {
 		margin-right: 1.6rem;
 	}
+`
+
+const ContentContainer = styled.div`
+	${HeaderTitle} {
+		color: hsl(212, 28%, 28%);
+		
+		> span {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			margin-left: 0.8rem;
+		}
+
+		svg {
+			margin: 0 1.4rem;
+
+			path {
+				fill: hsl(212, 28%, 28%);
+			}
+		}
+	}
+
+	${Spinner} {
+		align-items: center;
+		min-height: 40vh;
+	}
+
+	${breakpointGenerator({
+		large: css`
+			> div:first-child > div:last-child {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				max-width: 110rem;
+				min-height: 80vh;
+				height: 100%;
+			}
+		`
+})}
 `
 
 const SecondaryButtonCustom = styled(SecondaryButton)`
@@ -91,7 +151,7 @@ const DriverPage = () => {
 		const newStatus = JOB_STATUS_CODE[jobDetails.status]?.next
 		const response = await updateStatusByDriver({
 			driver_tel: driverTel,
-			jobinfo: { 
+			jobinfo: {
 				status: newStatus
 			},
 			job_id: jobID
@@ -114,51 +174,70 @@ const DriverPage = () => {
 				const dropoffLatLng = {
 					latitude: jobDocument.dropoff_location.latitude,
 					longitude: jobDocument.dropoff_location.longitude
-				} 
+				}
 				route(pickupLatLng, dropoffLatLng, routeMap)
 			})
 		}, driverTel)
 	}
 
 	return (
-		<div>
-			<Header>
-				<JobTitle>
-					งาน <span>{jobDetails.pickup_location.province}</span>
-					<RightArrowLine />
-					<span>{jobDetails.dropoff_location.province}</span>
-				</JobTitle>
-			</Header>
-			<Map id="route-map" />
-			<JobDocumentContainer>
-				{jobDetails.status && (
-					<Progress
-						currentStep={JOB_STATUS_CODE[jobDetails.status]?.status_name}
-						nextStep={JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}
-						percent={JOB_STATUS_CODE[jobDetails.status]?.progress / 6}
-						label="สถานะ"
-					/>
-				)}
-				{
-				jobDetails.status !== 800 && 
-					<ChangeStatusContainer>
-						กดปุ่มเพื่อเปลี่ยนสถานะ
-						<PrimaryButton onClick={changeStatus}>{JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}</PrimaryButton>
-					</ChangeStatusContainer>
-				}
-				<JobDetailsSection 
-					isShowAutoPrice={false}
-					isShowFooterDetails={false}
-				/>
-				<ButtonContainer>
-					<SecondaryButtonCustom>แจ้งปัญหา</SecondaryButtonCustom>
-					<SecondaryButtonCustom>ติดต่อผู้ส่ง</SecondaryButtonCustom>
-				</ButtonContainer>
-			</JobDocumentContainer>
+		<PageContainer>
+			<BreakpointMD>
+				<Header>
+					<JobTitle>
+						งาน <span>{jobDetails.pickup_location.province}</span>
+						<RightArrowLine />
+						<span>{jobDetails.dropoff_location.province}</span>
+					</JobTitle>
+				</Header>
+			</BreakpointMD>
+			<ContentContainer>
+				<div>
+					<BreakpointLG>
+						<DesktopHeader>
+							<HeaderTitle>
+								งาน <span>{jobDetails.pickup_location.province}</span>
+								<RightArrowLine />
+								<span>{jobDetails.dropoff_location.province}</span>
+							</HeaderTitle>
+						</DesktopHeader>
+					</BreakpointLG>
+					<div>
+						<MapContainer>
+							<Map id="route-map" />
+						</MapContainer>
+						<JobDocumentContainer>
+							{jobDetails.status && (
+								<Progress
+									currentStep={JOB_STATUS_CODE[jobDetails.status]?.status_name}
+									nextStep={JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}
+									percent={JOB_STATUS_CODE[jobDetails.status]?.progress / 6}
+									label="สถานะ"
+								/>
+							)}
+							{
+								jobDetails.status !== 800 &&
+								<ChangeStatusContainer>
+									กดปุ่มเพื่อเปลี่ยนสถานะ
+							<PrimaryButton onClick={changeStatus}>{JOB_STATUS_CODE[JOB_STATUS_CODE[jobDetails.status]?.next]?.status_name}</PrimaryButton>
+								</ChangeStatusContainer>
+							}
+							<JobDetailsSection
+								isShowAutoPrice={false}
+								isShowFooterDetails={false}
+							/>
+							<ButtonContainer>
+								<SecondaryButtonCustom>แจ้งปัญหา</SecondaryButtonCustom>
+								<SecondaryButtonCustom>ติดต่อผู้ส่ง</SecondaryButtonCustom>
+							</ButtonContainer>
+						</JobDocumentContainer>
+					</div>
+				</div>
+			</ContentContainer>
 			<Modal toggle={toggleModal} setToggle={setToggleModal}>
 				<ModalContent>
 					<span>กรุณากรอกเบอร์โทรศัพท์</span>
-					<InputComponent 
+					<InputComponent
 						name="tel"
 						value={driverTel}
 						disableLabel={true}
@@ -167,7 +246,7 @@ const DriverPage = () => {
 					<PrimaryButton onClick={confirmDriverTel}>ยืนยัน</PrimaryButton>
 				</ModalContent>
 			</Modal>
-		</div>
+		</PageContainer>
 	)
 }
 

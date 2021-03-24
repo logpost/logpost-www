@@ -98,11 +98,14 @@ const PageContainer = styled.div<{ bottomSpace: boolean }>`
         }
     }
 
-	${breakpointGenerator({
-	large: css`
-			margin-bottom: 2rem;
+	${props => css`
+			${breakpointGenerator({
+				large: `
+					margin-bottom: ${props.bottomSpace ? 12 : 2}rem;
+				`
+			})}
 		`
-})}
+	}
 `;
 
 const JobDetailsContainer = styled.div`
@@ -187,6 +190,12 @@ const DriverURLContainer = styled.div`
             width: 2.6rem;
         }
     }
+
+	${breakpointGenerator({
+		large: css`
+			bottom: 0;
+		`
+	})}
 `;
 
 const URLContainer = styled.div`
@@ -276,7 +285,7 @@ const JobDetailPage = () => {
 			setAlert(true, "error", "ไม่สามารถเริ่มงานได้")
 		} else {
 			setAlert(true, "success", "เริ่มงานสำเร็จ")
-			router.push(`/jobs`)
+			router.reload()
 		}
 		setToggleModal("")
 	}
@@ -302,7 +311,7 @@ const JobDetailPage = () => {
 						คัดลอกลิงก์และส่งให้พนักงานขับรถ
 					</div>
 					<URLContainer>
-						<input ref={driverURLRef} value={`localhost:3000/driver/${jobID}`} readOnly />
+						<input ref={driverURLRef} value={`https://logpost.netlify.app/driver/${jobID}`} readOnly />
 						<button onClick={copyToClipboard}>
 							<CopyIcon />
 						</button>
@@ -395,7 +404,7 @@ const JobDetailPage = () => {
 						}
 					</div>
 				</div>
-				{isCarrier &&
+				{(isCarrier && !isJobHasCarrier) &&
 					<JobSuggestion selectedJobID={jobID} />
 				}
 			</ContentContainer>

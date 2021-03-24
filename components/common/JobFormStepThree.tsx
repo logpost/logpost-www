@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { DRIVER_LICENSE_TYPE, TRUCK_TYPE_LIST } from '../../data/carrier'
 import { JobFormInterface } from '../../entities/interface/job'
@@ -12,6 +12,7 @@ const JobFormStepThree = (props: JobFormInterface) => {
     const { changedField, setChangedField } = props
 
     const [jobDetails, setJobDetails] = useRecoilState(jobDetailsState)
+    const [driverLicenseList, setDriverLicenseList] = useState(DRIVER_LICENSE_TYPE)
     const stepThreeDetails = useRecoilValue(jobStepThreeSelector)
     const truckType = stepThreeDetails.carrier_specification.truck.property.type
 
@@ -58,6 +59,22 @@ const JobFormStepThree = (props: JobFormInterface) => {
             }
         })
     }
+
+    const filterDriverLicense = () => {
+        const truckType = jobDetails.carrier_specification.truck.property.type
+        let filteredDriverLicenseType = [...DRIVER_LICENSE_TYPE]
+        if (truckType === "รถ 6 ล้อ") {
+            filteredDriverLicenseType.splice(0, 1)
+        } else if (truckType !== "รถ 4 ล้อ") {
+            filteredDriverLicenseType.splice(0, 2)
+        }
+        handleDriverOnChange("driver_license_type", filteredDriverLicenseType[0])
+        setDriverLicenseList(filteredDriverLicenseType)
+    }
+
+    useEffect(() => {
+        filterDriverLicense()
+    }, [jobDetails.carrier_specification.truck.property.type])
 
     
     return (
@@ -120,12 +137,12 @@ const JobFormStepThree = (props: JobFormInterface) => {
             />
             <InputComponent
                 name="driver_license_type"
-                labelTH="ประเภทใบขับขี่"
+                labelTH="ประเภทใบขับขี่ขั้นต่ำ"
                 labelEN="Driver License Type"
                 type="other"
             >
                 <SelectComponent 
-                    menuList={DRIVER_LICENSE_TYPE}
+                    menuList={driverLicenseList}
                     value={stepThreeDetails.carrier_specification.driver.driver_license_type}
                     setValue={(value: string) => handleDriverOnChange("driver_license_type", value)}
                 />

@@ -37,6 +37,17 @@ const SidebarContent = styled.div`
 	top: 0;
 	right: 0;
 	z-index: 1;
+
+	${HeaderTitle} {
+		margin-left: 2rem;
+		transition: none;
+		opacity: 1;
+	}
+
+	button {
+		align-self: flex-end;
+		margin-right: 2rem;
+	}
 `
 
 const SidebarItem = styled.button`

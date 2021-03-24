@@ -10,7 +10,7 @@ import DesktopHeader from '../../../components/common/DesktopHeader'
 import { FormActions, HeaderTitle, HeaderTitleContainer, PrimaryButton, SecondaryButton } from '../../../components/styles/GlobalComponents'
 import styled from 'styled-components'
 import JobFormStepOne from '../../../components/common/JobFormStepOne'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useResetRecoilState } from 'recoil'
 import { jobDetailsState } from '../../../store/atoms/jobDetailsState'
 import { MapInterface } from '../../../entities/interface/googlemaps'
 import { initMap, route } from '../../../components/utilities/googlemaps'
@@ -79,8 +79,10 @@ const AddJobSwitcherPage = () => {
 		directionsService: null,
 		directionsRenderer: null
 	})
+	const resetJobDetails = useResetRecoilState(jobDetailsState)
 
 	useEffect(() => {
+		resetJobDetails()
 		initMap(document.getElementById("route-map-desktop") as HTMLElement, setRouteMap)
 	}, [])
 

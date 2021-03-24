@@ -16,6 +16,11 @@ body {
 
 body > div {
     display: flex;
+
+}
+
+body > div.pac-container {
+    display: block;
 }
 
 @media screen and (max-width: 960px) {
