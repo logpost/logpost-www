@@ -8,16 +8,11 @@ import { JobDetails, JobDocument } from '../../entities/interface/job'
 import { TruckDetails, TruckDocument } from '../../entities/interface/truck'
 import { authorizationHandler } from './authorizationHelper'
 
-// const ACCOUNT_URL = "https://account-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app/account"
-// const JOB_URL = "https://jobs-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app/jobs"
-// const CARRIER_URL = "https://carrier-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app"
-// const SHIPPER_URL = "https://shipper-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app"
-const ACCOUNT_URL = "http://35.197.134.136/account"
-const JOB_URL = "http://34.87.156.135/jobs"
-const CARRIER_URL = "http://34.87.153.233"
-const SHIPPER_URL = "http://35.198.230.87"
-// const OPTIMIZE_URL = "https://jobs-optimization-service-logpost-stag-qjrfn6j7kq-as.a.run.app/job-opts"
-const OPTIMIZE_URL = "https://jobs-optimization-service-logpost-prod-qjrfn6j7kq-as.a.run.app/job-opts"
+const ACCOUNT_URL = "https://account-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app/account"
+const JOB_URL = "https://jobs-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app/jobs"
+const CARRIER_URL = "https://carrier-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app"
+const SHIPPER_URL = "https://shipper-management-service-logpost-stag-qjrfn6j7kq-as.a.run.app"
+const OPTIMIZE_URL = "https://jobs-optimization-service-logpost-stag-qjrfn6j7kq-as.a.run.app/job-opts"
 
 const credentialsAPIs = axios.create({
 	'withCredentials': true
